@@ -22,14 +22,14 @@ export default ({ navigation }) => {
         <View style={styles.toggleContainer}>
           <Text style={styles.toggle} onPress={() => navigation.navigate("Login")} >Sign in</Text>
           <Text style={styles.toggle} onPress={() => {}} >|</Text>
-          <Text style={[styles.toggle, { fontWeight:"bold"}]} onPress={() => navigation.navigate("Register")} >Sign up</Text>
+          <Text style={[styles.toggle, { fontWeight:"bold"}]} onPress={() => navigation.navigate("Register")}>Sign up</Text>
         </View>
         
         <TextInput style={styles.input} placeholder="username"></TextInput>
         <TextInput style={styles.input} placeholder="password"></TextInput>
         <TextInput style={styles.input} placeholder="confirm password"></TextInput>
 
-        <TouchableOpacity style={{backgroundColor: "black", width:365, paddingVertical: 15, borderRadius:15, marginTop:30}}>
+        <TouchableOpacity style={{backgroundColor: "black", width:365, paddingVertical: 15, borderRadius:15, marginTop:30}} onPress={() => navigation.navigate("Login")}>
           <Text style={{fontFamily:"Roboto_900Black", color:"white", textAlign:'center', }}>NEXT</Text>
         </TouchableOpacity>
       </SafeAreaView>
@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
       fontFamily:"Montserrat_700Bold", 
       alignItems: 'center',
       justifyContent: 'center',
-      
+      paddingBottom: 10
+
     },
 
     toggleContainer: {

@@ -20,8 +20,8 @@ export default ({ navigation }) => {
       <SafeAreaView style={styles.container}>
         <Text style={styles.logo}>LESGO!</Text>
         <View style={styles.toggleContainer}>
-          <Text style={[styles.toggle, { fontWeight:"bold"}]} onPress={() => {}} >Sign in</Text>
-          <Text style={styles.toggle} onPress={() => navigation.navigate("Login")} >|</Text>
+          <Text style={[styles.toggle, { fontWeight:"bold"}]} onPress={() => navigation.navigate("Login")} >Sign in</Text>
+          <Text style={styles.toggle}>|</Text>
           <Text style={styles.toggle} onPress={() => navigation.navigate("Register")}>Sign up</Text>
         </View>
         
@@ -31,7 +31,7 @@ export default ({ navigation }) => {
           <Text style={styles.forgotPW} onPress={() => {}}>Forgot your password?</Text>
         </View>
         <TouchableOpacity style={{backgroundColor: "black", width:365, paddingVertical: 15, borderRadius:15, marginTop:30}}>
-          <Text style={{fontFamily:"Roboto_900Black", color:"white", textAlign:'center', }}>SIGN IN</Text>
+          <Text style={{fontFamily:"Roboto_900Black", color:"white", textAlign:'center'}} onPress={() => navigation.navigate("Home")}>SIGN IN</Text>
         </TouchableOpacity>
       </SafeAreaView>
     );
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
       fontFamily:"Montserrat_700Bold", 
       alignItems: 'center',
       justifyContent: 'center',
-      
+      paddingBottom: 10
     },
 
     toggleContainer: {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
       fontSize:15,
       alignItems: 'center',
       justifyContent: 'center',
-      paddingHorizontal: 20,
+      paddingHorizontal: 20
     },
 
     misc: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
       marginTop: 20,
       paddingLeft: 15,
       fontSize: 15,
-      borderRadius:15
+      borderRadius: 15
     }
 
   });
