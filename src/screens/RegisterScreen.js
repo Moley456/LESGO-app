@@ -1,5 +1,6 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, StatusBar, Button, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { SafeAreaView, StyleSheet, Text, View, StatusBar, Button, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-paper'
 import { useFonts, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Roboto_900Black } from '@expo-google-fonts/roboto';
 import AppLoading from 'expo-app-loading';
@@ -7,6 +8,16 @@ import AppLoading from 'expo-app-loading';
 
 
 export default ({ navigation }) => {
+
+  const [user, setUser] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const passwordTextInput = useRef();
+  const emailTextInput = useRef();
+  
+
+
   let [fontsLoaded] = useFonts({
     Montserrat_700Bold,
     Roboto_900Black
@@ -25,9 +36,41 @@ export default ({ navigation }) => {
           <Text style={[styles.toggle, { fontWeight:"bold"}]} onPress={() => navigation.navigate("Register")}>Sign up</Text>
         </View>
         
-        <TextInput style={styles.input} placeholder="username"></TextInput>
-        <TextInput style={styles.input} placeholder="password"></TextInput>
-        <TextInput style={styles.input} placeholder="confirm password"></TextInput>
+        <TextInput 
+        style={styles.input} 
+        label="Username" 
+        theme={{ colors: {primary: 'black'}}}
+        onChangeText={setUser}
+        returnKeyType="next"
+        value={user}
+        onSubmitEditing={() => emailTextInput.current.focus()}
+        left={<TextInput.Icon name="account" color={'#5AA897'} />}
+        
+        />
+
+        <TextInput 
+        ref={emailTextInput}
+        style={styles.input} 
+        label="Email" 
+        theme={{ colors: {primary: 'black'}}}
+        onChangeText={setEmail}
+        returnKeyType="next"
+        value={email}
+        onSubmitEditing={() => passwordTextInput.current.focus()}
+        left={<TextInput.Icon name="at" color={'#5AA897'} />}
+        
+        />
+
+        <TextInput 
+        ref={passwordTextInput}
+        style={styles.input} 
+        label="Password" 
+        theme={{ colors: {primary: 'black'}}}
+        onChangeText={setPassword}
+        secureTextEntry={!isPasswordVisible}
+        left={<TextInput.Icon name="form-textbox-password" color={"#5AA897"} />}
+        right={<TextInput.Icon name={isPasswordVisible ? "eye-off" : "eye"} onPress={() => setIsPasswordVisible((state) => !state)} />}
+        />
 
         <TouchableOpacity style={{backgroundColor: "black", width:365, paddingVertical: 15, borderRadius:15, marginTop:30}} onPress={() => navigation.navigate("Login")}>
           <Text style={{fontFamily:"Roboto_900Black", color:"white", textAlign:'center', }}>NEXT</Text>
@@ -85,11 +128,9 @@ const styles = StyleSheet.create({
       height: 52,
       width: 365,
       backgroundColor: "white",
-      fontFamily: "Roboto",
       marginTop: 20,
-      paddingLeft: 15,
       fontSize: 15,
-      borderRadius:15
+      
     }
 
   });

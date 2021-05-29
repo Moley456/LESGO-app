@@ -1,12 +1,21 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, StatusBar, Button, TextInput, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { SafeAreaView, StyleSheet, Text, View, StatusBar, Button, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-paper'
 import { useFonts, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Roboto_900Black } from '@expo-google-fonts/roboto';
 import AppLoading from 'expo-app-loading';
 
 
 
+
+
 export default ({ navigation }) => {
+  
+  const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [user, setUser] = useState("");
+  const passwordTextInput = useRef();
+
   let [fontsLoaded] = useFonts({
     Montserrat_700Bold,
     Roboto_900Black
@@ -25,8 +34,28 @@ export default ({ navigation }) => {
           <Text style={styles.toggle} onPress={() => navigation.navigate("Register")}>Sign up</Text>
         </View>
         
-        <TextInput style={styles.input} placeholder="username"></TextInput>
-        <TextInput style={styles.input} placeholder="password"></TextInput>
+        <TextInput 
+        style={styles.input} 
+        label="Username" 
+        theme={{ colors: {primary: 'black'}}}
+        onChangeText={setUser}
+        returnKeyType="next"
+        value={user}
+        onSubmitEditing={() => passwordTextInput.current.focus()}
+        left={<TextInput.Icon name="account" color={'#5AA897'} />}
+        />
+
+        <TextInput 
+        ref={passwordTextInput}
+        style={styles.input} 
+        label="Password" 
+        theme={{ colors: {primary: 'black',underlineColor:'transparent', background : '#003489'}}}
+        onChangeText={setPassword}
+        secureTextEntry={!isPasswordVisible}
+        left={<TextInput.Icon name="form-textbox-password" color={"#5AA897"} />}
+        right={<TextInput.Icon name={isPasswordVisible ? "eye-off" : "eye"} onPress={() => setIsPasswordVisible((state) => !state)} />}
+        />
+
         <View style={styles.misc}>
           <Text style={styles.forgotPW} onPress={() => {}}>Forgot your password?</Text>
         </View>
@@ -44,7 +73,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
-      paddingBottom: 100
+      paddingBottom: 70
       
     },
     
@@ -86,9 +115,8 @@ const styles = StyleSheet.create({
       width: 365,
       backgroundColor: "white",
       marginTop: 20,
-      paddingLeft: 15,
       fontSize: 15,
-      borderRadius: 15
+      
     }
 
   });
