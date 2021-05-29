@@ -1,24 +1,12 @@
 import React, { useState, useRef } from "react";
 import { SafeAreaView, StyleSheet, Text, View, StatusBar, Button, TouchableOpacity, ScrollView } from "react-native";
 import { TextInput } from "react-native-paper";
-import { useFonts, Montserrat_700Bold } from "@expo-google-fonts/montserrat";
-import { Roboto_900Black } from "@expo-google-fonts/roboto";
-import AppLoading from "expo-app-loading";
 
 export default ({ navigation }) => {
 	const [password, setPassword] = useState("");
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 	const [user, setUser] = useState("");
 	const passwordTextInput = useRef();
-
-	let [fontsLoaded] = useFonts({
-		Montserrat_700Bold,
-		Roboto_900Black,
-	});
-
-	if (!fontsLoaded) {
-		return <AppLoading />;
-	}
 
 	return (
 		<SafeAreaView style={styles.container}>

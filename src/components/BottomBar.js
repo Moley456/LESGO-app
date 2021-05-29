@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BottomNavigation, Text } from 'react-native-paper';
+import { BottomNavigation, Text} from 'react-native-paper';
 
 const HomeRoute = () => <Text>Home</Text>;
 
@@ -10,9 +10,9 @@ const ProfileRoute = () => <Text>Profile</Text>;
 export default (props) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'home', title: 'Home', icon: 'album' },
-    { key: 'create', title: 'Create', icon: 'album' },
-    { key: 'profile', title: 'Profile', icon: 'history' },
+    { key: 'home', title: 'Home', icon: 'home' },
+    { key: 'create', title: 'Create', icon: 'plus-circle' },
+    { key: 'profile', title: 'Profile', icon: 'account-circle' },
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
@@ -26,6 +26,8 @@ export default (props) => {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
+      barStyle={{ backgroundColor: "#F8F5F1" }}
+      keyboardHidesNavigationBar={true}
     />
   );
 };
