@@ -6,7 +6,7 @@ import AppLoading from 'expo-app-loading';
 
 
 
-export default function LoginScreen() {
+export default ({ navigation }) => {
   let [fontsLoaded] = useFonts({
     Montserrat_700Bold,
     Roboto_900Black
@@ -20,9 +20,9 @@ export default function LoginScreen() {
       <SafeAreaView style={styles.container}>
         <Text style={styles.logo}>LESGO!</Text>
         <View style={styles.toggleContainer}>
-          <Text style={styles.toggle} onPress={() => {}} >Sign in</Text>
+          <Text style={styles.toggle} onPress={() => navigation.navigate("Login")} >Sign in</Text>
           <Text style={styles.toggle} onPress={() => {}} >|</Text>
-          <Text style={[styles.toggle, { fontWeight:"bold"}]} onPress={() => {}} >Sign up</Text>
+          <Text style={[styles.toggle, { fontWeight:"bold"}]} onPress={() => navigation.navigate("Register")} >Sign up</Text>
         </View>
         
         <TextInput style={styles.input} placeholder="username"></TextInput>
