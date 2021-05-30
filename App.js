@@ -2,14 +2,15 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import AppLoading from 'expo-app-loading';
+import RegisterSuccessScreen from './src/screens/RegisterSuccessScreen';
 
 import { useFonts, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Roboto_900Black } from '@expo-google-fonts/roboto';
-import AppLoading from 'expo-app-loading';
-import RegisterSuccessScreen from './src/screens/RegisterSuccessScreen';
 
 const Stack = createStackNavigator();
 

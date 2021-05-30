@@ -4,6 +4,7 @@ import { TextInput } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 
 import * as Authentication from '../../api/auth';
+import HideKeyboard from '../components/HideKeyboard';
 
 export default ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -48,52 +49,54 @@ export default ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.logo}>LESGO!</Text>
-      <View style={styles.toggleContainer}>
-        <Text style={[styles.toggle, { fontWeight: 'bold' }]} onPress={() => navigation.navigate('Login')}>
-          Sign in
-        </Text>
-        <Text style={styles.toggle}>|</Text>
-        <Text style={styles.toggle} onPress={() => navigation.navigate('Register')}>
-          Sign up
-        </Text>
-      </View>
-      <TextInput
-        style={styles.input}
-        label="Email"
-        theme={{ colors: { primary: 'black' } }}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        returnKeyType="next"
-        value={email}
-        onSubmitEditing={() => passwordTextInput.current.focus()}
-        left={<TextInput.Icon name="account" color={'#5AA897'} />}
-      />
+    <HideKeyboard>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.logo}>LESGO!</Text>
+        <View style={styles.toggleContainer}>
+          <Text style={[styles.toggle, { fontWeight: 'bold' }]} onPress={() => navigation.navigate('Login')}>
+            Sign in
+          </Text>
+          <Text style={styles.toggle}>|</Text>
+          <Text style={styles.toggle} onPress={() => navigation.navigate('Register')}>
+            Sign up
+          </Text>
+        </View>
+        <TextInput
+          style={styles.input}
+          label="Email"
+          theme={{ colors: { primary: 'black' } }}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          returnKeyType="next"
+          value={email}
+          onSubmitEditing={() => passwordTextInput.current.focus()}
+          left={<TextInput.Icon name="account" color={'#5AA897'} />}
+        />
 
-      <TextInput
-        ref={passwordTextInput}
-        style={styles.input}
-        label="Password"
-        theme={{ colors: { primary: 'black', underlineColor: 'transparent', background: '#003489' } }}
-        onChangeText={setPassword}
-        secureTextEntry={!isPasswordVisible}
-        left={<TextInput.Icon name="form-textbox-password" color={'#5AA897'} />}
-        right={<TextInput.Icon name={isPasswordVisible ? 'eye-off' : 'eye'} onPress={() => setIsPasswordVisible((state) => !state)} />}
-      />
+        <TextInput
+          ref={passwordTextInput}
+          style={styles.input}
+          label="Password"
+          theme={{ colors: { primary: 'black', underlineColor: 'transparent', background: '#003489' } }}
+          onChangeText={setPassword}
+          secureTextEntry={!isPasswordVisible}
+          autoCapitalize="none"
+          left={<TextInput.Icon name="form-textbox-password" color={'#5AA897'} />}
+          right={<TextInput.Icon name={isPasswordVisible ? 'eye-off' : 'eye'} onPress={() => setIsPasswordVisible((state) => !state)} />}
+        />
 
-      <View style={styles.misc}>
-        <Text style={styles.forgotPW} onPress={() => {}}>
-          Forgot your password?
-        </Text>
-      </View>
+        <View style={styles.misc}>
+          <Text style={styles.forgotPW} onPress={() => {}}>
+            Forgot your password?
+          </Text>
+        </View>
 
-      <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitText} onPress={handleLogin}>
-          SIGN IN
-        </Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity style={styles.submitButton} onPress={handleLogin} loading={isLoginLoading} disabled={isLoginLoading}>
+          <Text style={styles.submitText}>SIGN IN</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </HideKeyboard>
   );
 };
 

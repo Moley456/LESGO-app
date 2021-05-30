@@ -4,6 +4,7 @@ import { TextInput } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 
 import * as Authentication from '../../api/auth';
+import HideKeyboard from '../components/HideKeyboard';
 
 export default ({ navigation }) => {
   const [user, setUser] = useState('');
@@ -53,57 +54,62 @@ export default ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.logo}>LESGO!</Text>
-      <View style={styles.toggleContainer}>
-        <Text style={styles.toggle} onPress={() => navigation.navigate('Login')}>
-          Sign in
-        </Text>
-        <Text style={styles.toggle}>|</Text>
-        <Text style={[styles.toggle, { fontWeight: 'bold' }]} onPress={() => navigation.navigate('Register')}>
-          Sign up
-        </Text>
-      </View>
+    <HideKeyboard>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.logo}>LESGO!</Text>
+        <View style={styles.toggleContainer}>
+          <Text style={styles.toggle} onPress={() => navigation.navigate('Login')}>
+            Sign in
+          </Text>
+          <Text style={styles.toggle}>|</Text>
+          <Text style={[styles.toggle, { fontWeight: 'bold' }]} onPress={() => navigation.navigate('Register')}>
+            Sign up
+          </Text>
+        </View>
 
-      <TextInput
-        style={styles.input}
-        label="Username"
-        theme={{ colors: { primary: 'black' } }}
-        onChangeText={setUser}
-        returnKeyType="next"
-        value={user}
-        onSubmitEditing={() => emailTextInput.current.focus()}
-        left={<TextInput.Icon name="account" color={'#5AA897'} />}
-      />
+        <TextInput
+          style={styles.input}
+          label="Username"
+          theme={{ colors: { primary: 'black' } }}
+          onChangeText={setUser}
+          autoCapitalize="none"
+          returnKeyType="next"
+          value={user}
+          onSubmitEditing={() => emailTextInput.current.focus()}
+          left={<TextInput.Icon name="account" color={'#5AA897'} />}
+        />
 
-      <TextInput
-        ref={emailTextInput}
-        style={styles.input}
-        label="Email"
-        theme={{ colors: { primary: 'black' } }}
-        onChangeText={setEmail}
-        returnKeyType="next"
-        keyboardType="email-address"
-        value={email}
-        onSubmitEditing={() => passwordTextInput.current.focus()}
-        left={<TextInput.Icon name="at" color={'#5AA897'} />}
-      />
+        <TextInput
+          ref={emailTextInput}
+          style={styles.input}
+          label="Email"
+          theme={{ colors: { primary: 'black' } }}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          returnKeyType="next"
+          value={email}
+          onSubmitEditing={() => passwordTextInput.current.focus()}
+          left={<TextInput.Icon name="at" color={'#5AA897'} />}
+        />
 
-      <TextInput
-        ref={passwordTextInput}
-        style={styles.input}
-        label="Password"
-        theme={{ colors: { primary: 'black' } }}
-        onChangeText={setPassword}
-        secureTextEntry={!isPasswordVisible}
-        left={<TextInput.Icon name="form-textbox-password" color={'#5AA897'} />}
-        right={<TextInput.Icon name={isPasswordVisible ? 'eye-off' : 'eye'} onPress={() => setIsPasswordVisible((state) => !state)} />}
-      />
+        <TextInput
+          ref={passwordTextInput}
+          style={styles.input}
+          label="Password"
+          theme={{ colors: { primary: 'black' } }}
+          onChangeText={setPassword}
+          secureTextEntry={!isPasswordVisible}
+          autoCapitalize="none"
+          left={<TextInput.Icon name="form-textbox-password" color={'#5AA897'} />}
+          right={<TextInput.Icon name={isPasswordVisible ? 'eye-off' : 'eye'} onPress={() => setIsPasswordVisible((state) => !state)} />}
+        />
 
-      <TouchableOpacity style={styles.submitButton} onPress={handleRegister} loading={isRegisterLoading} disabled={isRegisterLoading}>
-        <Text style={styles.submitText}>NEXT</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+        <TouchableOpacity style={styles.submitButton} onPress={handleRegister} loading={isRegisterLoading} disabled={isRegisterLoading}>
+          <Text style={styles.submitText}>NEXT</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </HideKeyboard>
   );
 };
 
@@ -114,7 +120,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
-    paddingBottom: 30,
+    paddingBottom: 25,
   },
 
   logo: {

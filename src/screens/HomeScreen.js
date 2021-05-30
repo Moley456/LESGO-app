@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
+
 import BottomBar from '../components/BottomBar';
 import * as Authentication from '../../api/auth';
 
