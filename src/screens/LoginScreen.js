@@ -87,7 +87,7 @@ export default ({ navigation }) => {
         />
 
         <View style={styles.misc}>
-          <Text style={styles.forgotPW} onPress={() => {}}>
+          <Text style={styles.forgotPW} onPress={() => navigation.navigate('ForgotPassword')}>
             Forgot your password?
           </Text>
         </View>

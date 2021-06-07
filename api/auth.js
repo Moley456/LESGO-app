@@ -33,6 +33,15 @@ export const signOut = async (onSuccess, onError) => {
   }
 }
 
+export const resetPassword = async ({email}, onSuccess, onError) => {
+  try {
+    await auth.sendPasswordResetEmail(email);
+    return onSuccess();
+  } catch (error) {
+    return onError(error);
+  }
+}
+
 export const getCurrentUserId = () => auth.currentUser ? auth.currentUser.uid : null;
 
 export const getCurrentUserName = () => auth.currentUser ? auth.currentUser.displayName : null;
