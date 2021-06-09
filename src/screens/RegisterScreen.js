@@ -22,9 +22,16 @@ export default ({ navigation }) => {
       Alert.alert('Please enter a username');
       return;
     }
+
+ 
+
     Authentication.createAccount(
       { name: user, email, password },
-      (user) =>
+      
+      (user) => {
+
+        Authentication.writeUserData({username, email, password});
+
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
@@ -35,7 +42,10 @@ export default ({ navigation }) => {
               },
             ],
           })
-        ),
+        )
+
+      },
+
       (error) => {
         switch (error.code) {
           case 'auth/email-already-in-use':

@@ -39,8 +39,9 @@ const styles = StyleSheet.create({
   signUpText: {
     fontFamily: 'Montserrat_700Bold',
     fontSize: 48,
-    marginLeft: 30,
-    marginBottom: 50,
+    marginBottom: 30,
+    alignSelf: 'flex-start',
+    marginLeft: 30
   },
 
   backButton: {
