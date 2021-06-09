@@ -7,7 +7,7 @@ import * as Authentication from '../../api/auth';
 import HideKeyboard from '../components/HideKeyboard';
 
 export default ({ navigation }) => {
-  const [user, setUser] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -18,49 +18,50 @@ export default ({ navigation }) => {
   const handleRegister = () => {
     Keyboard.dismiss();
     setIsRegisterLoading(true);
-    if (!user.trim()) {
+    if (!username.trim()) {
       Alert.alert('Please enter a username');
+      setIsRegisterLoading(false);
       return;
     }
+    Authentication.checkUsername(username).then((snapshot) => {
+      if (!snapshot.exists()) {
+        Authentication.createAccount(
+          { username: username, email, password },
+          (user) => {
+            Authentication.writeUserData(email);
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [
+                  {
+                    name: 'RegisterSuccess',
+                    params: { name: user.displayName },
+                  },
+                ],
+              })
+            );
+          },
 
- 
-
-    Authentication.createAccount(
-      { name: user, email, password },
-      
-      (user) => {
-
-        Authentication.writeUserData({username, email, password});
-
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'RegisterSuccess',
-                params: { name: user.displayName },
-              },
-            ],
-          })
-        )
-
-      },
-
-      (error) => {
-        switch (error.code) {
-          case 'auth/email-already-in-use':
-            Alert.alert('Email already in use!', 'Please try again with another email.');
-            break;
-          case 'auth/weak-password':
-            Alert.alert('Invalid password!', 'Password must be at least 6 characters long.');
-            break;
-          case 'auth/invalid-email':
-            Alert.alert('Invalid Email!', 'Please make sure you have entered your email in a valid format.');
-            break;
-        }
+          (error) => {
+            switch (error.code) {
+              case 'auth/email-already-in-use':
+                Alert.alert('Email already in use!', 'Please try again with another email.');
+                break;
+              case 'auth/weak-password':
+                Alert.alert('Invalid password!', 'Password must be at least 6 characters long.');
+                break;
+              case 'auth/invalid-email':
+                Alert.alert('Invalid Email!', 'Please make sure you have entered your email in a valid format.');
+                break;
+            }
+            setIsRegisterLoading(false);
+          }
+        );
+      } else {
+        Alert.alert('Username is already taken, please try another a different username');
         setIsRegisterLoading(false);
       }
-    );
+    });
   };
 
   return (
@@ -81,10 +82,10 @@ export default ({ navigation }) => {
           style={styles.input}
           label="Username"
           theme={{ colors: { primary: 'black' } }}
-          onChangeText={setUser}
+          onChangeText={setUsername}
           autoCapitalize="none"
           returnKeyType="next"
-          value={user}
+          value={username}
           onSubmitEditing={() => emailTextInput.current.focus()}
           left={<TextInput.Icon name="account" color={'#5AA897'} />}
         />

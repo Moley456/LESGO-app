@@ -7,7 +7,7 @@ import * as Authentication from '../../api/auth';
 import HideKeyboard from '../components/HideKeyboard';
 
 export default ({ navigation }) => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoginLoading, setIsLoginLoading] = useState(false);
@@ -16,36 +16,51 @@ export default ({ navigation }) => {
   const handleLogin = () => {
     Keyboard.dismiss();
     setIsLoginLoading(true);
-
-    Authentication.signIn(
-      { email, password },
-      (user) =>
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [
-              {
-                name: 'Home',
-                params: { name: user.displayName },
-              },
-            ],
-          })
-        ),
-      (error) => {
-        switch (error.code) {
-          case 'auth/user-not-found':
-            Alert.alert('Invalid username or password!', 'Please make sure you have entered a valid username and');
-            break;
-          case 'auth/wrong-password':
-            Alert.alert('Invalid username or password!', 'Please make sure you have entered a valid username and');
-            break;
-          case 'auth/invalid-email':
-            Alert.alert('Invalid Email!', 'Please make sure you have entered your email in a valid format.');
-            break;
-        }
+    if (!username.trim()) {
+      Alert.alert('Please enter a username');
+      setIsLoginLoading(false);
+      return;
+    }
+    Authentication.checkUsername(username).then((snapshot) => {
+      if (snapshot.exists()) {
+        const usernameObj = snapshot.val();
+        Authentication.getEmail(String(usernameObj.id)).then((snapshot) => {
+          const email = snapshot.val().email;
+          Authentication.signIn(
+            { email, password },
+            (user) =>
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'Home',
+                      params: { name: user.displayName },
+                    },
+                  ],
+                })
+              ),
+            (error) => {
+              switch (error.code) {
+                case 'auth/user-not-found':
+                  Alert.alert('Invalid username or password!', 'Please make sure you have entered a valid username and password');
+                  break;
+                case 'auth/wrong-password':
+                  Alert.alert('Invalid username or password!', 'Please make sure you have entered a valid username and password');
+                  break;
+                case 'auth/invalid-email':
+                  Alert.alert('Invalid Email!', 'Please make sure you have entered your email in a valid format.');
+                  break;
+              }
+              setIsLoginLoading(false);
+            }
+          );
+        });
+      } else {
+        Alert.alert('Invalid username or password!', 'Please make sure you have entered a valid username and password');
         setIsLoginLoading(false);
       }
-    );
+    });
   };
 
   return (
@@ -63,13 +78,13 @@ export default ({ navigation }) => {
         </View>
         <TextInput
           style={styles.input}
-          label="Email"
+          label="Username"
           theme={{ colors: { primary: 'black' } }}
-          onChangeText={setEmail}
+          onChangeText={setUsername}
           keyboardType="email-address"
           autoCapitalize="none"
           returnKeyType="next"
-          value={email}
+          value={username}
           onSubmitEditing={() => passwordTextInput.current.focus()}
           left={<TextInput.Icon name="account" color={'#5AA897'} />}
         />

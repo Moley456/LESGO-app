@@ -1,27 +1,29 @@
-import firebase from "./firebase";
+import firebase from './firebase';
 
 const auth = firebase.auth();
 const db = firebase.database();
 
-export const writeUserData = async ({username, email, password}) => {
-    await db.ref('app/users/' + 222).set({
-      username: username,
-      email: email,
-      password: password
-  });
-}
+export const writeUserData = async (email) => {
+  const id = getCurrentUserId();
+  const username = getCurrentUserName();
 
-// export const writeUserData = async ({userId, username, email}, onSuccess, onError) => {
-//   try {
-//       await db.ref('app/users/' + userId).set({
-//       username: username,
-//       email: email
-//       });
-//       return onSuccess(user);
-//   } catch (error) {
-//     return onError(error);
-//   }
-// }
+  await db.ref('app/users/' + id).set({
+    username: username,
+    email: email,
+  });
+
+  await db.ref('app/usernames/' + username).set({
+    id: id,
+  });
+};
+
+export const checkUsername = async (username) => {
+  return db.ref('app/usernames/' + username).get();
+};
+
+export const getEmail = (uid) => {
+  return db.ref('app/users/' + uid).get();
+};
 
 export const signIn = async ({ email, password }, onSuccess, onError) => {
   try {
@@ -30,20 +32,20 @@ export const signIn = async ({ email, password }, onSuccess, onError) => {
   } catch (error) {
     return onError(error);
   }
-}
+};
 
-export const createAccount = async ({ name, email, password }, onSuccess, onError) => {
+export const createAccount = async ({ username, email, password }, onSuccess, onError) => {
   try {
     const { user } = await auth.createUserWithEmailAndPassword(email, password);
     if (user) {
-      await user.updateProfile({ displayName: name });
+      await user.updateProfile({ displayName: username });
       await user.sendEmailVerification();
       return onSuccess(user);
     }
   } catch (error) {
     return onError(error);
   }
-}
+};
 
 export const signOut = async (onSuccess, onError) => {
   try {
@@ -52,25 +54,26 @@ export const signOut = async (onSuccess, onError) => {
   } catch (error) {
     return onError(error);
   }
-}
+};
 
-export const resetPassword = async ({email}, onSuccess, onError) => {
+export const resetPassword = async ({ email }, onSuccess, onError) => {
   try {
     await auth.sendPasswordResetEmail(email);
     return onSuccess();
   } catch (error) {
     return onError(error);
   }
-}
+};
 
-export const getCurrentUserId = () => auth.currentUser ? auth.currentUser.uid : null;
+export const getCurrentUserId = () => (auth.currentUser ? auth.currentUser.uid : null);
 
-export const getCurrentUserName = () => auth.currentUser ? auth.currentUser.displayName : null;
+export const getCurrentUserName = () => (auth.currentUser ? auth.currentUser.displayName : null);
 
-export const setOnAuthStateChanged = (onUserAuthenticated, onUserNotFound) => auth.onAuthStateChanged((user) => {
-  if (user) {
-    return onUserAuthenticated(user);
-  } else {
-    return onUserNotFound(user);
-  }
-});
+export const setOnAuthStateChanged = (onUserAuthenticated, onUserNotFound) =>
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      return onUserAuthenticated(user);
+    } else {
+      return onUserNotFound(user);
+    }
+  });
