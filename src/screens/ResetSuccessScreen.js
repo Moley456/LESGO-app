@@ -5,7 +5,7 @@ export default ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.resetText}>Password reset Successful!</Text>
-      <Text style={styles.message}>Check your email for further instructions!</Text>
+      <Text style={styles.message}>Check your email for further instructions.</Text>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('Login')}>
         <Text style={styles.backText}>BACK TO LOGIN</Text>
       </TouchableOpacity>
@@ -25,13 +25,12 @@ const styles = StyleSheet.create({
   resetText: {
     fontFamily: 'Montserrat_700Bold',
     fontSize: 40,
-    marginLeft: 20,
-    marginBottom: 10,
+    marginBottom: 20,
   },
 
   message: {
       fontFamily: 'Roboto_400Regular',
-      fontSize: 19,
+      fontSize: 18,
       color:'black',
       paddingBottom: 40
   },

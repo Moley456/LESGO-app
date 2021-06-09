@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     color: 'black',
     fontFamily: 'Montserrat_700Bold',
-    paddingBottom: 50,
+    paddingBottom: 30,
   },
 
   message: {

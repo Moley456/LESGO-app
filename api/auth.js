@@ -1,6 +1,27 @@
 import firebase from "./firebase";
 
 const auth = firebase.auth();
+const db = firebase.database();
+
+export const writeUserData = async ({username, email, password}) => {
+    await db.ref('app/users/' + 222).set({
+      username: username,
+      email: email,
+      password: password
+  });
+}
+
+// export const writeUserData = async ({userId, username, email}, onSuccess, onError) => {
+//   try {
+//       await db.ref('app/users/' + userId).set({
+//       username: username,
+//       email: email
+//       });
+//       return onSuccess(user);
+//   } catch (error) {
+//     return onError(error);
+//   }
+// }
 
 export const signIn = async ({ email, password }, onSuccess, onError) => {
   try {
