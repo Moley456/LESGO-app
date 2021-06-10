@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { BottomNavigation, Text} from 'react-native-paper';
+import { BottomNavigation} from 'react-native-paper';
+import HomeScreen from '../screens/HomeScreen';
+import UserProfile from '../screens/UserProfileScreen';
 
-const HomeRoute = () => <Text>Home</Text>;
+const HomeRoute = () => <HomeScreen/>;
 
-const CreateRoute = () => <Text>Create</Text>;
+const CreateRoute = () => <HomeScreen/>;
 
-const ProfileRoute = () => <Text>Profile</Text>;
+const ProfileRoute = () => <UserProfile/>;
 
 export default (props) => {
   const [index, setIndex] = React.useState(0);

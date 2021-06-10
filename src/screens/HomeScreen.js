@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 
-import BottomBar from "../components/BottomBar";
 import * as Authentication from "../../api/auth";
 
 export default ({ navigation }) => {
@@ -46,17 +45,17 @@ export default ({ navigation }) => {
         </View>
 
         <TouchableOpacity style={styles.tab} onPress={() => {}}>
-          <Text style={{ fontWeight: "bold" }}>Girl's Day Out</Text>
-          <Text>1 June, 12.30pm</Text>
-          <Text>Beach at Sentosa</Text>
+          <Text style={styles.tabBoldText}>Girl's Day Out</Text>
+          <Text style={styles.tabText}>1 June, 12.30pm</Text>
+          <Text style={styles.tabText}>Beach at Sentosa</Text>
         </TouchableOpacity>
 
         <Text style={styles.eventInfo}>@kate</Text>
 
         <TouchableOpacity style={styles.tab} onPress={() => {}}>
-          <Text style={{ fontWeight: "bold" }}>ROLL OUT</Text>
-          <Text>6 June, 10.30am</Text>
-          <Text>Bowling at Kallang</Text>
+          <Text style={styles.tabBoldText}>ROLL OUT</Text>
+          <Text style={styles.tabText}>6 June, 10.30am</Text>
+          <Text style={styles.tabText}>Bowling at Kallang</Text>
         </TouchableOpacity>
 
         <Text style={styles.eventInfo}>@jane</Text>
@@ -66,9 +65,9 @@ export default ({ navigation }) => {
         </View>
 
         <TouchableOpacity style={styles.tab} onPress={() => {}}>
-          <Text style={{ fontWeight: "bold" }}>TGIF</Text>
-          <Text>9 June, 6.30pm</Text>
-          <Text>Movie at Serangoon NEX</Text>
+          <Text style={styles.tabBoldText}>TGIF</Text>
+          <Text style={styles.tabText}>9 June, 6.30pm</Text>
+          <Text style={styles.tabText}>Movie at Serangoon NEX</Text>
         </TouchableOpacity>
 
         <View style={styles.invInfo}>
@@ -76,10 +75,6 @@ export default ({ navigation }) => {
           <Text>@jim</Text>
         </View>
       </ScrollView>
-
-      <View style={{ position: "absolute", left: 0, right: 0, bottom: 0 }}>
-        <BottomBar />
-      </View>
     </SafeAreaView>
   );
 };
@@ -89,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#5AA397",
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
-    paddingBottom: 60,
+    paddingBottom: 70,
   },
 
   scrollContainer: {
@@ -105,8 +100,9 @@ const styles = StyleSheet.create({
   },
 
   logoutText: {
-    fontFamily: "Montserrat_700Bold",
+    fontFamily: "Montserrat_700",
     fontSize: 20,
+    textDecorationLine: "underline",
   },
 
   headerStyle: {
@@ -129,13 +125,20 @@ const styles = StyleSheet.create({
 
   tab: {
     backgroundColor: "#F8F5F1",
-    fontFamily: "Roboto_900Black",
     alignItems: "center",
     justifyContent: "center",
     height: 100,
     width: 350,
     marginTop: 15,
     borderRadius: 20,
+  },
+
+  tabBoldText: {
+    fontFamily: "Roboto_900Black",
+  },
+
+  tabText: {
+    fontFamily: "Roboto_400Regular",
   },
 
   eventInfo: {

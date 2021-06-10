@@ -1,6 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -11,11 +9,13 @@ import AppLoading from 'expo-app-loading';
 import RegisterSuccessScreen from './src/screens/RegisterSuccessScreen';
 import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
 import ResetSuccessScreen from './src/screens/ResetSuccessScreen';
+import UserProfileScreen from './src/screens/UserProfileScreen';
+
+import BottomBar from './src/components/BottomBar';
 
 import { useFonts, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Roboto_900Black, Roboto_400Regular } from '@expo-google-fonts/roboto';
-import { color } from 'react-native-reanimated';
-
+import { View } from 'react-native';
 
 
 const Stack = createStackNavigator();
@@ -27,6 +27,8 @@ const screens = [
   { name: 'RegisterSuccess', component: RegisterSuccessScreen },
   { name: 'ForgotPassword', component: ForgotPasswordScreen },
   { name: 'ResetSuccess', component: ResetSuccessScreen },
+  { name: 'UserProfile', component: UserProfileScreen },
+  { name: 'Main', component: BottomBar }
 ];
 
 export default function App() {

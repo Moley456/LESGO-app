@@ -36,7 +36,7 @@ export default ({ navigation }) => {
                   index: 0,
                   routes: [
                     {
-                      name: 'Home',
+                      name: 'Main',
                       params: { name: user.displayName },
                     },
                   ],
