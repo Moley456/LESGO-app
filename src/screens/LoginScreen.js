@@ -21,10 +21,12 @@ export default ({ navigation }) => {
       setIsLoginLoading(false);
       return;
     }
-    Authentication.checkUsername(username).then((snapshot) => {
+
+    var lowerCaseName = username.toLowerCase();
+    Authentication.checkUsername(lowerCaseName).then((snapshot) => {
       if (snapshot.exists()) {
         const usernameObj = snapshot.val();
-        Authentication.getEmail(String(usernameObj.id)).then((snapshot) => {
+        Authentication.getEmail(usernameObj.id).then((snapshot) => {
           const email = snapshot.val().email;
           Authentication.signIn(
             { email, password },
@@ -77,6 +79,7 @@ export default ({ navigation }) => {
           </Text>
         </View>
         <TextInput
+          maxLength={10}        
           style={styles.input}
           label="Username"
           theme={{ colors: { primary: 'black' } }}

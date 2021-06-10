@@ -23,10 +23,12 @@ export default ({ navigation }) => {
       setIsRegisterLoading(false);
       return;
     }
-    Authentication.checkUsername(username).then((snapshot) => {
+
+    var lowerCaseName = username.toLowerCase();
+    Authentication.checkUsername(lowerCaseName).then((snapshot) => {
       if (!snapshot.exists()) {
         Authentication.createAccount(
-          { username: username, email, password },
+          { username: lowerCaseName, email, password },
           (user) => {
             Authentication.writeUserData(email);
             navigation.dispatch(
@@ -79,6 +81,7 @@ export default ({ navigation }) => {
         </View>
 
         <TextInput
+          maxLength={10}
           style={styles.input}
           label="Username"
           theme={{ colors: { primary: 'black' } }}
