@@ -12,8 +12,8 @@ export const writeUserData = async (email) => {
     email: email,
   });
 
-  await db.ref('app/usernames/' + username).set({
-    id: id,
+  await db.ref('app/usernames/' + username).update({
+    [username]: id,
   });
 };
 

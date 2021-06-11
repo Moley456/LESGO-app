@@ -1,28 +1,26 @@
-import React from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  StatusBar,
-  TouchableOpacity,
-} from "react-native";
-import { CommonActions } from "@react-navigation/native";
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 
-import * as Authentication from "../../api/auth";
+import * as Authentication from '../../api/auth';
 
 export default ({ navigation }) => {
   const handleLogout = () => {
     Authentication.signOut(
-      () =>
+      () => {
+        console.log('reached');
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: "Login" }],
+            routes: [
+              {
+                name: 'Login',
+              },
+            ],
           })
-        ),
-      console.error
+        );
+      },
+      (error) => console.log(error)
     );
   };
 
@@ -35,7 +33,7 @@ export default ({ navigation }) => {
 
         <View style={styles.headerStyle}>
           <Text style={styles.headerText}>
-            Welcome,{"\n"}
+            Welcome,{'\n'}
             {Authentication.getCurrentUserName()}!
           </Text>
         </View>
@@ -82,51 +80,50 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5AA397",
+    backgroundColor: '#5AA397',
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
-    paddingBottom: 70,
   },
 
   scrollContainer: {
-    width: "100%",
-    alignItems: "center",
+    width: '100%',
+    alignItems: 'center',
   },
 
   logoutButton: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     height: 30,
     marginTop: 20,
     marginRight: 10,
   },
 
   logoutText: {
-    fontFamily: "Montserrat_700",
+    fontFamily: 'Roboto_400Regular',
     fontSize: 20,
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
   },
 
   headerStyle: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginHorizontal: 35,
   },
 
   headerText: {
     fontSize: 50,
-    color: "#F8F5F1",
-    fontFamily: "Montserrat_700Bold",
+    color: '#F8F5F1',
+    fontFamily: 'Montserrat_700Bold',
   },
 
   subHeaderText: {
     fontSize: 24,
-    color: "black",
-    fontFamily: "Montserrat_700Bold",
+    color: 'black',
+    fontFamily: 'Montserrat_700Bold',
     paddingTop: 40,
   },
 
   tab: {
-    backgroundColor: "#F8F5F1",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#F8F5F1',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: 100,
     width: 350,
     marginTop: 15,
@@ -134,22 +131,22 @@ const styles = StyleSheet.create({
   },
 
   tabBoldText: {
-    fontFamily: "Roboto_900Black",
+    fontFamily: 'Roboto_900Black',
   },
 
   tabText: {
-    fontFamily: "Roboto_400Regular",
+    fontFamily: 'Roboto_400Regular',
   },
 
   eventInfo: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     paddingRight: 35,
   },
 
   invInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
     paddingHorizontal: 35,
   },
 });

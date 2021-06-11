@@ -1,35 +1,38 @@
-import * as React from 'react';
-import { BottomNavigation} from 'react-native-paper';
+import React from 'react';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from '../screens/HomeScreen';
-import UserProfile from '../screens/UserProfileScreen';
+import UserProfileScreen from '../screens/UserProfileScreen';
 
-const HomeRoute = () => <HomeScreen/>;
+const Tab = createMaterialBottomTabNavigator();
 
-const CreateRoute = () => <HomeScreen/>;
-
-const ProfileRoute = () => <UserProfile/>;
-
-export default (props) => {
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
-    { key: 'home', title: 'Home', icon: 'home' },
-    { key: 'create', title: 'Create', icon: 'plus-circle' },
-    { key: 'profile', title: 'Profile', icon: 'account-circle' },
-  ]);
-
-  const renderScene = BottomNavigation.SceneMap({
-    home: HomeRoute,
-    create: CreateRoute,
-    profile: ProfileRoute,
-  });
-
+export default () => {
   return (
-    <BottomNavigation
-      navigationState={{ index, routes }}
-      onIndexChange={setIndex}
-      renderScene={renderScene}
-      barStyle={{ backgroundColor: "#F8F5F1" }}
-      keyboardHidesNavigationBar={true}
-    />
+    <Tab.Navigator initialRouteName="Home" barStyle={{ backgroundColor: '#F8F5F1' }}>
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={26} />,
+        }}
+      />
+      <Tab.Screen
+        name="Create"
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Create',
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="plus-circle" color={color} size={26} />,
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={UserProfileScreen}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-circle" color={color} size={26} />,
+        }}
+      />
+    </Tab.Navigator>
   );
 };

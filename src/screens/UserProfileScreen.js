@@ -1,14 +1,7 @@
-import React from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  TouchableOpacity,
-} from "react-native";
-import { CommonActions } from "@react-navigation/native";
-import * as Authentication from "../../api/auth";
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import * as Authentication from '../../api/auth';
 
 export default ({ navigation }) => {
   const handleLogout = () => {
@@ -17,7 +10,7 @@ export default ({ navigation }) => {
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: "Login" }],
+            routes: [{ name: 'Login' }],
           })
         ),
       console.error
@@ -31,9 +24,7 @@ export default ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.header}>
-        <Text style={styles.headerText}>
-          {Authentication.getCurrentUserName()}
-        </Text>
+        <Text style={styles.headerText}>{Authentication.getCurrentUserName()}</Text>
       </View>
 
       <TouchableOpacity style={styles.tab} onPress={() => {}}>
@@ -67,42 +58,42 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5AA397",
+    backgroundColor: '#5AA397',
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
     paddingBottom: 70,
-    alignItems: "center",
+    alignItems: 'center',
   },
 
   logoutButton: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     height: 30,
     marginTop: 20,
     marginRight: 10,
   },
 
   logoutText: {
-    fontFamily: "Montserrat_700",
+    fontFamily: 'Roboto_400Regular',
     fontSize: 20,
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
   },
 
   header: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginHorizontal: 35,
     marginVertical: 15,
   },
 
   headerText: {
     fontSize: 50,
-    color: "black",
-    fontFamily: "Montserrat_700Bold",
+    color: 'black',
+    fontFamily: 'Montserrat_700Bold',
   },
 
   tab: {
-    backgroundColor: "#F8F5F1",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexDirection: "row",
+    backgroundColor: '#F8F5F1',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
     marginTop: 15,
     width: 350,
     height: 50,
@@ -112,12 +103,12 @@ const styles = StyleSheet.create({
 
   tabBoldText: {
     fontSize: 20,
-    fontFamily: "Montserrat_700Bold",
+    fontFamily: 'Montserrat_700Bold',
   },
 
   tabText: {
     fontSize: 20,
-    fontFamily: "Roboto_400Regular",
-    color: "#5AA397",
+    fontFamily: 'Roboto_400Regular',
+    color: '#5AA397',
   },
 });

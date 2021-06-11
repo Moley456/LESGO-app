@@ -17,7 +17,6 @@ import { useFonts, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Roboto_900Black, Roboto_400Regular } from '@expo-google-fonts/roboto';
 import { View } from 'react-native';
 
-
 const Stack = createStackNavigator();
 
 const screens = [
@@ -28,7 +27,7 @@ const screens = [
   { name: 'ForgotPassword', component: ForgotPasswordScreen },
   { name: 'ResetSuccess', component: ResetSuccessScreen },
   { name: 'UserProfile', component: UserProfileScreen },
-  { name: 'Main', component: BottomBar }
+  { name: 'Main', component: BottomBar },
 ];
 
 export default function App() {
@@ -44,7 +43,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={screens[0].name} headerMode="none" screenOptions={{ animationEnabled: false }} mode="modal" >
+      <Stack.Navigator initialRouteName={screens[0].name} headerMode="none" screenOptions={{ animationEnabled: false }} mode="modal">
         {screens.map(({ name, component }) => (
           <Stack.Screen key={name} name={name} component={component} />
         ))}
