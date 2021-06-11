@@ -12,7 +12,7 @@ export const writeUserData = async (email) => {
     email: email,
   });
 
-  await db.ref('app/usernames/' + username).update({
+  await db.ref('app/usernames').update({
     [username]: id,
   });
 };

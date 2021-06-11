@@ -1,7 +1,7 @@
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
-import * as Authentication from '../../api/auth';
+import * as Authentication from '../../../api/auth';
 
 export default ({ navigation }) => {
   const handleLogout = () => {
@@ -27,7 +27,7 @@ export default ({ navigation }) => {
         <Text style={styles.headerText}>{Authentication.getCurrentUserName()}</Text>
       </View>
 
-      <TouchableOpacity style={styles.tab} onPress={() => {}}>
+      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Friends')}>
         <Text style={styles.tabBoldText}>Friends</Text>
         <Text style={styles.tabText}>edit</Text>
       </TouchableOpacity>

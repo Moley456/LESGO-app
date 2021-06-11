@@ -2,13 +2,12 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, ScrollView, StatusBar, TouchableOpacity } from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 
-import * as Authentication from '../../api/auth';
+import * as Authentication from '../../../api/auth';
 
 export default ({ navigation }) => {
   const handleLogout = () => {
     Authentication.signOut(
       () => {
-        console.log('reached');
         navigation.dispatch(
           CommonActions.reset({
             index: 0,

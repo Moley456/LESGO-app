@@ -3,8 +3,8 @@ import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, Scro
 import { TextInput } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 
-import * as Authentication from '../../api/auth';
-import HideKeyboard from '../components/HideKeyboard';
+import * as Authentication from '../../../api/auth';
+import HideKeyboard from '../../components/HideKeyboard';
 
 export default ({ navigation }) => {
   const [username, setUsername] = useState('');

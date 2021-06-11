@@ -2,20 +2,21 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import LoginScreen from './src/screens/LoginScreen';
-import RegisterScreen from './src/screens/RegisterScreen';
-import HomeScreen from './src/screens/HomeScreen';
+import LoginScreen from './src/screens/AuthScreens/LoginScreen';
+import RegisterScreen from './src/screens/AuthScreens/RegisterScreen';
+import HomeScreen from './src/screens/BottomNavScreens/HomeScreen';
 import AppLoading from 'expo-app-loading';
-import RegisterSuccessScreen from './src/screens/RegisterSuccessScreen';
-import ForgotPasswordScreen from './src/screens/ForgotPasswordScreen';
-import ResetSuccessScreen from './src/screens/ResetSuccessScreen';
-import UserProfileScreen from './src/screens/UserProfileScreen';
+import RegisterSuccessScreen from './src/screens/AuthScreens/RegisterSuccessScreen';
+import ForgotPasswordScreen from './src/screens/AuthScreens/ForgotPasswordScreen';
+import ResetSuccessScreen from './src/screens/AuthScreens/ResetSuccessScreen';
+import UserProfileScreen from './src/screens/BottomNavScreens/UserProfileScreen';
 
 import BottomBar from './src/components/BottomBar';
 
 import { useFonts, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Roboto_900Black, Roboto_400Regular } from '@expo-google-fonts/roboto';
 import { View } from 'react-native';
+import FriendNav from './src/screens/FriendNavScreens/FriendNav';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ const screens = [
   { name: 'ResetSuccess', component: ResetSuccessScreen },
   { name: 'UserProfile', component: UserProfileScreen },
   { name: 'Main', component: BottomBar },
+  { name: 'Friends', component: FriendNav },
 ];
 
 export default function App() {
