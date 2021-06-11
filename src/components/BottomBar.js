@@ -3,6 +3,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeScreen from '../screens/BottomNavScreens/HomeScreen';
 import UserProfileScreen from '../screens/BottomNavScreens/UserProfileScreen';
+import CreateRoomScreen from '../screens/BottomNavScreens/CreateRoomScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -19,7 +20,7 @@ export default () => {
       />
       <Tab.Screen
         name="Create"
-        component={HomeScreen}
+        component={CreateRoomScreen}
         options={{
           tabBarLabel: 'Create',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="plus-circle" color={color} size={26} />,

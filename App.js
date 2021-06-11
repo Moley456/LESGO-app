@@ -10,6 +10,7 @@ import RegisterSuccessScreen from './src/screens/AuthScreens/RegisterSuccessScre
 import ForgotPasswordScreen from './src/screens/AuthScreens/ForgotPasswordScreen';
 import ResetSuccessScreen from './src/screens/AuthScreens/ResetSuccessScreen';
 import UserProfileScreen from './src/screens/BottomNavScreens/UserProfileScreen';
+import CreateRoomScreen from './src/screens/BottomNavScreens/CreateRoomScreen';
 
 import BottomBar from './src/components/BottomBar';
 
@@ -30,6 +31,7 @@ const screens = [
   { name: 'UserProfile', component: UserProfileScreen },
   { name: 'Main', component: BottomBar },
   { name: 'Friends', component: FriendNav },
+  { name: 'CreateRoom', component: CreateRoomScreen },
 ];
 
 export default function App() {
