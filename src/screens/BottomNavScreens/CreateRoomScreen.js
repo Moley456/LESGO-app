@@ -7,10 +7,10 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
-  Button,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import * as Authentication from '../../../api/auth';
+import HideKeyboard from '../../components/HideKeyboard';
 
 export default ({ navigation }) => {
   const [roomName, setRoomName] = React.useState("");
@@ -32,14 +32,14 @@ export default ({ navigation }) => {
   };
 
   return (
+    <HideKeyboard>
+
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
 
-      <View style={styles.header}>
         <Text style={styles.headerText}>Let's go!</Text>
-      </View>
 
         <View style={styles.row}>
           <Text style={styles.tabBoldText}>Name</Text>
@@ -77,7 +77,7 @@ export default ({ navigation }) => {
         <View style={styles.row}>
           <Text style={styles.tabBoldText}>Time Limit</Text>
           <TextInput
-            style={[styles.input, {width: 170}]}
+            style={[styles.input, {width: '40%'}]}
             onChangeText={setLimit}
             value={limit}
             keyboardType={'number-pad'}
@@ -91,7 +91,15 @@ export default ({ navigation }) => {
             <Text style={styles.addFriendsText}>ADD FRIENDS</Text>
         </TouchableOpacity>
 
+
+
+        <TouchableOpacity style={styles.invite} onPress={() => {navigation.navigate('InviteSent')}}>
+            <Text style={styles.inviteText}>INVITE</Text>
+        </TouchableOpacity>
+
     </SafeAreaView>
+    </HideKeyboard>
+
   );
 };
 
@@ -105,8 +113,8 @@ const styles = StyleSheet.create({
   },
 
   logoutButton: {
-    alignSelf: "flex-end",
-    height: 30,
+    alignSelf: 'flex-end',
+    height: '4%',
     marginTop: 20,
     marginRight: 10,
   },
@@ -117,14 +125,11 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
 
-  header: {
+  headerText: {
     alignSelf: "flex-start",
     marginHorizontal: 35,
     marginTop: 80,
     marginBottom: 30,
-  },
-
-  headerText: {
     fontSize: 65,
     color: "#F8F5F1",
     fontFamily: "Montserrat_700Bold",
@@ -143,8 +148,8 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat_700Bold",
     textAlign: "center",
     fontSize: 20,
-    width: 250,
-    height: 35,
+    width: '60%',
+    height: '100%',
     borderRadius: 20,
     marginRight: 30,
   },
@@ -158,14 +163,33 @@ const styles = StyleSheet.create({
   addFriends: {
     backgroundColor: "#F8F5F1",
     borderRadius: 5,
-    margin: 15,
+    marginTop: 25,
+    marginHorizontal: 15,
     width: '85%',
-    height: '5%',
-    justifyContent:'center'
+    height: '6.5%',
+    justifyContent:'center',
+    borderWidth: 2,
+    borderColor: 'black'
   },
 
   addFriendsText: {
-    fontSize: 20,
+    fontSize: 18,
+    fontFamily: "Montserrat_700Bold",
+    alignSelf: 'center',
+  },
+
+  invite: {
+    backgroundColor: "black",
+    borderRadius: 5,
+    margin: 15,
+    width: '85%',
+    height: '6.5%',
+    justifyContent:'center'
+  },
+
+  inviteText: {
+    color: 'white',
+    fontSize: 18,
     fontFamily: "Montserrat_700Bold",
     alignSelf: 'center',
   }

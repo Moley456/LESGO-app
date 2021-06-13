@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   misc: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    width: 365,
+    width: '90%',
     marginTop: 10,
   },
 
@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    height: 52,
-    width: 365,
+    height: 50,
+    width: '90%',
     backgroundColor: 'white',
     marginTop: 20,
     fontSize: 15,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
 
   submitButton: {
     backgroundColor: 'black',
-    width: 365,
+    width: '90%',
     paddingVertical: 15,
     borderRadius: 15,
     marginTop: 30,

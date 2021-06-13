@@ -31,8 +31,8 @@ export default ({ navigation }) => {
   return (
     <HideKeyboard>
       <SafeAreaView style={styles.container}>
-        <Text style={styles.logo}>Password Reset</Text>
-        <Text style={styles.message}>Enter your email address below</Text>
+        <Text style={styles.logo}>Reset Password</Text>
+        <Text style={styles.message}>Enter your email address below:</Text>
         <TextInput
           style={styles.input}
           label="Email"
@@ -68,10 +68,12 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    fontSize: 40,
+    fontSize: 55,
     color: 'black',
     fontFamily: 'Montserrat_700Bold',
-    paddingBottom: 30,
+    paddingBottom: 20,
+    alignSelf: 'flex-start',
+    marginHorizontal: 15
   },
 
   message: {
@@ -81,8 +83,8 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    height: 52,
-    width: 365,
+    height: 50,
+    width: '90%',
     backgroundColor: 'white',
     marginTop: 10,
     fontSize: 15,
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
 
   submitButton: {
     backgroundColor: 'black',
-    width: 365,
+    width: '90%',
     paddingVertical: 15,
     borderRadius: 15,
     marginTop: 30,
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
 
   backButton: {
     backgroundColor: 'white',
-    width: 365,
+    width: '90%',
     paddingVertical: 15,
     borderRadius: 15,
     marginTop: 20,

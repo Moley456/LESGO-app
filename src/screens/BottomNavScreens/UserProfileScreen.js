@@ -1,7 +1,14 @@
-import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity } from 'react-native';
-import { CommonActions } from '@react-navigation/native';
-import * as Authentication from '../../../api/auth';
+import React from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  TouchableOpacity,
+} from "react-native";
+import { CommonActions } from "@react-navigation/native";
+import * as Authentication from "../../../api/auth";
 
 export default ({ navigation }) => {
   const handleLogout = () => {
@@ -10,7 +17,7 @@ export default ({ navigation }) => {
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
-            routes: [{ name: 'Login' }],
+            routes: [{ name: "Login" }],
           })
         ),
       console.error
@@ -23,11 +30,14 @@ export default ({ navigation }) => {
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
 
-      <View style={styles.header}>
-        <Text style={styles.headerText}>{Authentication.getCurrentUserName()}</Text>
-      </View>
+      <Text style={styles.headerText}>
+        {Authentication.getCurrentUserName()}
+      </Text>
 
-      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Friends')}>
+      <TouchableOpacity
+        style={styles.tab}
+        onPress={() => navigation.navigate("Friends")}
+      >
         <Text style={styles.tabBoldText}>Friends</Text>
         <Text style={styles.tabText}>edit</Text>
       </TouchableOpacity>
@@ -58,57 +68,54 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#5AA397',
+    backgroundColor: "#5AA397",
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
     paddingBottom: 70,
-    alignItems: 'center',
+    alignItems: "center",
   },
 
   logoutButton: {
-    alignSelf: 'flex-end',
-    height: 30,
+    alignSelf: "flex-end",
+    height: "4%",
     marginTop: 20,
     marginRight: 10,
   },
 
   logoutText: {
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: "Roboto_400Regular",
     fontSize: 20,
-    textDecorationLine: 'underline',
-  },
-
-  header: {
-    alignSelf: 'flex-start',
-    marginHorizontal: 35,
-    marginVertical: 15,
+    textDecorationLine: "underline",
   },
 
   headerText: {
+    alignSelf: "flex-start",
+    marginHorizontal: 35,
+    marginVertical: 15,
     fontSize: 50,
-    color: 'black',
-    fontFamily: 'Montserrat_700Bold',
+    color: "black",
+    fontFamily: "Montserrat_700Bold",
   },
 
   tab: {
-    backgroundColor: '#F8F5F1',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    backgroundColor: "#F8F5F1",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
     marginTop: 15,
-    width: 350,
-    height: 50,
+    width: "85%",
+    height: "6%",
     borderRadius: 20,
     paddingHorizontal: 20,
   },
 
   tabBoldText: {
     fontSize: 20,
-    fontFamily: 'Montserrat_700Bold',
+    fontFamily: "Montserrat_700Bold",
   },
 
   tabText: {
     fontSize: 20,
-    fontFamily: 'Roboto_400Regular',
-    color: '#5AA397',
+    fontFamily: "Roboto_400Regular",
+    color: "#5AA397",
   },
 });

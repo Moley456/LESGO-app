@@ -1,11 +1,11 @@
-import React, { useState, useRef } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, ScrollView, Keyboard, Alert } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, StatusBar, TouchableOpacity} from 'react-native';
 import { CommonActions } from '@react-navigation/native';
 
 export default ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.signUpText}>Sign Up Successful!</Text>
+      <Text style={styles.sentText}>Invite Sent!</Text>
       <TouchableOpacity
         style={styles.backButton}
         onPress={() =>
@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
   },
 
-  signUpText: {
+  sentText: {
     fontFamily: 'Montserrat_700Bold',
     fontSize: 48,
     marginBottom: 30,
     alignSelf: 'flex-start',
-    marginHorizontal: 30
+    marginHorizontal: 20
   },
 
   backButton: {
