@@ -36,7 +36,7 @@ export default ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.tab}
-        onPress={() => navigation.navigate("Friends")}
+        onPress={() => navigation.navigate("FriendsNav")}
       >
         <Text style={styles.tabBoldText}>Friends</Text>
         <Text style={styles.tabText}>edit</Text>

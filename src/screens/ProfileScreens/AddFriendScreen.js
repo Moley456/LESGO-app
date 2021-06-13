@@ -6,7 +6,7 @@ export default ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <TouchableOpacity
         style={styles.logoutButton}
-        onPress={() => navigation.navigate("Profile")}
+        onPress={() => navigation.navigate('UserProfile')}
       >
         <Text style={styles.logoutText}>Back</Text>
       </TouchableOpacity>

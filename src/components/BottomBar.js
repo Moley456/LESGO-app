@@ -1,39 +1,39 @@
 import React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import HomeScreen from '../screens/BottomNavScreens/HomeScreen';
-import UserProfileScreen from '../screens/BottomNavScreens/UserProfileScreen';
-import CreateRoomScreen from '../screens/BottomNavScreens/CreateRoomScreen';
+import ProfileTab from '../screens/BottomNav/ProfileTab';
+import HomeTab from '../screens/BottomNav/HomeTab';
+import CreateTab from '../screens/BottomNav/CreateTab';
 
-const Tab = createMaterialBottomTabNavigator();
+const bottomTab = createMaterialBottomTabNavigator();
 
 export default () => {
   return (
-    <Tab.Navigator initialRouteName="Home" barStyle={{ backgroundColor: '#F8F5F1' }}>
-      <Tab.Screen
+    <bottomTab.Navigator initialRouteName="Home" barStyle={{ backgroundColor: '#F8F5F1' }}>
+      <bottomTab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeTab}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="home" color={color} size={26} />,
         }}
       />
-      <Tab.Screen
+      <bottomTab.Screen
         name="Create"
-        component={CreateRoomScreen}
+        component={CreateTab}
         options={{
           tabBarLabel: 'Create',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="plus-circle" color={color} size={26} />,
         }}
       />
-      <Tab.Screen
+      <bottomTab.Screen
         name="Profile"
-        component={UserProfileScreen}
+        component={ProfileTab}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-circle" color={color} size={26} />,
         }}
       />
-    </Tab.Navigator>
+    </bottomTab.Navigator>
   );
 };
