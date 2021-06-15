@@ -1,10 +1,22 @@
 import React from 'react';
-import { SafeAreaView, Text, StyleSheet, StatusBar } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import FriendResult from '../../components/FriendResult';
+import SearchBar from '../../components/SearchBar';
 
-export default () => {
+export default ({ navigation }) => {
+  const button = (
+    <Text style={styles.actionButton} onPress={() => {}}>
+      Remove
+    </Text>
+  );
   return (
     <SafeAreaView style={styles.container}>
-      <Text> AllFriendScreen </Text>
+      <SearchBar />
+      <View style={styles.header}>
+        <FriendResult name="name" tag="@tag" actionButton={button} backgroundColor="#D8D4CF" />
+        <FriendResult name="name" tag="@tag" actionButton={button} backgroundColor="#E3E0DB" />
+      </View>
     </SafeAreaView>
   );
 };
@@ -12,7 +24,17 @@ export default () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#5AA397',
-    alignItems: 'center',
+    backgroundColor: '#F8F5F1',
+  },
+
+  header: {
+    marginTop: 20,
+  },
+
+  actionButton: {
+    color: 'red',
+    width: '67%',
+    textAlign: 'right',
+    fontSize: 18,
   },
 });

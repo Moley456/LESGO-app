@@ -1,17 +1,21 @@
-import React from "react";
-import { SafeAreaView, Text, StyleSheet, TouchableOpacity } from "react-native";
+import React from 'react';
+import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
+import FriendResult from '../../components/FriendResult';
+import SearchBar from '../../components/SearchBar';
 
 export default ({ navigation }) => {
+  const button = (
+    <Text style={styles.actionButton} onPress={() => {}}>
+      Add
+    </Text>
+  );
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        style={styles.logoutButton}
-        onPress={() => navigation.navigate('UserProfile')}
-      >
-        <Text style={styles.logoutText}>Back</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.header}>Add Friends</Text>
+      <SearchBar />
+      <View style={styles.header}>
+        <FriendResult name="name" tag="@tag" actionButton={button} backgroundColor="#D8D4CF" />
+        <FriendResult name="name" tag="@tag" actionButton={button} backgroundColor="#E3E0DB" />
+      </View>
     </SafeAreaView>
   );
 };
@@ -19,30 +23,17 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5AA397",
-    alignItems: "center",
+    backgroundColor: '#F8F5F1',
   },
 
   header: {
-    alignSelf: "flex-start",
-    marginHorizontal: 35,
-    marginTop: 30,
-    marginBottom: 30,
-    fontSize: 45,
-    color: "#F8F5F1",
-    fontFamily: "Montserrat_700Bold",
-  },
-
-  logoutButton: {
-    alignSelf: "flex-start",
-    height: "4%",
     marginTop: 20,
-    marginLeft: 10,
   },
 
-  logoutText: {
-    fontFamily: "Roboto_400Regular",
-    fontSize: 20,
-    textDecorationLine: "underline",
+  actionButton: {
+    color: 'black',
+    width: '66%',
+    textAlign: 'right',
+    fontSize: 18,
   },
 });
