@@ -13,6 +13,10 @@ import BottomBar from './src/components/BottomBar';
 
 import { useFonts, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { Roboto_900Black, Roboto_400Regular } from '@expo-google-fonts/roboto';
+import AllFriendScreen from './src/screens/ProfileScreens/AllFriendScreen';
+import AddFriendScreen from './src/screens/ProfileScreens/AddFriendScreen';
+import PendingFriendScreen from './src/screens/ProfileScreens/PendingFriendScreen';
+import FriendsScreen from './src/screens/ProfileScreens/FriendsScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +27,7 @@ const screens = [
   { name: 'ForgotPassword', component: ForgotPasswordScreen },
   { name: 'ResetSuccess', component: ResetSuccessScreen },
   { name: 'Main', component: BottomBar },
+  { name: 'Test', component: FriendsScreen },
 ];
 
 export default function App() {

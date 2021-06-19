@@ -23,11 +23,10 @@ export default ({ navigation }) => {
     }
 
     var lowerCaseName = username.toLowerCase();
-    Authentication.checkUsername(lowerCaseName).then((snapshot) => {
-      if (snapshot.exists()) {
-        const usernameObj = JSON.stringify(snapshot).slice(1, -1);
-
-        Authentication.getEmail(usernameObj).then((snapshot) => {
+    Authentication.checkUsername().then((snapshot) => {
+      const existingUsername = snapshot.val()[lowerCaseName];
+      if (existingUsername) {
+        Authentication.getEmail(existingUsername).then((snapshot) => {
           const email = snapshot.val().email;
           Authentication.signIn(
             { email, password },
@@ -60,7 +59,7 @@ export default ({ navigation }) => {
           );
         });
       } else {
-        Alert.alert('Invalid username or password!', 'Please make sure you have entered a valid username and password');
+        Alert.alert('Invalid username or password!fdgd', 'Please make sure you have entered a valid username and password');
         setIsLoginLoading(false);
       }
     });

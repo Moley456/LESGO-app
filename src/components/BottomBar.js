@@ -9,7 +9,7 @@ const bottomTab = createMaterialBottomTabNavigator();
 
 export default () => {
   return (
-    <bottomTab.Navigator initialRouteName="Home" barStyle={{ backgroundColor: 'white' }}>
+    <bottomTab.Navigator initialRouteName="Home" barStyle={{ backgroundColor: 'white' }} tabBarOptions={{ keyboardHidesTabBar: true }}>
       <bottomTab.Screen
         name="Home"
         component={HomeTab}

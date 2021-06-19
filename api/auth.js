@@ -17,8 +17,8 @@ export const writeUserData = async (email) => {
   });
 };
 
-export const checkUsername = async (username) => {
-  return db.ref('app/usernames/' + username).get();
+export const checkUsername = async () => {
+  return db.ref('app/usernames').get();
 };
 
 export const getEmail = (uid) => {
