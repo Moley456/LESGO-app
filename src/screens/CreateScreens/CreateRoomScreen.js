@@ -11,6 +11,12 @@ import {
 import { CommonActions } from "@react-navigation/native";
 import * as Authentication from '../../../api/auth';
 import HideKeyboard from '../../components/HideKeyboard';
+import firebase from "firebase";
+
+const db = firebase.database();
+const id = Authentication.getCurrentUserId();
+const username = Authentication.getCurrentUserName();
+
 
 export default ({ navigation }) => {
   const [roomName, setRoomName] = React.useState("");
@@ -30,6 +36,16 @@ export default ({ navigation }) => {
       console.error
     );
   };
+
+  const invite = () => {
+    db.ref('app/rooms/').push({
+      roomName: roomName,
+      date: date,
+      time: time,
+      limit: limit,
+      creator: username,
+    });
+  }
 
   return (
     <HideKeyboard>
@@ -93,7 +109,7 @@ export default ({ navigation }) => {
 
 
 
-        <TouchableOpacity style={styles.invite} onPress={() => {navigation.navigate('InviteSent')}}>
+        <TouchableOpacity style={styles.invite} onPress={() => {invite(); navigation.navigate('InviteSent')}}>
             <Text style={styles.inviteText}>INVITE</Text>
         </TouchableOpacity>
 

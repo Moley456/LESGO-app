@@ -4,13 +4,56 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
+  FlatList,
   StatusBar,
   TouchableOpacity,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 
 import * as Authentication from "../../../api/auth";
+
+const UPCOMING = [
+  {
+    id: "id1",
+    name: "Girl's Out",
+    date: "1 June, 12.30pm",
+    activity: "Beach at Sentosa",
+    creator: "Kate",
+  },
+  {
+    id: "id2",
+    name: "ROLL OUT",
+    date: "6 June, 10.30am",
+    activity: "sleeping at home",
+    creator: "Jane",
+  },
+  {
+    id: "id3",
+    name: "ROLL IN",
+    date: "6 June, 4am",
+    activity: "Bowling at Kallang",
+    creator: "Pete",
+  },
+];
+
+const INVITES = [
+  {
+    id: "id1",
+    name: "TGIF",
+    date: "10 June, 12.30pm",
+    activity: "Cherry Club",
+    creator: "OXW",
+    timeRemaining: "10 hours"
+  },
+  {
+    id: "id2",
+    name: "sunday fun",
+    date: "6 June, 6pm",
+    activity: "RYAN HOUSE",
+    creator: "Ryan",
+    timeRemaining: "3 hours"
+  }
+];
 
 export default ({ navigation }) => {
   const handleLogout = () => {
@@ -31,9 +74,9 @@ export default ({ navigation }) => {
     );
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+  const aboveUpcomingEvents = () => {
+    return (
+      <View>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Text style={styles.logoutText}>Logout</Text>
         </TouchableOpacity>
@@ -44,36 +87,65 @@ export default ({ navigation }) => {
         </Text>
 
         <Text style={styles.subHeaderText}>Upcoming Events</Text>
+      </View>
+    );
+  };
 
-        <TouchableOpacity style={styles.tab} onPress={() => {}}>
-          <Text style={styles.tabBoldText}>Girl's Day Out</Text>
-          <Text style={styles.tabText}>1 June, 12.30pm</Text>
-          <Text style={styles.tabText}>Beach at Sentosa</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.eventInfo}>@kate</Text>
-
-        <TouchableOpacity style={styles.tab} onPress={() => {}}>
-          <Text style={styles.tabBoldText}>ROLL OUT</Text>
-          <Text style={styles.tabText}>6 June, 10.30am</Text>
-          <Text style={styles.tabText}>Bowling at Kallang</Text>
-        </TouchableOpacity>
-
-        <Text style={styles.eventInfo}>@jane</Text>
-
+  const belowUpcomingEvents = () => {
+    return (
+      <View>
         <Text style={styles.subHeaderText}>Invitations</Text>
+        <FlatList
+        data={INVITES}
+        renderItem={renderInvites}
+        keyExtractor={(item) => item.id}
+      />
+      </View>
+    );
+  };
 
-        <TouchableOpacity style={styles.tab} onPress={() => {}}>
-          <Text style={styles.tabBoldText}>TGIF</Text>
-          <Text style={styles.tabText}>9 June, 6.30pm</Text>
-          <Text style={styles.tabText}>Movie at Serangoon NEX</Text>
-        </TouchableOpacity>
+  const renderEvents = ({ item }) => (
+    <View>
+      <TouchableOpacity
+        style={styles.tab}
+        onPress={() => navigation.navigate("Room")}
+      >
+        <Text style={styles.tabBoldText}>{item.name}</Text>
+        <Text style={styles.tabText}>{item.date}</Text>
+        <Text style={styles.tabText}>{item.activity}</Text>
+      </TouchableOpacity>
 
-        <View style={styles.invInfo}>
-          <Text>Time remaining: 10 hours</Text>
-          <Text>@jim</Text>
+      <Text style={styles.eventInfo}>@{item.creator}</Text>
+    </View>
+  );
+
+  const renderInvites = ({ item }) => (
+    <View>
+      <TouchableOpacity
+        style={styles.tab}
+        onPress={() => navigation.navigate("Invitation")}
+      >
+        <Text style={styles.tabBoldText}>{item.name}</Text>
+        <Text style={styles.tabText}>{item.date}</Text>
+        <Text style={styles.tabText}>{item.activity}</Text>
+      </TouchableOpacity>
+
+      <View style={styles.invInfo}>
+          <Text>Time remaining: {item.timeRemaining}</Text>
+          <Text>@{item.creator}</Text>
         </View>
-      </ScrollView>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={UPCOMING}
+        renderItem={renderEvents}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={aboveUpcomingEvents}
+        ListFooterComponent={belowUpcomingEvents}
+      />
     </SafeAreaView>
   );
 };
@@ -85,14 +157,8 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
   },
 
-  scrollContainer: {
-    width: "100%",
-    alignItems: "center",
-  },
-
   logoutButton: {
     alignSelf: "flex-end",
-    height: "4%",
     marginTop: 20,
     marginRight: 10,
   },
@@ -123,11 +189,12 @@ const styles = StyleSheet.create({
   tab: {
     backgroundColor: "#F8F5F1",
     alignItems: "center",
+    alignSelf: "center",
     justifyContent: "center",
-    height: "20%",
     width: "85%",
     marginTop: 15,
     borderRadius: 20,
+    paddingVertical: 20,
   },
 
   tabBoldText: {
