@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import InviteSentScreen from "../RoomScreens/InviteSentScreen";
-import CreateRoomScreen from '../RoomScreens/CreateRoomScreen';
+import InviteSentScreen from "../CreateScreens/InviteSentScreen";
+import CreateRoomScreen from '../CreateScreens/CreateRoomScreen';
 
 
 const createStack = createStackNavigator();
