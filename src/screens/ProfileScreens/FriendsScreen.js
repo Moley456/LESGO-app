@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SafeAreaView, StyleSheet, StatusBar, View, Text } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AddFriendScreen from './AddFriendScreen';
-import AllFriendScreen from './AllFriendScreen';
+import CurrentFriendScreen from './CurrentFriendScreen';
 import PendingFriendScreen from './PendingFriendScreen';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,7 +16,7 @@ export default ({ navigation }) => {
       </View>
 
       <friendsTab.Navigator initialRouteName="All" style={styles.nav}>
-        <friendsTab.Screen name="All" component={AllFriendScreen} options={{ tabBarLabel: 'All' }} />
+        <friendsTab.Screen name="All" component={CurrentFriendScreen} options={{ tabBarLabel: 'Current' }} />
         <friendsTab.Screen name="Add" component={AddFriendScreen} options={{ tabBarLabel: 'Add' }} />
         <friendsTab.Screen name="Pending" component={PendingFriendScreen} options={{ tabBarLabel: 'Pending' }} />
       </friendsTab.Navigator>

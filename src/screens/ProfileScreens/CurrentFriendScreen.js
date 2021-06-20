@@ -43,7 +43,7 @@ export default ({ navigation }) => {
   useEffect(() => {
     db.ref('app/users/friends/' + getCurrentUserId())
       .orderByValue()
-      .equalTo(false)
+      .equalTo(true)
       .on('value', (snapshot) => {
         setFilteredResults([]);
         setResults([]);
@@ -59,7 +59,7 @@ export default ({ navigation }) => {
     return db
       .ref('app/users/friends/' + getCurrentUserId())
       .orderByValue()
-      .equalTo(false)
+      .equalTo(true)
       .off('value', (snapshot) => {
         setFilteredResults([]);
         setResults([]);
@@ -73,9 +73,6 @@ export default ({ navigation }) => {
       });
   }, []);
 
-  if (isLoading) {
-    <ActivityIndicator />;
-  }
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -98,20 +95,12 @@ export default ({ navigation }) => {
               {item.username} {'\n'} @tag
             </Text>
             <TouchableOpacity
-              style={styles.cancelButton}
+              style={styles.removeButton}
               onPress={() => {
                 Friends.rejectRequest(item.username);
               }}
             >
-              <Text style={styles.cancelText}>Reject</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.acceptButton}
-              onPress={() => {
-                Friends.acceptRequest(item.username);
-              }}
-            >
-              <Text style={styles.acceptText}>Accept</Text>
+              <Text style={styles.removeText}>Remove</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -139,23 +128,13 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
 
-  cancelButton: {
+  removeButton: {
     position: 'absolute',
     right: 10,
   },
 
-  cancelText: {
+  removeText: {
     color: 'red',
-    fontSize: 18,
-  },
-
-  acceptButton: {
-    position: 'absolute',
-    right: 70,
-  },
-
-  acceptText: {
-    color: 'black',
     fontSize: 18,
   },
 

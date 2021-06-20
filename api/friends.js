@@ -40,24 +40,34 @@ export const getUserInfo = async (uid) => {
   return searchPromise;
 };
 
-export const sendFriendReq = (friendUserName) => {
+export const sendFriendRequest = (friendUserName) => {
   db.ref('app/usernames/' + friendUserName)
     .get()
     .then((snapshot) => {
       const friendUid = JSON.stringify(snapshot).slice(1, -1);
-      db.ref('app/users/friends/' + getCurrentUserId()).update({
-        [friendUid]: false,
+      db.ref('app/users/friends/' + friendUid).update({
+        [getCurrentUserId()]: false,
       });
     });
 };
 
-export const sendCancelReq = (friendUserName) => {
-  db.ref('app/usernames/' + friendUserName)
+export const rejectRequest = (friendUserName) => {
+  return db
+    .ref('app/usernames/' + friendUserName)
     .get()
     .then((snapshot) => {
       const friendUid = JSON.stringify(snapshot).slice(1, -1);
-      db.ref('app/users/friends/' + getCurrentUserId() + '/' + friendUid)
-        .remove()
-        .then(() => console.log('pressed'));
+      db.ref('app/users/friends/' + getCurrentUserId() + '/' + friendUid).remove();
+    });
+};
+
+export const acceptRequest = (friendUserName) => {
+  return db
+    .ref('app/usernames/' + friendUserName)
+    .get()
+    .then((snapshot) => {
+      const friendUid = JSON.stringify(snapshot).slice(1, -1);
+      db.ref('app/users/friends/' + getCurrentUserId()).update({ [friendUid]: true });
+      db.ref('app/users/friends/' + friendUid).update({ [getCurrentUserId()]: true });
     });
 };

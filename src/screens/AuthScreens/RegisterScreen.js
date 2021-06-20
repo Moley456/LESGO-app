@@ -25,8 +25,9 @@ export default ({ navigation }) => {
     }
 
     var lowerCaseName = username.toLowerCase();
-    Authentication.checkUsername(lowerCaseName).then((snapshot) => {
-      if (!snapshot.exists()) {
+    Authentication.checkUsername().then((snapshot) => {
+      const existingUsername = snapshot.val()[lowerCaseName];
+      if (!existingUsername) {
         Authentication.createAccount(
           { username: lowerCaseName, email, password },
           (user) => {
@@ -55,6 +56,8 @@ export default ({ navigation }) => {
               case 'auth/invalid-email':
                 Alert.alert('Invalid Email!', 'Please make sure you have entered your email in a valid format.');
                 break;
+              default:
+                Alert.alert('lmao');
             }
             setIsRegisterLoading(false);
           }

@@ -46,9 +46,14 @@ export default ({ navigation }) => {
             <Text style={styles.names}>
               {item.username} {'\n'} @tag
             </Text>
-            <Text style={styles.actionButton} onPress={() => Friends.sendFriendReq(item.username)}>
-              Add
-            </Text>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => {
+                Friends.sendFriendRequest(item.username);
+              }}
+            >
+              <Text style={styles.addText}>Add</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
@@ -75,9 +80,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
   },
 
-  actionButton: {
+  addButton: {
     position: 'absolute',
     right: 10,
+  },
+
+  addText: {
     color: 'black',
     fontSize: 18,
   },
