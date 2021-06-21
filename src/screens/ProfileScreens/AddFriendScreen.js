@@ -4,7 +4,7 @@ import SearchBar from '../../components/SearchBar';
 import * as Friends from '../../../api/friends';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from '../../../api/firebase';
-import { getCurrentUserId } from '../../../api/auth';
+import { getCurrentUserId, getCurrentUserName } from '../../../api/auth';
 
 export default ({ navigation }) => {
   const [searchInput, setSearchInput] = useState('');
@@ -43,7 +43,7 @@ export default ({ navigation }) => {
         if (currentFriends[0] !== null) {
           const res = replace.filter((item) => {
             return !currentFriends.some((item2) => {
-              return item2.username === item.username;
+              return item2.username === item.username || item.username === getCurrentUserName();
             });
           });
           setResults(res);
