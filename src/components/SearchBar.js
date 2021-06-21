@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
-import { search } from '../../api/friends';
 
 export default (props) => {
   const [searchInput, setSearchInput] = useState('');
@@ -9,11 +8,12 @@ export default (props) => {
   return (
     <View>
       <Searchbar
+        theme={{ colors: { primary: "#5AA397" } }}
         style={styles.search}
         placeholder="search"
-        value={searchInput}
-        onChangeText={setSearchInput}
-        onSubmitEditing={props.onSubmitEditing}
+        inputStyle={styles.inputStyle}
+        value={props.value}
+        onChangeText={props.onChangeText}
       />
     </View>
   );
@@ -24,7 +24,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '90%',
     height: 45,
-    marginTop: 20,
-    borderRadius: 25,
+    marginVertical: 20,
+    borderRadius: 15,
   },
+  inputStyle: {
+    fontFamily: "Roboto_400Regular",
+  }
 });

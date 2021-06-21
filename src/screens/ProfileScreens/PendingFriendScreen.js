@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View, FlatList, ActivityIndicator, SliderComponent } from 'react-native';
-import { Searchbar } from 'react-native-paper';
+import SearchBar from '../../components/SearchBar';
 import * as Friends from '../../../api/friends';
 import { FontAwesome } from '@expo/vector-icons';
 import { getCurrentUserId } from '../../../api/auth';
@@ -79,9 +79,7 @@ export default ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Searchbar
-          style={styles.search}
-          placeholder="search"
+        <SearchBar
           value={searchInput}
           onChangeText={(text) => {
             handleSearch(text);
@@ -129,14 +127,6 @@ const styles = StyleSheet.create({
 
   header: {
     marginTop: 20,
-  },
-
-  search: {
-    alignSelf: 'center',
-    width: '90%',
-    height: 45,
-    marginVertical: 20,
-    borderRadius: 25,
   },
 
   cancelButton: {

@@ -17,7 +17,13 @@ export default ({ navigation }) => {
         <Text style={styles.title}>Friends</Text>
       </View>
 
-      <friendsTab.Navigator initialRouteName="All" style={styles.nav}>
+      <friendsTab.Navigator 
+      initialRouteName="All" 
+        tabBarOptions={{
+          pressColor: "red",
+          labelStyle: { fontFamily:"Montserrat_700Bold", fontSize: 12 },
+          indicatorStyle: {backgroundColor: "#5AA397"},
+        }}>
         <friendsTab.Screen name="All" component={CurrentFriendScreen} options={{ tabBarLabel: 'Current' }} />
         <friendsTab.Screen name="Add" component={AddFriendScreen} options={{ tabBarLabel: 'Add' }} />
         <friendsTab.Screen name="Pending" component={PendingFriendScreen} options={{ tabBarLabel: 'Pending' }} />
@@ -42,7 +48,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifyContent: "center",
     paddingTop: "1%",
-    paddingLeft: "1%",
+    paddingHorizontal: "2%",
     height: "70%",
     width: "10%",
   },
@@ -51,9 +57,7 @@ const styles = StyleSheet.create({
     fontSize: 45,
     fontFamily: 'Montserrat_700Bold',
     paddingTop: "5%",
+    paddingHorizontal: "2%",
   },
-  nav: {
-    flex: 1,
-    textAlign: 'center',
-  },
+
 });

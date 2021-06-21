@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native';
-import { Searchbar } from 'react-native-paper';
+import SearchBar from '../../components/SearchBar';
 import * as Friends from '../../../api/friends';
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -28,9 +28,7 @@ export default ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Searchbar
-          style={styles.search}
-          placeholder="search"
+        <SearchBar
           value={searchInput}
           onChangeText={(text) => {
             handleSearch(text);
@@ -42,7 +40,7 @@ export default ({ navigation }) => {
         data={results}
         renderItem={({ item, index }) => (
           <View style={[styles.listItem, { backgroundColor: index % 2 === 0 ? '#D8D4CF' : '#E3E0DB' }]}>
-            <FontAwesome name="user-circle" size={60} />
+            <FontAwesome name="user-circle" size={50} />
             <Text style={styles.names}>
               {item.username} {'\n'} @tag
             </Text>
