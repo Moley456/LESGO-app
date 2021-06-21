@@ -12,18 +12,19 @@ export default ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back" size={32}/>
+          <Ionicons name="chevron-back" size={32} />
         </TouchableOpacity>
         <Text style={styles.title}>Friends</Text>
       </View>
 
-      <friendsTab.Navigator 
-      initialRouteName="All" 
+      <friendsTab.Navigator
+        initialRouteName="All"
         tabBarOptions={{
-          pressColor: "red",
-          labelStyle: { fontFamily:"Montserrat_700Bold", fontSize: 12 },
-          indicatorStyle: {backgroundColor: "#5AA397"},
-        }}>
+          pressColor: 'red',
+          labelStyle: { fontFamily: 'Montserrat_700Bold', fontSize: 12 },
+          indicatorStyle: { backgroundColor: '#5AA397' },
+        }}
+      >
         <friendsTab.Screen name="All" component={CurrentFriendScreen} options={{ tabBarLabel: 'Current' }} />
         <friendsTab.Screen name="Add" component={AddFriendScreen} options={{ tabBarLabel: 'Add' }} />
         <friendsTab.Screen name="Pending" component={PendingFriendScreen} options={{ tabBarLabel: 'Pending' }} />
@@ -39,25 +40,24 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
   },
   searchContainer: {
-    height: "12%",
+    height: '12%',
     marginTop: 20,
     marginBottom: 5,
-    flexDirection: "row"
+    flexDirection: 'row',
   },
   backButton: {
-    alignSelf: "center",
-    justifyContent: "center",
-    paddingTop: "1%",
-    paddingHorizontal: "2%",
-    height: "70%",
-    width: "10%",
+    alignSelf: 'center',
+    justifyContent: 'center',
+    paddingTop: '1%',
+    paddingHorizontal: '2%',
+    height: '70%',
+    width: '10%',
   },
   title: {
     color: '#F8F5F1',
     fontSize: 45,
     fontFamily: 'Montserrat_700Bold',
-    paddingTop: "5%",
-    paddingHorizontal: "2%",
+    paddingTop: '5%',
+    paddingHorizontal: '2%',
   },
-
 });

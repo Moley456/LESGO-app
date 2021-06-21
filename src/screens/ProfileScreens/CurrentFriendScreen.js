@@ -76,7 +76,7 @@ export default ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-      <SearchBar
+        <SearchBar
           value={searchInput}
           onChangeText={(text) => {
             handleSearch(text);

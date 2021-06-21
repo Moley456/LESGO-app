@@ -1,29 +1,85 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View, FlatList, ActivityIndicator } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View, FlatList, ActivityIndicator, Alert } from 'react-native';
 import SearchBar from '../../components/SearchBar';
 import * as Friends from '../../../api/friends';
 import { FontAwesome } from '@expo/vector-icons';
+import firebase from '../../../api/firebase';
+import { getCurrentUserId } from '../../../api/auth';
 
 export default ({ navigation }) => {
   const [searchInput, setSearchInput] = useState('');
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const replace = [];
+  const [currentFriends, setCurrentFriends] = useState([]);
+  const db = firebase.database();
+
+  const handleAdd = (username) => {
+    Friends.sendFriendRequest(username);
+    db.ref('app/friends/' + getCurrentUserId())
+      .orderByValue()
+      .startAt()
+      .once('value', (snapshot) => {
+        setCurrentFriends([]);
+        snapshot.forEach((data) => {
+          Friends.getUserInfo(data.key).then((snapshot) => {
+            setCurrentFriends((old) => [...old, snapshot.val()]);
+            console.log(currentFriends);
+          });
+        });
+        setIsLoading(false);
+      });
+    Alert.alert('Friend request sent to' + username + '!');
+    setResults((old) => old.filter((item) => item.username !== username));
+  };
 
   const handleSearch = (text) => {
+    const replace = [];
     setIsLoading(true);
     if (text !== '') {
       Friends.searchAll(text.toLowerCase()).then((snapshot) => {
         snapshot.forEach((data) => {
           replace.push(data.val());
         });
-        setResults(replace);
+        if (currentFriends[0] !== null) {
+          const res = replace.filter((item) => {
+            return !currentFriends.some((item2) => {
+              return item2.username === item.username;
+            });
+          });
+          setResults(res);
+        } else {
+          setResults(replace);
+        }
       });
     } else {
       setResults([]);
     }
     setSearchInput(text);
   };
+
+  useEffect(() => {
+    db.ref('app/friends/' + getCurrentUserId())
+      .orderByValue()
+      .on('value', (snapshot) => {
+        setCurrentFriends([]);
+        snapshot.forEach((data) => {
+          Friends.getUserInfo(data.key).then((snapshot) => {
+            setCurrentFriends((old) => [...old, snapshot.val()]);
+          });
+        });
+      });
+    return db
+      .ref('app/friends/' + getCurrentUserId())
+      .orderByValue()
+      .on('value', (snapshot) => {
+        setCurrentFriends([]);
+        snapshot.forEach((data) => {
+          Friends.getUserInfo(data.key).then((snapshot) => {
+            setCurrentFriends((old) => [...old, snapshot.val()]);
+          });
+        });
+      });
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -47,7 +103,7 @@ export default ({ navigation }) => {
             <TouchableOpacity
               style={styles.addButton}
               onPress={() => {
-                Friends.sendFriendRequest(item.username);
+                handleAdd(item.username);
               }}
             >
               <Text style={styles.addText}>Add</Text>
