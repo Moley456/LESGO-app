@@ -73,6 +73,10 @@ export default ({ navigation }) => {
       });
   }, []);
 
+  if (isLoading) {
+    <ActivityIndicator />;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View>

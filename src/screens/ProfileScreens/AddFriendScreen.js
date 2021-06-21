@@ -23,12 +23,11 @@ export default ({ navigation }) => {
         snapshot.forEach((data) => {
           Friends.getUserInfo(data.key).then((snapshot) => {
             setCurrentFriends((old) => [...old, snapshot.val()]);
-            console.log(currentFriends);
           });
         });
         setIsLoading(false);
       });
-    Alert.alert('Friend request sent to' + username + '!');
+    Alert.alert('Friend request sent to ' + username + '!');
     setResults((old) => old.filter((item) => item.username !== username));
   };
 
@@ -80,6 +79,10 @@ export default ({ navigation }) => {
         });
       });
   }, []);
+
+  if (isLoading) {
+    <ActivityIndicator />;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

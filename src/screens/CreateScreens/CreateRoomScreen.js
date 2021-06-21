@@ -19,11 +19,10 @@ import { FontAwesome } from "@expo/vector-icons";
 import firebase from "firebase";
 import { Searchbar } from "react-native-paper";
 
-const db = firebase.database();
-const id = Authentication.getCurrentUserId();
-const username = Authentication.getCurrentUserName();
-
 export default ({ navigation }) => {
+  const db = firebase.database();
+  const id = Authentication.getCurrentUserId();
+  const username = Authentication.getCurrentUserName();
   const [roomName, setRoomName] = React.useState("");
   const [date, setDate] = React.useState("");
   const [time, setTime] = React.useState("");
@@ -196,17 +195,9 @@ export default ({ navigation }) => {
                   keyExtractor={(item) => item.email}
                   data={filteredResults}
                   renderItem={({ item, index }) => (
-                    <View
-                      style={[
-                        styles.listItem,
-                        {
-                          backgroundColor:
-                            index % 2 === 0 ? "#D8D4CF" : "#E3E0DB",
-                        },
-                      ]}
-                    >
-                      <FontAwesome name="user-circle" size={20} />
-                      <Text style={styles.names}>
+                    <View style={[styles.listItem, { backgroundColor: index % 2 === 0 ? "#D8D4CF" : "#E3E0DB" }]}>
+                    <FontAwesome name="user-circle" size={20} />
+                    <Text style={styles.names}>
                         {item.username} {"\n"} @tag
                       </Text>
                       <TouchableOpacity
