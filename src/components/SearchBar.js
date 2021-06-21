@@ -3,11 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
 export default (props) => {
-
   return (
     <View>
       <Searchbar
-        theme={{ colors: { primary: "#5AA397" } }}
+        theme={{ colors: { primary: '#5AA397' } }}
         style={styles.search}
         placeholder="search"
         inputStyle={styles.inputStyle}
@@ -27,6 +26,6 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   inputStyle: {
-    fontFamily: "Roboto_400Regular",
-  }
+    fontFamily: 'Roboto_400Regular',
+  },
 });

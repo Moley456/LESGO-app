@@ -47,6 +47,9 @@ export const sendFriendRequest = (friendUserName) => {
       db.ref('app/friends/' + friendUid).update({
         [getCurrentUserId()]: false,
       });
+      db.ref('app/friends/' + getCurrentUserId()).update({
+        [friendUid]: false,
+      });
     });
 };
 
@@ -57,6 +60,7 @@ export const rejectRequest = (friendUserName) => {
     .then((snapshot) => {
       const friendUid = JSON.stringify(snapshot).slice(1, -1);
       db.ref('app/friends/' + getCurrentUserId() + '/' + friendUid).remove();
+      db.ref('app/friends/' + friendUid + '/' + getCurrentUserId()).remove();
     });
 };
 
