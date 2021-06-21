@@ -108,7 +108,7 @@ export default ({ navigation }) => {
     <View>
       <TouchableOpacity
         style={styles.tab}
-        onPress={() => navigation.navigate("Room")}
+        onPress={() => navigation.navigate("Room", {...item})}
       >
         <Text style={styles.tabBoldText}>{item.name}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
@@ -123,7 +123,7 @@ export default ({ navigation }) => {
     <View>
       <TouchableOpacity
         style={styles.tab}
-        onPress={() => navigation.navigate("Invitation")}
+        onPress={() => navigation.navigate("Invitation", {...item})}
       >
         <Text style={styles.tabBoldText}>{item.name}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
