@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 
 export default (props) => {
-  const [searchInput, setSearchInput] = useState('');
 
   return (
     <View>
