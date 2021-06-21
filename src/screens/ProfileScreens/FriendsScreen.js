@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { SafeAreaView, StyleSheet, StatusBar, View, Text } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet, StatusBar, View, Text, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import AddFriendScreen from './AddFriendScreen';
 import CurrentFriendScreen from './CurrentFriendScreen';
@@ -11,8 +11,10 @@ export default ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.searchContainer}>
-        <Ionicons name="chevron-back" size={32} style={{ paddingLeft: 10 }} onPress={() => navigation.navigate('UserProfile')} />
-        <Text style={styles.title}> Friends </Text>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="chevron-back" size={32}/>
+        </TouchableOpacity>
+        <Text style={styles.title}>Friends</Text>
       </View>
 
       <friendsTab.Navigator initialRouteName="All" style={styles.nav}>
@@ -31,21 +33,24 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
   },
   searchContainer: {
-    height: 50,
+    height: "12%",
     marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 5,
+    flexDirection: "row"
+  },
+  backButton: {
+    alignSelf: "center",
+    justifyContent: "center",
+    paddingTop: "1%",
+    paddingLeft: "1%",
+    height: "70%",
+    width: "10%",
   },
   title: {
     color: '#F8F5F1',
-    fontSize: 30,
+    fontSize: 45,
     fontFamily: 'Montserrat_700Bold',
-    paddingTop: 10,
-    paddingLeft: 10,
-  },
-  search: {
-    flex: 1,
-    height: 50,
-    width: '90%',
+    paddingTop: "5%",
   },
   nav: {
     flex: 1,

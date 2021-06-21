@@ -16,7 +16,7 @@ export const searchAll = async (queryText) => {
 
 export const searchPending = async () => {
   const promise = await db
-    .ref('app/users/friends/' + getCurrentUserId())
+    .ref('app/friends/' + getCurrentUserId())
     .orderByValue()
     .startAt(false)
     .once('value');
@@ -26,10 +26,9 @@ export const searchPending = async () => {
 
 export const searchCurrent = async () => {
   const promise = db
-    .ref('app/users/friends/' + getCurrentUserId())
+    .ref('app/friends/' + getCurrentUserId())
     .orderByValue()
-    .startAt(true)
-    .endAt(true)
+    .equals(true)
     .once('value');
 
   return promise;
@@ -45,7 +44,7 @@ export const sendFriendRequest = (friendUserName) => {
     .get()
     .then((snapshot) => {
       const friendUid = JSON.stringify(snapshot).slice(1, -1);
-      db.ref('app/users/friends/' + friendUid).update({
+      db.ref('app/friends/' + friendUid).update({
         [getCurrentUserId()]: false,
       });
     });
@@ -57,7 +56,7 @@ export const rejectRequest = (friendUserName) => {
     .get()
     .then((snapshot) => {
       const friendUid = JSON.stringify(snapshot).slice(1, -1);
-      db.ref('app/users/friends/' + getCurrentUserId() + '/' + friendUid).remove();
+      db.ref('app/friends/' + getCurrentUserId() + '/' + friendUid).remove();
     });
 };
 
@@ -67,7 +66,18 @@ export const acceptRequest = (friendUserName) => {
     .get()
     .then((snapshot) => {
       const friendUid = JSON.stringify(snapshot).slice(1, -1);
-      db.ref('app/users/friends/' + getCurrentUserId()).update({ [friendUid]: true });
-      db.ref('app/users/friends/' + friendUid).update({ [getCurrentUserId()]: true });
+      db.ref('app/friends/' + getCurrentUserId()).update({ [friendUid]: true });
+      db.ref('app/friends/' + friendUid).update({ [getCurrentUserId()]: true });
+    });
+};
+
+export const deleteFriend = (friendUserName) => {
+  return db
+    .ref('app/usernames/' + friendUserName)
+    .get()
+    .then((snapshot) => {
+      const friendUid = JSON.stringify(snapshot).slice(1, -1);
+      db.ref('app/friends/' + getCurrentUserId() + '/' + friendUid).remove();
+      db.ref('app/friends/' + friendUid + '/' + getCurrentUserId()).remove();
     });
 };

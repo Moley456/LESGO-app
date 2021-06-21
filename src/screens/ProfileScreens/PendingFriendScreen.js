@@ -41,7 +41,7 @@ export default ({ navigation }) => {
   // };
 
   useEffect(() => {
-    db.ref('app/users/friends/' + getCurrentUserId())
+    db.ref('app/friends/' + getCurrentUserId())
       .orderByValue()
       .equalTo(false)
       .on('value', (snapshot) => {
@@ -57,7 +57,7 @@ export default ({ navigation }) => {
       });
 
     return db
-      .ref('app/users/friends/' + getCurrentUserId())
+      .ref('app/friends/' + getCurrentUserId())
       .orderByValue()
       .equalTo(false)
       .off('value', (snapshot) => {
