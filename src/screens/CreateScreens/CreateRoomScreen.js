@@ -8,21 +8,23 @@ import {
   TouchableOpacity,
   TextInput,
   Modal,
+  Alert,
   FlatList,
   ActivityIndicator,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
-import * as Authentication from "../../../api/auth";
+import { getCurrentUserId, getCurrentUserName } from '../../../api/auth';
 import * as Friends from "../../../api/friends";
 import HideKeyboard from "../../components/HideKeyboard";
 import { FontAwesome } from "@expo/vector-icons";
 import firebase from "firebase";
 import { Searchbar } from "react-native-paper";
+import * as Authentication from "../../../api/auth";
+
 
 export default ({ navigation }) => {
   const db = firebase.database();
-  const id = Authentication.getCurrentUserId();
-  const username = Authentication.getCurrentUserName();
+  const username = getCurrentUserName();
   const [roomName, setRoomName] = React.useState("");
   const [date, setDate] = React.useState("");
   const [time, setTime] = React.useState("");
@@ -30,15 +32,13 @@ export default ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [filteredResults, setFilteredResults] = useState([]);
   const [results, setResults] = useState([]);
   const [participants, setParticipants] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
 
   const handleSearch = (text) => {
     setSearchInput(text);
-    const filtered = results.filter((item) =>
-      item.username.includes(text.toLowerCase())
-    );
+    const filtered = results.filter((item) => item.username.includes(text.toLowerCase()));
     setFilteredResults(filtered);
   };
 
@@ -66,15 +66,19 @@ export default ({ navigation }) => {
     });
   };
 
-  const addFriend = (addedParticipant) => {
+  const addParticipant = (addedParticipant) => {
+    console.log(addedParticipant);
     setParticipants([...participants, addedParticipant]);
-  };
-
+    setFilteredResults((old) => old.filter((item) => !participants.includes(item.username)));
+    Alert.alert('Invited ' + addedParticipant + '!');
+    console.log(participants);
+  };  
+  
   useEffect(() => {
-    db.ref("app/friends/" + id)
+    db.ref('app/friends/' + getCurrentUserId())
       .orderByValue()
       .equalTo(true)
-      .on("value", (snapshot) => {
+      .on('value', (snapshot) => {
         setFilteredResults([]);
         setResults([]);
         snapshot.forEach((data) => {
@@ -87,10 +91,10 @@ export default ({ navigation }) => {
       });
 
     return db
-      .ref("app/friends/" + id)
+      .ref('app/friends/' + getCurrentUserId())
       .orderByValue()
       .equalTo(true)
-      .off("value", (snapshot) => {
+      .off('value', (snapshot) => {
         setFilteredResults([]);
         setResults([]);
         snapshot.forEach((data) => {
@@ -202,7 +206,7 @@ export default ({ navigation }) => {
                       </Text>
                       <TouchableOpacity
                          style={styles.addButton}
-                         onPress={() => {addFriend(item.username)}}
+                         onPress={() => {addParticipant(item.username)}}
                       >
               <Text style={styles.inputStyle}>Add</Text>
             </TouchableOpacity>
