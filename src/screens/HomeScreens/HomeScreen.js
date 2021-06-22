@@ -55,6 +55,10 @@ const INVITES = [
   }
 ];
 
+const leaveRoom = () => {
+  
+}
+
 export default ({ navigation }) => {
   const handleLogout = () => {
     Authentication.signOut(

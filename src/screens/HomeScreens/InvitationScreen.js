@@ -7,6 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import * as Authentication from '../../../api/auth';
@@ -20,23 +21,11 @@ export default ({ navigation, route }) => {
   const [time, setTime] = React.useState("");
   const [limit, setLimit] = React.useState("");
 
-  const handleLogout = () => {
-    Authentication.signOut(
-      () =>
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: "Login" }],
-          })
-        ),
-      console.error
-    );
-  };
 
   return (
-    <HideKeyboard>
 
     <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
 
     <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="chevron-back" size={32}/>
@@ -45,11 +34,29 @@ export default ({ navigation, route }) => {
     <TouchableOpacity style={styles.leaveButton} onPress={() => {}}>
           <Text style={styles.leaveText}>Leave</Text>
         </TouchableOpacity>
-    <Text style={[styles.header, {fontSize: 20}]}>You've been invited to</Text>
+    <Text style={[styles.header, {fontSize: 20, marginTop: 30}]}>You've been invited to</Text>
       <Text style={styles.header}>{route.params.name}!</Text>
       <Text style={styles.subHeader}>{route.params.date}</Text>
+
+
+    <View style={styles.prefContainer}>
+      <Text style={styles.prefHeader}>Preferences</Text>
+      <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+      <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+
+      <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+      <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+      <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+      <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+      <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+
+
+
+    </View>
+
+    
+    </ScrollView>
     </SafeAreaView>
-    </HideKeyboard>
 
   );
 };
@@ -59,8 +66,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#5AA397",
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
-    paddingBottom: 70,
-    alignItems: "center",
+  },
+
+  scrollContainer: {
+    alignItems: "center"
   },
 
   leaveButton: {
@@ -89,6 +98,7 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   header: {
+    marginVertical: "1%",
     fontSize: 55,
     color: "#F8F5F1",
     fontFamily: "Montserrat_700Bold",
@@ -98,6 +108,30 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: "black",
     fontFamily: "Montserrat_700Bold",
+  },
+  
+  prefContainer: {
+    marginTop: 30,
+    backgroundColor: "#F8F5F1",
+    width: "100%",
+  },
+
+  prefHeader: {
+    paddingVertical: 10,
+    fontSize: 40,
+    color: "black",
+    fontFamily: "Montserrat_700Bold",
+    alignSelf: "center"
+  },
+
+  prefText: {
+    fontSize: 20,
+    color: "black",
+    fontFamily: "Montserrat_700Bold",
+  },
+  
+  budget: {
+    height: 100,
   }
 
 });
