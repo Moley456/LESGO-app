@@ -70,7 +70,7 @@ export default ({ navigation }) => {
     return db
       .ref('app/friends/' + getCurrentUserId())
       .orderByValue()
-      .on('value', (snapshot) => {
+      .off('value', (snapshot) => {
         setCurrentFriends([]);
         snapshot.forEach((data) => {
           Friends.getUserInfo(data.key).then((snapshot) => {
