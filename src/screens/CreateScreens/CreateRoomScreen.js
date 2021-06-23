@@ -13,14 +13,13 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
-import { getCurrentUserId, getCurrentUserName } from '../../../api/auth';
+import { getCurrentUserId, getCurrentUserName } from "../../../api/auth";
 import * as Friends from "../../../api/friends";
 import HideKeyboard from "../../components/HideKeyboard";
 import { FontAwesome } from "@expo/vector-icons";
 import firebase from "firebase";
 import { Searchbar } from "react-native-paper";
 import * as Authentication from "../../../api/auth";
-
 
 export default ({ navigation }) => {
   const db = firebase.database();
@@ -38,7 +37,9 @@ export default ({ navigation }) => {
 
   const handleSearch = (text) => {
     setSearchInput(text);
-    const filtered = results.filter((item) => item.username.includes(text.toLowerCase()));
+    const filtered = results.filter((item) =>
+      item.username.includes(text.toLowerCase())
+    );
     setFilteredResults(filtered);
   };
 
@@ -70,24 +71,20 @@ export default ({ navigation }) => {
 
     for (var i = 0; i < participants.length; i++) {
       db.ref("app/participants/" + participants[i]).update({
-        [postId]: false
-      }) 
+        [postId]: false,
+      });
     }
   };
 
-  const addParticipant = (addedParticipant) => {
-    console.log(addedParticipant);
-    setParticipants([...participants, addedParticipant]);
-    setFilteredResults((old) => old.filter((item) => !participants.includes(item.username)));
-    Alert.alert('Invited ' + addedParticipant + '!');
-    console.log(participants);
-  };  
-  
   useEffect(() => {
-    db.ref('app/friends/' + getCurrentUserId())
+    setFilteredResults((old) => old.filter((item) => !participants.includes(item.username)));
+    }, [participants]);
+
+  useEffect(() => {
+    db.ref("app/friends/" + getCurrentUserId())
       .orderByValue()
       .equalTo(true)
-      .on('value', (snapshot) => {
+      .on("value", (snapshot) => {
         setFilteredResults([]);
         setResults([]);
         snapshot.forEach((data) => {
@@ -100,10 +97,10 @@ export default ({ navigation }) => {
       });
 
     return db
-      .ref('app/friends/' + getCurrentUserId())
+      .ref("app/friends/" + getCurrentUserId())
       .orderByValue()
       .equalTo(true)
-      .off('value', (snapshot) => {
+      .off("value", (snapshot) => {
         setFilteredResults([]);
         setResults([]);
         snapshot.forEach((data) => {
@@ -186,62 +183,75 @@ export default ({ navigation }) => {
           }}
         >
           <HideKeyboard>
-              <View style={styles.modalView}>
-                
-                <Text style={styles.modalTitle}>Add Friends!</Text>
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Add Friends!</Text>
 
-                <View>
-                  <Searchbar
-                    theme={{ colors: { primary: "#5AA397" } }}
-                    style={styles.search}
-                    placeholder="search"
-                    inputStyle={styles.inputStyle}
-                    value={searchInput}
-                    onChangeText={(text) => {
-                      handleSearch(text);
-                    }}
-                  />
-                </View>
+              <View>
+                <Searchbar
+                  theme={{ colors: { primary: "#5AA397" } }}
+                  style={styles.search}
+                  placeholder="search"
+                  inputStyle={styles.inputStyle}
+                  value={searchInput}
+                  onChangeText={(text) => {
+                    handleSearch(text);
+                  }}
+                />
+              </View>
 
-                <View style={{width: "100%"}}>
+              <View style={{ width: "100%" }}>
                 <FlatList
                   keyExtractor={(item) => item.email}
                   data={filteredResults}
+                  style={styles.flatList}
                   renderItem={({ item, index }) => (
-                    <View style={[styles.listItem, { backgroundColor: index % 2 === 0 ? "#D8D4CF" : "#E3E0DB" }]}>
-                    <FontAwesome name="user-circle" size={20} />
-                    <Text style={styles.names}>
+                    <View
+                      style={[
+                        styles.listItem,
+                        {
+                          backgroundColor:
+                            index % 2 === 0 ? "#D8D4CF" : "#E3E0DB",
+                        },
+                      ]}
+                    >
+                      <FontAwesome name="user-circle" size={20} />
+                      <Text style={styles.names}>
                         {item.username} {"\n"} @tag
                       </Text>
                       <TouchableOpacity
-                         style={styles.addButton}
-                         onPress={() => {addParticipant(item.username)}}
+                        style={styles.addButton}
+                        onPress={() => {
+                          setParticipants((old) => [...old, item.username]);
+                          Alert.alert("Invited " + item.username + "!");                        }}
                       >
-              <Text style={styles.inputStyle}>Add</Text>
-            </TouchableOpacity>
+                        <Text style={styles.inputStyle}>Add</Text>
+                      </TouchableOpacity>
                     </View>
                   )}
                 />
-                </View>
-
-                <View style={styles.modalButtons}>
-                  <TouchableOpacity
-                    style={styles.modalButton}
-                    onPress={() => {setParticipants([]); setModalVisible(!modalVisible)}}
-                  >
-                    <Text style={styles.modalText}>Cancel</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={styles.modalButton}
-                    onPress={() => {
-                      setModalVisible(!modalVisible);
-                    }}
-                  >
-                    <Text style={styles.modalText}>Done</Text>
-                  </TouchableOpacity>
-                </View>
               </View>
+
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => {
+                    setParticipants([]);
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Text style={styles.modalText}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.modalButton}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Text style={styles.modalText}>Done</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </HideKeyboard>
         </Modal>
 
@@ -269,7 +279,7 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: '100%',
+    width: "100%",
     backgroundColor: "#5AA397",
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
     paddingBottom: 70,
@@ -359,12 +369,12 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    flex: 1,
     alignSelf: "center",
     alignItems: "center",
     width: "75%",
     height: "45%",
     marginTop: "40%",
+    marginBottom: "20%",
     backgroundColor: "#F8F5F1",
     borderRadius: 20,
     paddingTop: "10%",
@@ -395,19 +405,19 @@ const styles = StyleSheet.create({
 
   modalButtons: {
     position: "absolute",
+    width: "100%",
     flexDirection: "row",
-    bottom: "5%",
     justifyContent: "space-between",
-    paddingHorizontal: 10,
+    paddingHorizontal: "15%",
+    bottom: "5%"
   },
 
   modalButton: {
     borderWidth: 2,
     borderColor: "black",
-    width: "38%",
+    width: "35%",
     alignItems: "center",
     justifyContent: "center",
-    margin: "3%",
     borderRadius: 5,
   },
 
@@ -436,8 +446,7 @@ const styles = StyleSheet.create({
   },
 
   addButton: {
-    position: 'absolute',
+    position: "absolute",
     right: 15,
   },
-
 });

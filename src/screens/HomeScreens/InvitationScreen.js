@@ -9,6 +9,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+
 import { CommonActions } from "@react-navigation/native";
 import * as Authentication from '../../../api/auth';
 import HideKeyboard from '../../components/HideKeyboard';
@@ -43,6 +44,7 @@ export default ({ navigation, route }) => {
       <Text style={styles.prefHeader}>Preferences</Text>
       <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
       <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
+
 
       <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
       <View style={styles.budget}><Text  style={{fontSize: 100}}>Budget</Text></View>
