@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -9,57 +9,48 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
-
+import firebase from "firebase";
+import { getCurrentUserId, getCurrentUserName } from '../../../api/auth';
 import * as Authentication from "../../../api/auth";
 
-const UPCOMING = [
-  {
-    id: "id1",
-    name: "Girl's Out",
-    date: "1 June, 12.30pm",
-    activity: "Beach at Sentosa",
-    creator: "Kate",
-  },
-  {
-    id: "id2",
-    name: "ROLL OUT",
-    date: "6 June, 10.30am",
-    activity: "sleeping at home",
-    creator: "Jane",
-  },
-  {
-    id: "id3",
-    name: "ROLL IN",
-    date: "6 June, 4am",
-    activity: "Bowling at Kallang",
-    creator: "Pete",
-  },
-];
-
-const INVITES = [
-  {
-    id: "id1",
-    name: "TGIF",
-    date: "10 June, 12.30pm",
-    activity: "Cherry Club",
-    creator: "OXW",
-    timeRemaining: "10 hours"
-  },
-  {
-    id: "id2",
-    name: "sunday fun",
-    date: "6 June, 6pm",
-    activity: "RYAN HOUSE",
-    creator: "Ryan",
-    timeRemaining: "3 hours"
-  }
-];
-
 const leaveRoom = () => {
-  
 }
 
 export default ({ navigation }) => {
+const db = firebase.database();
+const [upcoming, setUpcoming] = useState([]);
+const [invitations, setInvitations] = useState([]);
+
+// FOR UPCOMING EVENTS
+useEffect(() => {
+  db.ref("app/participants/" + getCurrentUserName())
+    .orderByValue()  
+    .equalTo(false)
+    .on('value', (snapshot) => {
+      setInvitations([]);
+      snapshot.forEach((data) => {
+        db.ref("app/rooms/" + data.key).get().then((snapshot) => {
+          setInvitations((old) => [...old, snapshot.val()]);
+        });
+      });
+    });
+  }, []);
+
+  // FOR INVITATIONS
+  useEffect(() => {
+    db.ref("app/participants/" + getCurrentUserName())
+      .orderByValue()  
+      .equalTo(true)
+      .on('value', (snapshot) => {
+        setUpcoming([]);
+        snapshot.forEach((data) => {
+          db.ref("app/rooms/" + data.key).get().then((snapshot) => {
+            setUpcoming((old) => [...old, snapshot.val()]);
+          });
+        });
+      });
+    }, []);
+
   const handleLogout = () => {
     Authentication.signOut(
       () => {
@@ -100,7 +91,7 @@ export default ({ navigation }) => {
       <View>
         <Text style={styles.subHeaderText}>Invitations</Text>
         <FlatList
-        data={INVITES}
+        data={invitations}
         renderItem={renderInvites}
         keyExtractor={(item) => item.id}
       />
@@ -114,7 +105,7 @@ export default ({ navigation }) => {
         style={styles.tab}
         onPress={() => navigation.navigate("Room", {...item})}
       >
-        <Text style={styles.tabBoldText}>{item.name}</Text>
+        <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
         <Text style={styles.tabText}>{item.activity}</Text>
       </TouchableOpacity>
@@ -129,13 +120,13 @@ export default ({ navigation }) => {
         style={styles.tab}
         onPress={() => navigation.navigate("Invitation", {...item})}
       >
-        <Text style={styles.tabBoldText}>{item.name}</Text>
+        <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
-        <Text style={styles.tabText}>{item.activity}</Text>
+        <Text style={styles.tabText}>{item.date}</Text>
       </TouchableOpacity>
 
       <View style={styles.invInfo}>
-          <Text>Time remaining: {item.timeRemaining}</Text>
+          <Text>Time remaining: {item.limit}</Text>
           <Text>@{item.creator}</Text>
         </View>
     </View>
@@ -144,7 +135,7 @@ export default ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={UPCOMING}
+        data={upcoming}
         renderItem={renderEvents}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={aboveUpcomingEvents}

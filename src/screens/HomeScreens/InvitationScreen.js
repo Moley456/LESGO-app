@@ -35,7 +35,7 @@ export default ({ navigation, route }) => {
           <Text style={styles.leaveText}>Leave</Text>
         </TouchableOpacity>
     <Text style={[styles.header, {fontSize: 20, marginTop: 30}]}>You've been invited to</Text>
-      <Text style={styles.header}>{route.params.name}!</Text>
+      <Text style={styles.header}>{route.params.roomName}!</Text>
       <Text style={styles.subHeader}>{route.params.date}</Text>
 
 

@@ -56,14 +56,23 @@ export default ({ navigation }) => {
   };
 
   const invite = () => {
-    db.ref("app/rooms/").push({
+    const pushedPostRef = db.ref("app/rooms/").push({
       roomName: roomName,
       date: date,
       time: time,
       limit: limit,
       creator: username,
       participants: participants,
+      activity: "",
     });
+
+    const postId = pushedPostRef.getKey();
+
+    for (var i = 0; i < participants.length; i++) {
+      db.ref("app/participants/" + participants[i]).update({
+        [postId]: false
+      }) 
+    }
   };
 
   const addParticipant = (addedParticipant) => {

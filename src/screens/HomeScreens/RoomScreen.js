@@ -35,7 +35,7 @@ export default ({ navigation, route}) => {
         </TouchableOpacity>
 
       <Text style={styles.creator}>{route.params.creator}</Text>
-      <Text style={styles.header}>{route.params.name}</Text>
+      <Text style={styles.header}>{route.params.roomName}</Text>
       <Text style={styles.subHeader}>{route.params.date}</Text>
       <Text style={styles.subHeader}>{route.params.activity}</Text>
     </SafeAreaView>
