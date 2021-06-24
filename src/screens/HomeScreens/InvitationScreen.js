@@ -20,6 +20,7 @@ const DATA = [
 export default ({ navigation, route }) => {
   const [budget, setBudget] = React.useState(0);
   const [data, setData] = React.useState(DATA);
+  const [toggle, setToggle] = React.useState(false);
 
   const top = () => {
     return (
@@ -54,12 +55,6 @@ export default ({ navigation, route }) => {
     );
   };
 
-  const toggleDone = (id) => {
-    let newState = [...data];
-    newState[id].selected = true;
-    setData(newState);
-  };
-
   const renderItem = ({ item }) => (
     <View style={styles.item}>
       <Text style={styles.activity}>{item.activity}</Text>
@@ -68,7 +63,8 @@ export default ({ navigation, route }) => {
         onPress={() => {
           const updatedData = data;
           updatedData[item.id].selected = !updatedData[item.id].selected;
-          toggleDone(item.id);
+          setToggle(!toggle);
+          setData(updatedData);
         }}
       ></TouchableOpacity>
     </View>
