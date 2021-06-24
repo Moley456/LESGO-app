@@ -38,7 +38,6 @@ export default ({ navigation }) => {
 
   const handleSearch = (text) => {
     setSearchInput(text);
-    console.log(results);
     const filtered = results.filter((item) => item.username.includes(text.toLowerCase()));
     setFilteredResults(filtered);
   };

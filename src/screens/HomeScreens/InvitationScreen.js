@@ -15,32 +15,22 @@ import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 
 const DATA = [
-  { id: "1", activity: "Badminton", selected: false},
-  { id: "2", activity: "Cafe-hopping", selected: false },
-  { id: "3", activity: "Gym", selected: false},
-  { id: "4", activity: "Movie", selected: false },
-  { id: "5", activity: "Prawning", selected: false },
-  { id: "6", activity: "Nature", selected: false },
-  { id: "7", activity: "Theme Parks", selected: false },
-  { id: "8", activity: "Beach", selected: false },
-  { id: "9", activity: "Golf", selected: false },
-  { id: "10", activity: "Bowling", selected: false },
+  { id: "0", activity: "Badminton", selected: false},
+  { id: "1", activity: "Cafe-hopping", selected: false },
+  { id: "2", activity: "Gym", selected: false},
+  { id: "3", activity: "Movie", selected: false },
+  { id: "4", activity: "Prawning", selected: false },
+  { id: "5", activity: "Nature", selected: false },
+  { id: "6", activity: "Theme Parks", selected: false },
+  { id: "7", activity: "Beach", selected: false },
+  { id: "8", activity: "Golf", selected: false },
+  { id: "9", activity: "Bowling", selected: false },
 ];
 
 export default ({ navigation, route }) => {
   const [budget, setBudget] = React.useState(0);
-  const [selected, setSelection] = React.useState([]);
   const [data, setData] = React.useState(DATA);
-
-/* 
-useEffect(() => {
-  setData((old) => old.filter((item) => !selected.includes(item.activity)));
-  }, [selected]); */
-
-  useEffect(() => {
-    setData((old) => old);
-    }, [data]);
-
+  const [toggle, setToggle] = React.useState(false);
 
   const top = () => {
     return (
@@ -82,13 +72,13 @@ useEffect(() => {
       style={item.selected === true ? styles.selected : styles.notSelected}
       onPress={() => {
         const updatedData = data;
-        data[item.id - 1].selected = true;
+        updatedData[item.id].selected = !updatedData[item.id].selected;
+        console.log("hi")
+        setToggle(!toggle);
         setData(updatedData)}}>
       </TouchableOpacity>
     </View>
   );
-
-  console.log(data);
 
   return (
     <SafeAreaView style={styles.container}>
