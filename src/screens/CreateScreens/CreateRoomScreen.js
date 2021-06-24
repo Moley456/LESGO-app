@@ -56,36 +56,47 @@ export default ({ navigation }) => {
   };
 
   const invite = () => {
-    const pushedPostRef = db.ref('app/rooms/').push({ details: [1] });
-    const postId = pushedPostRef.getKey();
-    db.ref('app/rooms/' + postId + '/details').set({
-      roomName: roomName,
-      date: date,
-      time: time,
-      limit: limit,
-      creator: username,
-      activity: '',
-    });
 
-    participants.forEach((item) => {
-      db.ref('app/rooms/' + postId + '/participants').update({
-        [item]: false,
+    if (roomName === '' || date === '' || time === '' || limit === '') {
+      Alert.alert("Please fill in every field!")
+    } else if (participants.length === 0) {
+      Alert.alert("No friends added!")
+    } else {
+      const pushedPostRef = db.ref('app/rooms/').push({ details: [1] });
+      const postId = pushedPostRef.getKey();
+      db.ref('app/rooms/' + postId + '/details').set({
+        roomName: roomName,
+        date: date,
+        time: time,
+        limit: limit,
+        creator: username,
+        activity: '',
       });
-    });
-    
-    db.ref('app/rooms/' + postId + '/participants').update({
-      [username]: false,
-    });
-
-    db.ref('app/participants/' + username).update({
-      [postId]: false,
-    });
-
-    for (var i = 0; i < participants.length; i++) {
-      db.ref('app/participants/' + participants[i]).update({
+  
+      participants.forEach((item) => {
+        db.ref('app/rooms/' + postId + '/participants').update({
+          [item]: false,
+        });
+      });
+      
+      db.ref('app/rooms/' + postId + '/participants').update({
+        [username]: false,
+      });
+  
+      db.ref('app/participants/' + username).update({
         [postId]: false,
       });
+  
+      for (var i = 0; i < participants.length; i++) {
+        db.ref('app/participants/' + participants[i]).update({
+          [postId]: false,
+        });
+      }
+
+      navigation.navigate('InviteSent');
     }
+
+
   };
 
   useEffect(() => {
@@ -145,7 +156,7 @@ export default ({ navigation }) => {
 
         <View style={styles.row}>
           <Text style={styles.tabBoldText}>Name</Text>
-          <TextInput style={styles.input} onChangeText={setRoomName} value={roomName} keyboardType={'default'} maxLength={12}></TextInput>
+          <TextInput style={styles.input} onChangeText={setRoomName} value={roomName} keyboardType={'default'} maxLength={10}></TextInput>
         </View>
 
         <View style={styles.row}>
@@ -165,7 +176,7 @@ export default ({ navigation }) => {
             onChangeText={setLimit}
             value={limit}
             keyboardType={'number-pad'}
-            maxLength={2}
+            maxLength={1}
           ></TextInput>
         </View>
 
@@ -238,7 +249,7 @@ export default ({ navigation }) => {
                     setModalVisible(!modalVisible);
                   }}
                 >
-                  <Text style={styles.modalText}>Cancel</Text>
+                  <Text style={styles.modalText}>Clear</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -262,7 +273,6 @@ export default ({ navigation }) => {
           style={styles.invite}
           onPress={() => {
             invite();
-            navigation.navigate('InviteSent');
           }}
         >
           <Text style={styles.inviteText}>INVITE</Text>
