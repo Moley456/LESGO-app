@@ -72,6 +72,7 @@ export default ({ navigation }) => {
         [item]: false,
       });
     });
+    
     db.ref('app/rooms/' + postId + '/participants').update({
       [username]: false,
     });
@@ -110,7 +111,6 @@ export default ({ navigation }) => {
         });
         setIsLoading(false);
         setBaseResults(results);
-        console.log(baseResults);
       });
 
     return db

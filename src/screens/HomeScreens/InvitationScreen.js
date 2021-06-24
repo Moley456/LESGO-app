@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, TextInput, ScrollView, FlatList } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, TextInput, ScrollView, FlatList, Alert } from 'react-native';
 
 import Slider from '@react-native-community/slider';
 import { Ionicons } from '@expo/vector-icons';
@@ -28,30 +28,44 @@ export default ({ navigation, route }) => {
 
 const submit = () => {
 
-    db.ref("app/rooms/" + route.params.key + "/preferences/budget")
+    db.ref("app/rooms/" + route.params.key + "/participants/").child(getCurrentUserName())
     .get()
     .then((snapshot) => {
-      const val = snapshot.child(budget).val();
-      db.ref("app/rooms/" + route.params.key + "/preferences/budget").update({
-        [budget]: 1 + val
-      })
-    });
+      if (snapshot.val() === true) {
+        Alert.alert("You can only submit once!")
+      } else {
 
-    for (var i = 0; i <data.length; i++) {
-      if (data[i].selected === true) {
-        const type = data[i].activity;
-        db.ref("app/rooms/" + route.params.key + "/preferences/")
+        db.ref("app/rooms/" + route.params.key + "/participants").update({
+          [getCurrentUserName()]: true
+        })
+    
+        db.ref("app/rooms/" + route.params.key + "/preferences/budget")
         .get()
         .then((snapshot) => {
-          
-          const val = snapshot.child(type).val();
-          db.ref("app/rooms/" + route.params.key + "/preferences/").update({
-            [type]: 1 + val
+          const val = snapshot.child(budget).val();
+          db.ref("app/rooms/" + route.params.key + "/preferences/budget").update({
+            [budget]: 1 + val
           })
-        })
+        });
+    
+        for (var i = 0; i <data.length; i++) {
+          if (data[i].selected === true) {
+            const type = data[i].activity;
+            db.ref("app/rooms/" + route.params.key + "/preferences/")
+            .get()
+            .then((snapshot) => {
+              
+              const val = snapshot.child(type).val();
+              db.ref("app/rooms/" + route.params.key + "/preferences/").update({
+                [type]: 1 + val
+              })
+            })
+          }
+        }
       }
-    }
+    })
   }
+
 
   const leave = () => {
     db.ref("app/participants/" + getCurrentUserName() + "/" + route.params.key).remove();
