@@ -3,6 +3,9 @@ import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, Text
 
 import Slider from '@react-native-community/slider';
 import { Ionicons } from '@expo/vector-icons';
+import { getCurrentUserId, getCurrentUserName } from '../../../api/auth';
+import firebase from 'firebase';
+
 
 const DATA = [
   { id: '0', activity: 'Badminton', selected: false },
@@ -18,9 +21,40 @@ const DATA = [
 ];
 
 export default ({ navigation, route }) => {
+  const db = firebase.database();
   const [budget, setBudget] = React.useState(0);
   const [data, setData] = React.useState(DATA);
   const [toggle, setToggle] = React.useState(false);
+
+const submit = () => {
+    db.ref("app/rooms/" + route.params.key + "/preferences/budget").update({
+      budget: budget   
+    });
+    
+    for (var i = 0; i <data.length; i++) {
+      if (data[i].selected === true) {
+        const type = data[i].activity;
+        db.ref("app/rooms/" + route.params.key + "/preferences/")
+        .get()
+        .then((snapshot) => {
+          
+          const val = snapshot.child(type).val();
+          console.log(val)
+          db.ref("app/rooms/" + route.params.key + "/preferences/").update({
+            [type]: 1 + val
+          })
+        })
+      }
+    }
+  }
+
+  const leave = () => {
+    db.ref("app/participants/" + getCurrentUserName() + "/" + route.params.key).remove();
+    db.ref("app/rooms/" + route.params.key + "/participants/" + getCurrentUserName()).remove();
+     if (route.params.creator === getCurrentUserName()) {
+      db.ref("app/rooms/" + route.params.key).remove();
+     }
+  }
 
   const top = () => {
     return (
@@ -48,7 +82,7 @@ export default ({ navigation, route }) => {
   const btm = () => {
     return (
       <View style={styles.btm}>
-        <TouchableOpacity style={styles.okButton}>
+        <TouchableOpacity style={styles.okButton} onPress={() => {submit(); navigation.goBack()}}>
           <Text style={styles.okText}>SUBMIT</Text>
         </TouchableOpacity>
       </View>
@@ -77,7 +111,7 @@ export default ({ navigation, route }) => {
           <Ionicons name="chevron-back" size={32} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.leaveButton} onPress={() => {}}>
+        <TouchableOpacity style={styles.leaveButton} onPress={() => {leave(); navigation.goBack()}}>
           <Text style={styles.leaveText}>Leave</Text>
         </TouchableOpacity>
         <Text style={[styles.subHeader, { fontSize: 20, marginTop: 30 }]}>You've been invited to</Text>

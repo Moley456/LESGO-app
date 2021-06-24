@@ -73,7 +73,6 @@ export default ({ navigation }) => {
       });
     });
 
-    db.ref('app/rooms/-McyQ4PWqbcLG2BNj57U/preferences').set('hi');
     db.ref('app/participants/' + username).update({
       [postId]: false,
     });
