@@ -27,10 +27,16 @@ export default ({ navigation, route }) => {
   const [toggle, setToggle] = React.useState(false);
 
 const submit = () => {
-    db.ref("app/rooms/" + route.params.key + "/preferences/budget").update({
-      budget: budget   
+
+    db.ref("app/rooms/" + route.params.key + "/preferences/budget")
+    .get()
+    .then((snapshot) => {
+      const val = snapshot.child(budget).val();
+      db.ref("app/rooms/" + route.params.key + "/preferences/budget").update({
+        [budget]: 1 + val
+      })
     });
-    
+
     for (var i = 0; i <data.length; i++) {
       if (data[i].selected === true) {
         const type = data[i].activity;
@@ -39,7 +45,6 @@ const submit = () => {
         .then((snapshot) => {
           
           const val = snapshot.child(type).val();
-          console.log(val)
           db.ref("app/rooms/" + route.params.key + "/preferences/").update({
             [type]: 1 + val
           })
@@ -51,6 +56,7 @@ const submit = () => {
   const leave = () => {
     db.ref("app/participants/" + getCurrentUserName() + "/" + route.params.key).remove();
     db.ref("app/rooms/" + route.params.key + "/participants/" + getCurrentUserName()).remove();
+
      if (route.params.creator === getCurrentUserName()) {
       db.ref("app/rooms/" + route.params.key).remove();
      }
