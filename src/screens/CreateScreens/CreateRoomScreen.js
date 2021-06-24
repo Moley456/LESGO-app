@@ -68,7 +68,11 @@ export default ({ navigation }) => {
     });
 
     const postId = pushedPostRef.getKey();
-
+    
+    db.ref("app/participants/" + creator).update({
+      [postId]: false,
+    });
+    
     for (var i = 0; i < participants.length; i++) {
       db.ref("app/participants/" + participants[i]).update({
         [postId]: false,

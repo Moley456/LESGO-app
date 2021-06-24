@@ -10,46 +10,79 @@ import {
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import firebase from "firebase";
-import { getCurrentUserId, getCurrentUserName } from '../../../api/auth';
+import { getCurrentUserId, getCurrentUserName } from "../../../api/auth";
 import * as Authentication from "../../../api/auth";
 
-const leaveRoom = () => {
-}
+const leaveRoom = () => {};
 
 export default ({ navigation }) => {
-const db = firebase.database();
-const [upcoming, setUpcoming] = useState([]);
-const [invitations, setInvitations] = useState([]);
-
-// FOR UPCOMING EVENTS
-useEffect(() => {
-  db.ref("app/participants/" + getCurrentUserName())
-    .orderByValue()  
-    .equalTo(false)
-    .on('value', (snapshot) => {
-      setInvitations([]);
-      snapshot.forEach((data) => {
-        db.ref("app/rooms/" + data.key).get().then((snapshot) => {
-          setInvitations((old) => [...old, snapshot.val()]);
-        });
-      });
-    });
-  }, []);
+  const db = firebase.database();
+  const [upcoming, setUpcoming] = useState([]);
+  const [invitations, setInvitations] = useState([]);
 
   // FOR INVITATIONS
   useEffect(() => {
     db.ref("app/participants/" + getCurrentUserName())
-      .orderByValue()  
-      .equalTo(true)
-      .on('value', (snapshot) => {
-        setUpcoming([]);
+      .orderByValue()
+      .equalTo(false)
+      .on("value", (snapshot) => {
+        setInvitations([]);
         snapshot.forEach((data) => {
-          db.ref("app/rooms/" + data.key).get().then((snapshot) => {
-            setUpcoming((old) => [...old, snapshot.val()]);
-          });
+          db.ref("app/rooms/" + data.key)
+            .get()
+            .then((snapshot) => {
+              setInvitations((old) => [...old, {...snapshot.val(), key: data.key}]);
+            });
         });
       });
-    }, []);
+
+    return db
+      .ref("app/participants/" + getCurrentUserName())
+      .orderByValue()
+      .equalTo(false)
+      .off("value", (snapshot) => {
+        setInvitations([]);
+        snapshot.forEach((data) => {
+          db.ref("app/rooms/" + data.key)
+            .get()
+            .then((snapshot) => {
+              setInvitations((old) => [...old, {...snapshot.val(), key: data.key}]);
+            });
+        });
+      });
+  }, []);
+
+  // FOR UPCOMING EVENTS
+  useEffect(() => {
+    db.ref("app/participants/" + getCurrentUserName())
+      .orderByValue()
+      .equalTo(true)
+      .on("value", (snapshot) => {
+        setUpcoming([]);
+        snapshot.forEach((data) => {
+          db.ref("app/rooms/" + data.key)
+            .get()
+            .then((snapshot) => {
+              setUpcoming((old) => [...old, {...snapshot.val(), key: data.key}]);
+            });
+        });
+      });
+
+    return db
+      .ref("app/participants/" + getCurrentUserName())
+      .orderByValue()
+      .equalTo(false)
+      .off("value", (snapshot) => {
+        setUpcoming([]);
+        snapshot.forEach((data) => {
+          db.ref("app/rooms/" + data.key)
+            .get()
+            .then((snapshot) => {
+              setUpcoming((old) => [...old, {...snapshot.val(), key: data.key}]);
+            });
+        });
+      });
+  }, []);
 
   const handleLogout = () => {
     Authentication.signOut(
@@ -91,10 +124,10 @@ useEffect(() => {
       <View>
         <Text style={styles.subHeaderText}>Invitations</Text>
         <FlatList
-        data={invitations}
-        renderItem={renderInvites}
-        keyExtractor={(item) => item.id}
-      />
+          data={invitations}
+          renderItem={renderInvites}
+          keyExtractor={(item) => item.id}
+        />
       </View>
     );
   };
@@ -103,7 +136,7 @@ useEffect(() => {
     <View>
       <TouchableOpacity
         style={styles.tab}
-        onPress={() => navigation.navigate("Room", {...item})}
+        onPress={() => navigation.navigate("Room", { ...item })}
       >
         <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
@@ -118,7 +151,7 @@ useEffect(() => {
     <View>
       <TouchableOpacity
         style={styles.tab}
-        onPress={() => navigation.navigate("Invitation", {...item})}
+        onPress={() => navigation.navigate("Invitation", { ...item })}
       >
         <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
@@ -126,9 +159,9 @@ useEffect(() => {
       </TouchableOpacity>
 
       <View style={styles.invInfo}>
-          <Text>Time remaining: {item.limit}</Text>
-          <Text>@{item.creator}</Text>
-        </View>
+        <Text>Time remaining: {item.limit}</Text>
+        <Text>@{item.creator}</Text>
+      </View>
     </View>
   );
 
