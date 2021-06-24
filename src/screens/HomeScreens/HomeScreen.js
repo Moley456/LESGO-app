@@ -20,7 +20,7 @@ export default ({ navigation }) => {
       .on('value', (snapshot) => {
         setInvitations([]);
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key)
+          db.ref('app/rooms/' + data.key + '/details')
             .get()
             .then((snapshot) => {
               setInvitations((old) => [...old, { ...snapshot.val(), key: data.key }]);
@@ -35,7 +35,7 @@ export default ({ navigation }) => {
       .off('value', (snapshot) => {
         setInvitations([]);
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key)
+          db.ref('app/rooms/' + data.key + '/details')
             .get()
             .then((snapshot) => {
               setInvitations((old) => [...old, { ...snapshot.val(), key: data.key }]);
@@ -52,7 +52,7 @@ export default ({ navigation }) => {
       .on('value', (snapshot) => {
         setUpcoming([]);
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key)
+          db.ref('app/rooms/' + data.key + '/details')
             .get()
             .then((snapshot) => {
               setUpcoming((old) => [...old, { ...snapshot.val(), key: data.key }]);
@@ -67,7 +67,7 @@ export default ({ navigation }) => {
       .off('value', (snapshot) => {
         setUpcoming([]);
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key)
+          db.ref('app/rooms/' + data.key + '/details')
             .get()
             .then((snapshot) => {
               setUpcoming((old) => [...old, { ...snapshot.val(), key: data.key }]);

@@ -56,22 +56,28 @@ export default ({ navigation }) => {
   };
 
   const invite = () => {
-    const pushedPostRef = db.ref('app/rooms/').push({
+    const pushedPostRef = db.ref('app/rooms/').push({ details: [1] });
+    const postId = pushedPostRef.getKey();
+    db.ref('app/rooms/' + postId + '/details').set({
       roomName: roomName,
       date: date,
       time: time,
       limit: limit,
       creator: username,
-      participants: participants,
       activity: '',
     });
 
-    const postId = pushedPostRef.getKey();
-    
-    db.ref("app/participants/" + creator).update({
+    participants.forEach((item) => {
+      db.ref('app/rooms/' + postId + '/participants').update({
+        [item]: false,
+      });
+    });
+
+    db.ref('app/rooms/-McyQ4PWqbcLG2BNj57U/preferences').set('hi');
+    db.ref('app/participants/' + username).update({
       [postId]: false,
     });
-    
+
     for (var i = 0; i < participants.length; i++) {
       db.ref('app/participants/' + participants[i]).update({
         [postId]: false,
