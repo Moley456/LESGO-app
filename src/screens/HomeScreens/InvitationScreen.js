@@ -261,18 +261,18 @@ const styles = StyleSheet.create({
   },
 
   selected: {
-    backgroundColor: "black",
+    backgroundColor: "#5AA397",
     borderWidth: 2,
-    height: 23,
-    width: 23,
-    borderRadius: 5,
+    height: 21,
+    width: 21,
+    borderRadius: 15,
   },
 
   notSelected: {
     borderWidth: 2,
-    height: 23,
-    width: 23,
-    borderRadius: 5,
+    height: 21,
+    width: 21,
+    borderRadius: 15,
   },
 
   activity: {

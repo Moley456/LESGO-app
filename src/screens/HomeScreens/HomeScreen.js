@@ -5,8 +5,6 @@ import firebase from 'firebase';
 import { getCurrentUserId, getCurrentUserName } from '../../../api/auth';
 import * as Authentication from '../../../api/auth';
 
-const leaveRoom = () => {};
-
 export default ({ navigation }) => {
   const db = firebase.database();
   const [upcoming, setUpcoming] = useState([]);
