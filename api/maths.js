@@ -16,9 +16,7 @@ export const calcBudget = async (roomUID) => {
         snapshot.forEach((data) => {
             count += data.val();
             value += data.key * data.val();
-
         })
-
       })
     
     if (count === 0) {
@@ -28,20 +26,34 @@ export const calcBudget = async (roomUID) => {
     }
 }
 
-export const getActivity = async (roomUID) => {
+export const generateActivity = async (roomUID) => {
     var activities = [];
 
     await db
     .ref('app/rooms/' + roomUID + "/preferences/")
     .orderByValue()
-    .limitToLast(4)
     .on('value', (snapshot) => {
         snapshot.forEach((data) => {
             if (!Array.isArray(data.val())) {
                 activities.push(data.key)
-                console.log(activities);
             }
         })
     })
 
+    return activities;
+}
+
+export const getCurrentTime = () => {
+    const time = new Date(new Date().getTime());
+    return time;
+}
+
+export const getTimeAfter = (limit) => {
+    const time = new Date(new Date().getTime()+( (limit) *60*60*1000));
+    return time;
+}
+
+export const getTimeLeft = (endTime) => {
+    const diff = (endTime - getCurrentTime())/1000/60/60;
+    return diff;
 }

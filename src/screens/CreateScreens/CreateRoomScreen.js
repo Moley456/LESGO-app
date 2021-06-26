@@ -20,6 +20,8 @@ import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
 import { Searchbar } from 'react-native-paper';
 import * as Authentication from '../../../api/auth';
+import * as Maths from '../../../api/maths';
+
 
 export default ({ navigation }) => {
   const db = firebase.database();
@@ -68,7 +70,8 @@ export default ({ navigation }) => {
         roomName: roomName,
         date: date,
         time: time,
-        limit: limit,
+        timeCreated: Maths.getCurrentTime().toString(),
+        timeEnded: Maths.getTimeAfter(limit).toString(),
         creator: username,
         activity: '',
       });
