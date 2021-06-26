@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  StatusBar,
-  TouchableOpacity,
-} from "react-native";
-import { CommonActions } from "@react-navigation/native";
-import firebase from "firebase";
-import { getCurrentUserId, getCurrentUserName } from "../../../api/auth";
-import * as Authentication from "../../../api/auth";
-import * as Maths from "../../../api/maths";
+import React, { useEffect, useState } from 'react';
+import { SafeAreaView, StyleSheet, Text, View, FlatList, StatusBar, TouchableOpacity } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
+import firebase from 'firebase';
+
+import * as Auth from '../../../api/auth';
+import * as Maths from '../../../api/maths';
+import { addplaceID, fetchPlaces } from '../../../api/googlePlaces';
 
 export default ({ navigation }) => {
   const db = firebase.database();
@@ -21,127 +14,91 @@ export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const refresh = () => {
-    console.log("refresh");
+    console.log('refresh');
     setRefreshing(true);
 
-    db.ref("app/participants/" + getCurrentUserName())
-      .orderByValue()
-      .on("value", (snapshot1) => {
-        snapshot1.forEach((data) => {
-          db.ref("app/rooms/" + data.key + "/details/timeEnded")
+    db.ref('app/participants/' + Auth.getCurrentUserName()).once('value', (snapshot1) => {
+      snapshot1.forEach((data) => {
+        console.log(data);
+        if (!data.val()) {
+          db.ref('app/rooms/' + data.key + '/details/timeEnded')
             .get()
             .then((snapshot2) => {
               const timeEnded = Date.parse(snapshot2.val());
               const left = Maths.getTimeLeft(timeEnded);
               if (left < 0) {
-                db.ref("app/participants/" + getCurrentUserName()).update({
-                  [data.key]: true,
-                });
-              } else {
-                db.ref("app/participants/" + getCurrentUserName()).update({
-                  [data.key]: false,
+                Maths.generateActivities(data.key).then((activities) => {
+                  console.log(activities[0]);
+                  db.ref('app/rooms/' + data.key + '/details').update({
+                    activity: activities[0],
+                  });
+                  fetchPlaces(activities[0]).then((value) => addplaceID(data.key, value));
+                  db.ref('app/participants/' + Auth.getCurrentUserName()).update({
+                    [data.key]: true,
+                  });
                 });
               }
             });
-        });
+        }
       });
-      
-      handleInvitations();
-      handleUpcoming();
+    });
 
-      setRefreshing(false);
+    handleInvitations();
+    handleUpcoming();
+
+    setRefreshing(false);
   };
 
   const handleInvitations = () => {
-    db.ref("app/participants/" + getCurrentUserName())
+    db.ref('app/participants/' + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(false)
-      .on("value", (snapshot) => {
+      .once('value', (snapshot) => {
         setInvitations([]);
         snapshot.forEach((data) => {
-          db.ref("app/rooms/" + data.key + "/details")
+          db.ref('app/rooms/' + data.key + '/details')
             .get()
             .then((snapshot) => {
-              setInvitations((old) => [
-                ...old,
-                { ...snapshot.val(), key: data.key },
-              ]);
+              setInvitations((old) => [...old, { ...snapshot.val(), key: data.key }]);
             });
         });
       });
 
-    console.log("inv");
-
-    db.ref("app/participants/" + getCurrentUserName())
-    .orderByValue()
-    .equalTo(false)
-    .off("value", (snapshot) => {
-      setInvitations([]);
-      snapshot.forEach((data) => {
-        db.ref("app/rooms/" + data.key + "/details")
-          .get()
-          .then((snapshot) => {
-            setInvitations((old) => [
-              ...old,
-              { ...snapshot.val(), key: data.key },
-            ]);
-          });
-      });
-    });
-  }
+    console.log('inv');
+  };
 
   const handleUpcoming = () => {
-    db.ref("app/participants/" + getCurrentUserName())
+    db.ref('app/participants/' + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(true)
-      .on("value", (snapshot) => {
+      .once('value', (snapshot) => {
         setUpcoming([]);
         snapshot.forEach((data) => {
-          db.ref("app/rooms/" + data.key + "/details")
+          db.ref('app/rooms/' + data.key + '/details')
             .get()
             .then((snapshot) => {
-              setUpcoming((old) => [
-                ...old,
-                { ...snapshot.val(), key: data.key },
-              ]);
+              console.log(data.key);
+              setUpcoming((old) => [...old, { ...snapshot.val(), key: data.key }]);
             });
         });
       });
 
-    console.log("upcoming");
-
-    db.ref("app/participants/" + getCurrentUserName())
-    .orderByValue()
-    .equalTo(true)
-    .off("value", (snapshot) => {
-      setUpcoming([]);
-      snapshot.forEach((data) => {
-        db.ref("app/rooms/" + data.key + "/details")
-          .get()
-          .then((snapshot) => {
-            setUpcoming((old) => [
-              ...old,
-              { ...snapshot.val(), key: data.key },
-            ]);
-          });
-      });
-    });
-  }
+    console.log('upcoming');
+  };
 
   useEffect(() => {
     refresh();
   }, []);
 
-
   const handleLogout = () => {
-    Authentication.signOut(
+    Auth.signOut(
       () => {
         navigation.dispatch(
           CommonActions.reset({
             index: 0,
             routes: [
               {
-                name: "Login",
+                name: 'Login',
               },
             ],
           })
@@ -159,8 +116,8 @@ export default ({ navigation }) => {
         </TouchableOpacity>
 
         <Text style={styles.headerText}>
-          Welcome,{"\n"}
-          {Authentication.getCurrentUserName()}!
+          Welcome,{'\n'}
+          {Auth.getCurrentUserName()}!
         </Text>
 
         <Text style={styles.subHeaderText}>Upcoming Events</Text>
@@ -185,12 +142,10 @@ export default ({ navigation }) => {
 
   const renderEvents = ({ item }) => (
     <View>
-      <TouchableOpacity
-        style={styles.tab}
-        onPress={() => navigation.navigate("Room", { ...item })}
-      >
+      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Room', { ...item })}>
         <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
+        <Text style={styles.tabText}>{item.time}</Text>
         <Text style={styles.tabText}>{item.activity}</Text>
       </TouchableOpacity>
 
@@ -199,21 +154,18 @@ export default ({ navigation }) => {
   );
 
   const renderInvites = ({ item }) => {
-    const limit = Math.floor(Maths.getTimeLeft(Date.parse(item.timeEnded)));
+    const limit = Math.floor(Maths.getTimeLeft(Date.parse(item.timeEnded))) + 1;
 
     return (
       <View>
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={() => navigation.navigate("Invitation", { ...item })}
-        >
+        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Invitation', { ...item })}>
           <Text style={styles.tabBoldText}>{item.roomName}</Text>
           <Text style={styles.tabText}>{item.date}</Text>
-          <Text style={styles.tabText}>{item.date}</Text>
+          <Text style={styles.tabText}>{item.time}</Text>
         </TouchableOpacity>
 
         <View style={styles.invInfo}>
-          <Text>Time remaining: {limit}</Text>
+          <Text>Time remaining: {limit <= 0 ? 'times up! please refresh' : limit}</Text>
           <Text>@{item.creator}</Text>
         </View>
       </View>
@@ -230,7 +182,9 @@ export default ({ navigation }) => {
         }}
         ListHeaderComponent={aboveUpcomingEvents}
         ListFooterComponent={belowUpcomingEvents}
-        onRefresh={() => {refresh(refreshing)}}
+        onRefresh={() => {
+          refresh(refreshing);
+        }}
         refreshing={refreshing}
       />
     </SafeAreaView>
@@ -240,67 +194,67 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5AA397",
+    backgroundColor: '#5AA397',
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
   },
 
   logoutButton: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginTop: 20,
     marginRight: 10,
   },
 
   logoutText: {
-    fontFamily: "Roboto_400Regular",
+    fontFamily: 'Roboto_400Regular',
     fontSize: 20,
-    textDecorationLine: "underline",
+    textDecorationLine: 'underline',
   },
 
   headerText: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginHorizontal: 35,
     fontSize: 50,
-    color: "#F8F5F1",
-    fontFamily: "Montserrat_700Bold",
+    color: '#F8F5F1',
+    fontFamily: 'Montserrat_700Bold',
   },
 
   subHeaderText: {
-    alignSelf: "flex-start",
+    alignSelf: 'flex-start',
     marginHorizontal: 35,
     fontSize: 24,
-    color: "black",
-    fontFamily: "Montserrat_700Bold",
+    color: 'black',
+    fontFamily: 'Montserrat_700Bold',
     paddingTop: 40,
   },
 
   tab: {
-    backgroundColor: "#F8F5F1",
-    alignItems: "center",
-    alignSelf: "center",
-    justifyContent: "center",
-    width: "85%",
+    backgroundColor: '#F8F5F1',
+    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    width: '85%',
     marginTop: 15,
     borderRadius: 20,
     paddingVertical: 20,
   },
 
   tabBoldText: {
-    fontFamily: "Roboto_900Black",
+    fontFamily: 'Roboto_900Black',
   },
 
   tabText: {
-    fontFamily: "Roboto_400Regular",
+    fontFamily: 'Roboto_400Regular',
   },
 
   eventInfo: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     paddingRight: 35,
   },
 
   invInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: "100%",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
     paddingHorizontal: 35,
   },
 });

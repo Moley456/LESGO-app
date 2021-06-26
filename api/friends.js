@@ -48,7 +48,7 @@ export const sendFriendRequest = (friendUserName) => {
         [getCurrentUserId()]: false,
       });
       db.ref('app/friends/' + getCurrentUserId()).update({
-        [friendUid]: "-",
+        [friendUid]: '-',
       });
     });
 };

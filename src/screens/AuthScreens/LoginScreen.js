@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, ScrollView, Keyboard, Alert } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, Keyboard, Alert } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { CommonActions } from '@react-navigation/native';
 
-import * as Authentication from '../../../api/auth';
+import * as Auth from '../../../api/auth';
 import HideKeyboard from '../../components/HideKeyboard';
 
 export default ({ navigation }) => {
@@ -23,12 +23,12 @@ export default ({ navigation }) => {
     }
 
     var lowerCaseName = username.toLowerCase();
-    Authentication.checkUsername().then((snapshot) => {
+    Auth.checkUsername().then((snapshot) => {
       const existingUsername = snapshot.val()[lowerCaseName];
       if (existingUsername) {
-        Authentication.getEmail(existingUsername).then((snapshot) => {
+        Auth.getEmail(existingUsername).then((snapshot) => {
           const email = snapshot.val().email;
-          Authentication.signIn(
+          Auth.signIn(
             { email, password },
             (user) =>
               navigation.dispatch(

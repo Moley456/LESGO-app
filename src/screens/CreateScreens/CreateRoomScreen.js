@@ -19,9 +19,8 @@ import HideKeyboard from '../../components/HideKeyboard';
 import { FontAwesome } from '@expo/vector-icons';
 import firebase from 'firebase';
 import { Searchbar } from 'react-native-paper';
-import * as Authentication from '../../../api/auth';
+import * as Auth from '../../../api/auth';
 import * as Maths from '../../../api/maths';
-
 
 export default ({ navigation }) => {
   const db = firebase.database();
@@ -45,7 +44,7 @@ export default ({ navigation }) => {
   };
 
   const handleLogout = () => {
-    Authentication.signOut(
+    Auth.signOut(
       () =>
         navigation.dispatch(
           CommonActions.reset({
@@ -58,11 +57,10 @@ export default ({ navigation }) => {
   };
 
   const invite = () => {
-
     if (roomName === '' || date === '' || time === '' || limit === '') {
-      Alert.alert("Please fill in every field!")
+      Alert.alert('Please fill in every field!');
     } else if (participants.length === 0) {
-      Alert.alert("No friends added!")
+      Alert.alert('No friends added!');
     } else {
       const pushedPostRef = db.ref('app/rooms/').push({ details: [1] });
       const postId = pushedPostRef.getKey();
@@ -75,21 +73,21 @@ export default ({ navigation }) => {
         creator: username,
         activity: '',
       });
-  
+
       participants.forEach((item) => {
         db.ref('app/rooms/' + postId + '/participants').update({
           [item]: false,
         });
       });
-      
+
       db.ref('app/rooms/' + postId + '/participants').update({
         [username]: false,
       });
-  
+
       db.ref('app/participants/' + username).update({
         [postId]: false,
       });
-  
+
       for (var i = 0; i < participants.length; i++) {
         db.ref('app/participants/' + participants[i]).update({
           [postId]: false,
@@ -98,8 +96,6 @@ export default ({ navigation }) => {
 
       navigation.navigate('InviteSent');
     }
-
-
   };
 
   useEffect(() => {
