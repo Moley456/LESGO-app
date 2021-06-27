@@ -14,12 +14,10 @@ export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const refresh = () => {
-    console.log('refresh');
     setRefreshing(true);
 
     db.ref('app/participants/' + Auth.getCurrentUserName()).once('value', (snapshot1) => {
       snapshot1.forEach((data) => {
-        console.log(data);
         if (!data.val()) {
           db.ref('app/rooms/' + data.key + '/details/timeEnded')
             .get()
@@ -28,7 +26,6 @@ export default ({ navigation }) => {
               const left = Maths.getTimeLeft(timeEnded);
               if (left < 0) {
                 Maths.generateActivities(data.key).then((activities) => {
-                  console.log(activities[0]);
                   db.ref('app/rooms/' + data.key + '/details').update({
                     activity: activities[0],
                   });
@@ -64,7 +61,6 @@ export default ({ navigation }) => {
         });
       });
 
-    console.log('inv');
   };
 
   const handleUpcoming = () => {
@@ -77,13 +73,10 @@ export default ({ navigation }) => {
           db.ref('app/rooms/' + data.key + '/details')
             .get()
             .then((snapshot) => {
-              console.log(data.key);
               setUpcoming((old) => [...old, { ...snapshot.val(), key: data.key }]);
             });
         });
       });
-
-    console.log('upcoming');
   };
 
   useEffect(() => {

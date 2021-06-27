@@ -19,27 +19,6 @@ export default ({ navigation }) => {
     setFilteredResults(filtered);
   };
 
-  // const handleCancel = async () => {
-  //   db.ref('app/users/friends/' + getCurrentUserId())
-  //     .orderByValue()
-  //     .startAt(false)
-  //     .endAt(false)
-  //     .on('value', (snapshot) => {
-  //       setResults([]);
-  //       setTemp([]);
-  //       snapshot.forEach((data) => {
-  //         Friends.getUserInfo(data.key).then((snapshot) => {
-  //           console.log('reached');
-  //           setTemp((old) => [...old, snapshot.val()]);
-  //         });
-  //       });
-  //       console.log('reached');
-  //       setFilteredResults(temp);
-  //       console.log('line');
-  //       console.log(results);
-  //     });
-  // };
-
   useEffect(() => {
     db.ref('app/friends/' + getCurrentUserId())
       .orderByValue()
