@@ -1,12 +1,21 @@
 # LESGO-App
 
-## Motivation
-Tired of your friends overusing the replies “Anything” or “I don’t know” when asked where to go? Or perhaps you are guilty of being part of the problem? It is not surprising that many of us encounter such dilemmas in our daily lives. We Singaporeans are spoilt for choice and do not take making these decisions seriously. Furthermore, being a student/youth could mean our choices will have to take into account our budgets.
 
-This may seem like a trivial issue, but it can be one that strains relationships due to ineffective communication. Moreover, not everyone in the group will fully enjoy the activity as they simply follow through with whatever that is suggested. Hence, LESGO! will be an application for anyone looking for an enjoyable adventure but can’t make up their mind or don't know where to go! 
+## How to install?
+Start terminal and navigate to intended directory.
+Type "git clone https://github.com/Moley456/LESGO-app.git"
+Type “expo install”
+Type “expo start”
+
+## Motivation
+Tired of your friends overusing the replies “Anything” or “I don’t know” when asked where to go? Or perhaps you are guilty of being part of the problem? It is not surprising that many of us encounter such dilemmas in our daily lives. We Singaporeans are spoilt for choice and do not take making these decisions seriously. Furthermore, being a student/youth could mean our choices will have to take into account our budgets.  
+
+This may seem like a trivial issue, but it can be one that strains relationships due to ineffective communication. Moreover, not everyone in the group will fully enjoy the activity as they simply follow through with whatever that is suggested. Hence, LESGO! will be an application for anyone looking for an enjoyable adventure but can’t make up their mind or don't know where to go!  
 
 ## Aim
-Our team intends to ease the decision-making process amongst groups of friends (mainly students/youths) during planning of gatherings through effective recommendations on the application. 
+Our team intends to ease the decision-making process amongst groups of friends (mainly students/youths) during planning of gatherings through effective recommendations on the application.  
+
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/poster.png>
 
 ## User Stories
 
@@ -19,11 +28,6 @@ As a busy student/ young adult, I want to be able to efficiently plan for a gath
 As a busy student/young adult, I want to be able to keep track of when I am going out with friends so that I can plan my schedule easily.
 
 As a thrifty student/young adult, I want to be able to have my spending capabilities considered whenever I plan outings with my friends.
-
-
-
-
-
 
 ## Core Features
 These are the main features meant to be implemented to tackle the above issues. These features are listed and described briefly below:
@@ -52,10 +56,12 @@ Application to generate a list of 6 potential activities for the participants to
 Users in the ‘Room’ will be able to vote for the activity which they are interested in from the list generated
 
 ## Step by Step Guide
-
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/p1.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/p2.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/p3.png>
 
 ## How our Algorithm Works
-
+<img width="50%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/algo.png>
 
 ## Additional Features
 To provide more functionality and improve the user experience, we are also planning to implement additional features. You can read more about these additional features below:
@@ -72,8 +78,25 @@ Provides a list of nearby activities, if users do not wish to filter out anythin
 Project Details
 
 ## Tech Stack
-Programming Language: JavaScript
-UI Design: Figma
-Framework: React Native
-Database: Firebase
-Version Control: Git
+Programming Language: JavaScript  
+UI Design: Figma  
+Framework: React Native  
+Database: Firebase  
+Version Control: Git  
+
+## Resources
+URL access to project deployed:
+https://expo.io/@xw99/lesgo-app
+
+Link to Milestone 1 README:  
+https://docs.google.com/document/d/14gynMKKA1u4plFcY2efOtrMZ1eUoEY3Lx6xd6sN-89c/edit?usp=sharing
+
+Link to Milestone 2 README:  
+https://docs.google.com/document/d/1DQ7ueVafSsjq2Zs6Ev-aRxDhMTDg8djU3zLAWoxsHO4/edit?usp=sharing
+
+Poster: 
+https://drive.google.com/file/d/1C6PnSd8Jb1JsgEiOTlp_rmRXS_5VG04d/view?usp=sharing
+
+Video: 
+https://drive.google.com/file/d/1o-pM8sAI7JsnqI3IYWAN3shGv2TpaH91/view?usp=sharing
+
