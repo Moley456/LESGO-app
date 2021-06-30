@@ -2,10 +2,10 @@
 
 
 ## How to install?
-Start terminal and navigate to intended directory.
-Type "git clone https://github.com/Moley456/LESGO-app.git"
-Type “expo install”
-Type “expo start”
+Start terminal and navigate to intended directory.  
+Type "git clone https://github.com/Moley456/LESGO-app.git"  
+Type “expo install”  
+Type “expo start”  
 
 ## Motivation
 Tired of your friends overusing the replies “Anything” or “I don’t know” when asked where to go? Or perhaps you are guilty of being part of the problem? It is not surprising that many of us encounter such dilemmas in our daily lives. We Singaporeans are spoilt for choice and do not take making these decisions seriously. Furthermore, being a student/youth could mean our choices will have to take into account our budgets.  
