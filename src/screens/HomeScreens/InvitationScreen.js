@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, StatusBar, TouchableOpacity, FlatList, Alert } from 'react-native';
 
 import Slider from '@react-native-community/slider';
@@ -26,14 +26,65 @@ export default ({ navigation, route }) => {
   const [data, setData] = useState(DATA);
   const [toggle, setToggle] = useState(false);
 
-  const submit = () => {
+  // to display previously submitted data
+  useEffect(() => {
+    const submission = DATA;
+    db.ref('app/rooms/' + route.params.key + '/preferences/activities/' + Auth.getCurrentUserName())
+    .get()
+    .then((snapshot) => {
+      for (var key in snapshot.val()) {
+        for (var i = 0; i < DATA.length; i++) {
+          if (submission[i].activity === key) {
+            submission[i].selected = true;
+          }
+        }
+      }
+      setData(submission);
+    })
+
+    db.ref('app/rooms/' + route.params.key + '/preferences/budget/' + Auth.getCurrentUserName())
+    .get()
+    .then((snapshot) => {
+      const startBudget = snapshot.val();
+      setBudget(startBudget);
+    })
+
+  }, [])
+
+  const showConfirmDialog = () => {
     db.ref('app/rooms/' + route.params.key + '/participants/')
       .child(Auth.getCurrentUserName())
       .get()
       .then((snapshot) => {
         if (snapshot.val() === true) {
-          Alert.alert('You can only submit once!');
+          return Alert.alert(
+            "You have already submitted once!",
+            "Submitting again will overwrite your previous submission.",
+            [
+              // The "Yes" button
+              {
+                text: "Confirm",
+                onPress: () => {
+                  submit();
+                  navigation.goBack();          
+                },
+              },
+              // The "No" button
+              // Does nothing but dismiss the dialog when tapped
+              {
+                text: "Back",
+              },
+            ]
+          );
         } else {
+          submit();
+          navigation.goBack();  
+        }
+      })
+  };
+
+  const submit = () => {
+
           db.ref('app/rooms/' + route.params.key + '/participants').update({
             [Auth.getCurrentUserName()]: true,
           });
@@ -43,9 +94,11 @@ export default ({ navigation, route }) => {
             .then((snapshot) => {
               const val = snapshot.child(budget).val();
               db.ref('app/rooms/' + route.params.key + '/preferences/budget').update({
-                [budget]: 1 + val,
+                [Auth.getCurrentUserName()]: budget,
               });
             });
+
+          db.ref('app/rooms/' + route.params.key + '/preferences/activities/' + Auth.getCurrentUserName()).remove();
 
           for (var i = 0; i < data.length; i++) {
             if (data[i].selected === true) {
@@ -54,19 +107,18 @@ export default ({ navigation, route }) => {
                 .get()
                 .then((snapshot) => {
                   const val = snapshot.child(type).val();
-                  db.ref('app/rooms/' + route.params.key + '/preferences/activities/').update({
-                    [type]: 1 + val,
+                  db.ref('app/rooms/' + route.params.key + '/preferences/activities/' + Auth.getCurrentUserName()).update({
+                    [type]: true
                   });
                 });
             }
           }
-        }
-      });
 
     setData(DATA);
   };
 
   const leave = () => {
+    console.log("left")
     db.ref('app/participants/' + Auth.getCurrentUserName() + '/' + route.params.key).remove();
     db.ref('app/rooms/' + route.params.key + '/participants/' + Auth.getCurrentUserName()).remove();
 
@@ -87,6 +139,7 @@ export default ({ navigation, route }) => {
             step={1}
             minimumValue={0}
             maximumValue={5}
+            value={budget}
             onValueChange={(value) => {
               setBudget(value);
             }}
@@ -104,8 +157,7 @@ export default ({ navigation, route }) => {
         <TouchableOpacity
           style={styles.okButton}
           onPress={() => {
-            submit();
-            navigation.goBack();
+            showConfirmDialog();
           }}
         >
           <Text style={styles.okText}>SUBMIT</Text>
