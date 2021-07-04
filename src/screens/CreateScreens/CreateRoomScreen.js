@@ -9,6 +9,7 @@ import {
   TextInput,
   Modal,
   Alert,
+  Button,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
@@ -21,13 +22,14 @@ import firebase from 'firebase';
 import { Searchbar } from 'react-native-paper';
 import * as Auth from '../../../api/auth';
 import * as Maths from '../../../api/maths';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default ({ navigation }) => {
   const db = firebase.database();
   const username = getCurrentUserName();
   const [roomName, setRoomName] = React.useState('');
-  const [date, setDate] = React.useState('');
-  const [time, setTime] = React.useState('');
+  const [date, setDate] = React.useState(Maths.getCurrentTime());
+  const [time, setTime] = React.useState(Maths.getCurrentTime());
   const [limit, setLimit] = React.useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [searchInput, setSearchInput] = useState('');
@@ -36,6 +38,20 @@ export default ({ navigation }) => {
   const [participants, setParticipants] = useState([]);
   const [filteredResults, setFilteredResults] = useState([]);
   const [baseResults, setBaseResults] = useState([]);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(true);
+
+  // event prop is required!!
+  const onDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+  };
+
+  // event prop is required!!
+  const onTimeChange = (event, selectedTime) => {
+    const currentTime = selectedTime || time;
+    setTime(currentTime);
+  };
 
   const handleSearch = (text) => {
     setSearchInput(text);
@@ -56,6 +72,7 @@ export default ({ navigation }) => {
     );
   };
 
+
   const invite = () => {
     if (roomName === '' || date === '' || time === '' || limit === '') {
       Alert.alert('Please fill in every field!');
@@ -66,8 +83,8 @@ export default ({ navigation }) => {
       const postId = pushedPostRef.getKey();
       db.ref('app/rooms/' + postId + '/details').set({
         roomName: roomName,
-        date: date,
-        time: time,
+        date: date.toDateString(),
+        time: time.toTimeString().split(' ')[0],
         timeCreated: Maths.getCurrentTime().toString(),
         timeEnded: Maths.getTimeAfter(limit).toString(),
         creator: username,
@@ -157,16 +174,36 @@ export default ({ navigation }) => {
           <Text style={styles.tabBoldText}>Name</Text>
           <TextInput style={styles.input} onChangeText={setRoomName} value={roomName} keyboardType={'default'} maxLength={10}></TextInput>
         </View>
-
+      
         <View style={styles.row}>
           <Text style={styles.tabBoldText}>Date</Text>
-          <TextInput style={styles.input} onChangeText={setDate} value={date} keyboardType={'number-pad'} maxLength={8}></TextInput>
-        </View>
+          <View style={[styles.input, {paddingHorizontal: '20%'}]}>
+          <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={'date'}
+          is24Hour={true}
+          display="default"
+          onChange={onDateChange}
+          minimumDate={Maths.getCurrentTime()}
+          />
+          </View>
+      </View>
 
-        <View style={styles.row}>
+      <View style={styles.row}>
           <Text style={styles.tabBoldText}>Time</Text>
-          <TextInput style={styles.input} onChangeText={setTime} value={time} keyboardType={'number-pad'} maxLength={4}></TextInput>
-        </View>
+          <View style={[styles.input, {paddingHorizontal: '18%'}]}>
+          <DateTimePicker
+          testID="dateTimePicker"
+          value={time}
+          mode={'time'}
+          is24Hour={true}
+          display="default"
+          onChange={onTimeChange}
+          minimumDate={Maths.getCurrentTime()}
+          />
+          </View>
+      </View>
 
         <View style={styles.row}>
           <Text style={styles.tabBoldText}>Time Limit</Text>
@@ -307,8 +344,8 @@ const styles = StyleSheet.create({
   headerText: {
     alignSelf: 'flex-start',
     marginHorizontal: 35,
-    marginTop: 80,
-    marginBottom: 30,
+    marginTop: "15%",
+    marginBottom: "8%",
     fontSize: 65,
     color: '#F8F5F1',
     fontFamily: 'Montserrat_700Bold',

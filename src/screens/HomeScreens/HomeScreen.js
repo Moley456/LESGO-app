@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, FlatList, StatusBar, TouchableOpacity } from 'react-native';
-import { CommonActions } from '@react-navigation/native';
-import firebase from 'firebase';
+import React, { useEffect, useState } from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  StatusBar,
+  TouchableOpacity,
+} from "react-native";
+import { CommonActions, useIsFocused } from "@react-navigation/native";
+import firebase from "firebase";
 
-import * as Auth from '../../../api/auth';
-import * as Maths from '../../../api/maths';
-import { addplaceID, fetchPlaces } from '../../../api/googlePlaces';
+import * as Auth from "../../../api/auth";
+import * as Maths from "../../../api/maths";
+import { addplaceID, fetchPlaces } from "../../../api/googlePlaces";
 
 export default ({ navigation }) => {
   const db = firebase.database();
@@ -13,32 +21,45 @@ export default ({ navigation }) => {
   const [invitations, setInvitations] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    refresh();
+  }, [isFocused]);
+
   const refresh = () => {
     setRefreshing(true);
 
-    db.ref('app/participants/' + Auth.getCurrentUserName()).once('value', (snapshot1) => {
-      snapshot1.forEach((data) => {
-        if (!data.val()) {
-          db.ref('app/rooms/' + data.key + '/details/timeEnded')
-            .get()
-            .then((snapshot2) => {
-              const timeEnded = Date.parse(snapshot2.val());
-              const left = Maths.getTimeLeft(timeEnded);
-              if (left < 0) {
-                Maths.generateActivities(data.key).then((activities) => {
-                  db.ref('app/rooms/' + data.key + '/details').update({
-                    activity: activities[0],
+    db.ref("app/participants/" + Auth.getCurrentUserName()).once(
+      "value",
+      (snapshot1) => {
+        snapshot1.forEach((data) => {
+          if (!data.val()) {
+            db.ref("app/rooms/" + data.key + "/details/timeEnded")
+              .get()
+              .then((snapshot2) => {
+                const timeEnded = Date.parse(snapshot2.val());
+                const left = Maths.getTimeLeft(timeEnded);
+                if (left < 0) {
+                  Maths.generateActivities(data.key).then((activities) => {
+                    db.ref("app/rooms/" + data.key + "/details").update({
+                      activity: activities[0],
+                    });
+                    fetchPlaces(activities[0]).then((value) =>
+                      addplaceID(data.key, value)
+                    );
+                    db.ref(
+                      "app/participants/" + Auth.getCurrentUserName()
+                    ).update({
+                      [data.key]: true,
+                    });
                   });
-                  fetchPlaces(activities[0]).then((value) => addplaceID(data.key, value));
-                  db.ref('app/participants/' + Auth.getCurrentUserName()).update({
-                    [data.key]: true,
-                  });
-                });
-              }
-            });
-        }
-      });
-    });
+                }
+              });
+          }
+        });
+      }
+    );
 
     handleInvitations();
     handleUpcoming();
@@ -47,41 +68,42 @@ export default ({ navigation }) => {
   };
 
   const handleInvitations = () => {
-    db.ref('app/participants/' + Auth.getCurrentUserName())
+    db.ref("app/participants/" + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(false)
-      .once('value', (snapshot) => {
+      .once("value", (snapshot) => {
         setInvitations([]);
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key + '/details')
+          db.ref("app/rooms/" + data.key + "/details")
             .get()
             .then((snapshot) => {
-              setInvitations((old) => [...old, { ...snapshot.val(), key: data.key }]);
+              setInvitations((old) => [
+                ...old,
+                { ...snapshot.val(), key: data.key },
+              ]);
             });
         });
       });
-
   };
 
   const handleUpcoming = () => {
-    db.ref('app/participants/' + Auth.getCurrentUserName())
+    db.ref("app/participants/" + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(true)
-      .once('value', (snapshot) => {
+      .once("value", (snapshot) => {
         setUpcoming([]);
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key + '/details')
+          db.ref("app/rooms/" + data.key + "/details")
             .get()
             .then((snapshot) => {
-              setUpcoming((old) => [...old, { ...snapshot.val(), key: data.key }]);
+              setUpcoming((old) => [
+                ...old,
+                { ...snapshot.val(), key: data.key },
+              ]);
             });
         });
       });
   };
-
-  useEffect(() => {
-    refresh();
-  }, []);
 
   const handleLogout = () => {
     Auth.signOut(
@@ -91,7 +113,7 @@ export default ({ navigation }) => {
             index: 0,
             routes: [
               {
-                name: 'Login',
+                name: "Login",
               },
             ],
           })
@@ -109,7 +131,7 @@ export default ({ navigation }) => {
         </TouchableOpacity>
 
         <Text style={styles.headerText}>
-          Welcome,{'\n'}
+          Welcome,{"\n"}
           {Auth.getCurrentUserName()}!
         </Text>
 
@@ -135,7 +157,10 @@ export default ({ navigation }) => {
 
   const renderEvents = ({ item }) => (
     <View>
-      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Room', { ...item })}>
+      <TouchableOpacity
+        style={styles.tab}
+        onPress={() => navigation.navigate("Room", { ...item })}
+      >
         <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
         <Text style={styles.tabText}>{item.time}</Text>
@@ -151,14 +176,19 @@ export default ({ navigation }) => {
 
     return (
       <View>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Invitation', { ...item })}>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => navigation.navigate("Invitation", { ...item })}
+        >
           <Text style={styles.tabBoldText}>{item.roomName}</Text>
           <Text style={styles.tabText}>{item.date}</Text>
           <Text style={styles.tabText}>{item.time}</Text>
         </TouchableOpacity>
 
         <View style={styles.invInfo}>
-          <Text>Time remaining: {limit <= 0 ? 'times up! please refresh' : limit}</Text>
+          <Text>
+            Time remaining: {limit <= 0 ? "times up! please refresh" : limit}
+          </Text>
           <Text>@{item.creator}</Text>
         </View>
       </View>
@@ -187,67 +217,67 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#5AA397',
+    backgroundColor: "#5AA397",
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
   },
 
   logoutButton: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     marginTop: 20,
     marginRight: 10,
   },
 
   logoutText: {
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: "Roboto_400Regular",
     fontSize: 20,
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
   },
 
   headerText: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginHorizontal: 35,
     fontSize: 50,
-    color: '#F8F5F1',
-    fontFamily: 'Montserrat_700Bold',
+    color: "#F8F5F1",
+    fontFamily: "Montserrat_700Bold",
   },
 
   subHeaderText: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginHorizontal: 35,
     fontSize: 24,
-    color: 'black',
-    fontFamily: 'Montserrat_700Bold',
+    color: "black",
+    fontFamily: "Montserrat_700Bold",
     paddingTop: 40,
   },
 
   tab: {
-    backgroundColor: '#F8F5F1',
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    width: '85%',
+    backgroundColor: "#F8F5F1",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    width: "85%",
     marginTop: 15,
     borderRadius: 20,
     paddingVertical: 20,
   },
 
   tabBoldText: {
-    fontFamily: 'Roboto_900Black',
+    fontFamily: "Roboto_900Black",
   },
 
   tabText: {
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: "Roboto_400Regular",
   },
 
   eventInfo: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     paddingRight: 35,
   },
 
   invInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
     paddingHorizontal: 35,
   },
 });
