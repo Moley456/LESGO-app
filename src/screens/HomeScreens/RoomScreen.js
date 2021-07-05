@@ -58,6 +58,8 @@ export default ({ navigation, route }) => {
             uri: Places.getPlacePhoto(photo),
           }}
         />
+
+        <TouchableOpacity style={styles.chatTab} onPress={() => navigation.navigate('Chat', { ...route})}><Text style={{fontFamily: 'Montserrat_700Bold'}}>Chat</Text></TouchableOpacity>
       </SafeAreaView>
     </HideKeyboard>
   );
@@ -106,4 +108,16 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlign: 'center',
   },
+
+  chatTab: {
+    width: "80%",
+    height: "5%",
+    backgroundColor: '#F8F5F1',
+    position: 'absolute',
+    bottom: "5%",
+    borderRadius: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
+
 });
