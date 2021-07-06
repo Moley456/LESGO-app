@@ -39,18 +39,21 @@ export default ({ navigation }) => {
   const [filteredResults, setFilteredResults] = useState([]);
   const [baseResults, setBaseResults] = useState([]);
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [showDatePicker, setShowDatePicker] = useState(true);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   // event prop is required!!
   const onDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
+    setShowDatePicker(false);
     setDate(currentDate);
   };
 
   // event prop is required!!
   const onTimeChange = (event, selectedTime) => {
     const currentTime = selectedTime || time;
+    setShowTimePicker(false);
     setTime(currentTime);
+    console.log(currentTime);
   };
 
   const handleSearch = (text) => {
@@ -72,6 +75,13 @@ export default ({ navigation }) => {
     );
   };
 
+  const handleDatePress = () => {
+    setShowDatePicker(true);
+  };
+
+  const handleTimePress = () => {
+    setShowTimePicker(true);
+  };
 
   const invite = () => {
     if (roomName === '' || date === '' || time === '' || limit === '') {
@@ -174,37 +184,46 @@ export default ({ navigation }) => {
           <Text style={styles.tabBoldText}>Name</Text>
           <TextInput style={styles.input} onChangeText={setRoomName} value={roomName} keyboardType={'default'} maxLength={10}></TextInput>
         </View>
-      
+
+        {/* DatePicker */}
         <View style={styles.row}>
           <Text style={styles.tabBoldText}>Date</Text>
-          <View style={[styles.input, {paddingHorizontal: '20%'}]}>
-          <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={'date'}
-          is24Hour={true}
-          display="default"
-          onChange={onDateChange}
-          minimumDate={Maths.getCurrentTime()}
-          />
-          </View>
-      </View>
+          <TouchableOpacity style={styles.input} onPress={handleDatePress}>
+            <Text style={styles.dateAndTimeText}>{date.toString().slice(0, 15)}</Text>
+          </TouchableOpacity>
+          {showDatePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={'date'}
+              is24Hour={true}
+              display="default"
+              onChange={onDateChange}
+              minimumDate={Maths.getCurrentTime()}
+            />
+          )}
+        </View>
 
-      <View style={styles.row}>
+        {/* TimePicker */}
+        <View style={styles.row}>
           <Text style={styles.tabBoldText}>Time</Text>
-          <View style={[styles.input, {paddingHorizontal: '18%'}]}>
-          <DateTimePicker
-          testID="dateTimePicker"
-          value={time}
-          mode={'time'}
-          is24Hour={true}
-          display="default"
-          onChange={onTimeChange}
-          minimumDate={Maths.getCurrentTime()}
-          />
-          </View>
-      </View>
+          <TouchableOpacity style={styles.input} onPress={handleTimePress}>
+            <Text style={styles.dateAndTimeText}>{time.toString().slice(15, 21)}</Text>
+          </TouchableOpacity>
+          {showTimePicker && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={time}
+              mode={'time'}
+              is24Hour={true}
+              display="default"
+              onChange={onTimeChange}
+              minimumDate={Maths.getCurrentTime()}
+            />
+          )}
+        </View>
 
+        {/* Time Limit */}
         <View style={styles.row}>
           <Text style={styles.tabBoldText}>Time Limit</Text>
           <TextInput
@@ -344,8 +363,8 @@ const styles = StyleSheet.create({
   headerText: {
     alignSelf: 'flex-start',
     marginHorizontal: 35,
-    marginTop: "15%",
-    marginBottom: "8%",
+    marginTop: '15%',
+    marginBottom: '8%',
     fontSize: 65,
     color: '#F8F5F1',
     fontFamily: 'Montserrat_700Bold',
@@ -368,6 +387,13 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 20,
     marginRight: 30,
+  },
+
+  dateAndTimeText: {
+    textAlign: 'center',
+    paddingTop: 2,
+    fontSize: 20,
+    fontFamily: 'Montserrat_700Bold',
   },
 
   tabBoldText: {
