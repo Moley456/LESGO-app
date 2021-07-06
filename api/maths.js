@@ -1,6 +1,7 @@
 import firebase from './firebase';
 const db = firebase.database();
 
+// return promise of value
 export const calcBudget = async (roomUID) => {
   var value = 0;
   var count = 0;
@@ -11,32 +12,40 @@ export const calcBudget = async (roomUID) => {
     .get()
     .then((snapshot) => {
       snapshot.forEach((data) => {
-        count += data.val();
-        value += data.key * data.val();
+        count ++;
+        value += data.val();
       });
     });
 
   if (count === 0) {
     return 0;
+    
   } else {
     return value / count;
   }
 };
 
-export const generateActivities = async (roomUID) => {
+
+// return promise of array
+export const generateActivities =  async (roomUID) => {
   const activities = [];
 
   await db
-    .ref('app/rooms/' + roomUID + '/preferences/activities')
-    .orderByValue()
-    .limitToLast(1)
+    .ref('app/rooms/' + roomUID + '/preferences/activities/')
     .get()
-    .then((snapshot) => {
-      for (const property in snapshot.val()) {
-        activities.push(property);
-      }
-    });
-  return activities;
+    .then((snapshot1) => {
+      snapshot1.forEach((data) => {
+        db.ref('app/rooms/' + roomUID + '/preferences/activities/' + data.key + "/")
+          .get()
+          .then((snapshot2) => {
+            for (const property in snapshot2.val()) {
+              activities.push(property);
+            }
+          })
+      })
+    })
+    
+    return activities;
 };
 
 export const getCurrentTime = () => {
