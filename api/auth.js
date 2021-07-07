@@ -25,6 +25,10 @@ export const getEmail = (uid) => {
   return db.ref('app/users/' + uid).get();
 };
 
+export const getUid = (username) => {
+  return db.ref('app/usernames/' + username).get();
+};
+
 export const signIn = async ({ email, password }, onSuccess, onError) => {
   try {
     const { user } = await auth.signInWithEmailAndPassword(email, password);
