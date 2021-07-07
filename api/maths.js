@@ -12,40 +12,55 @@ export const calcBudget = async (roomUID) => {
     .get()
     .then((snapshot) => {
       snapshot.forEach((data) => {
-        count ++;
+        count++;
         value += data.val();
       });
     });
 
   if (count === 0) {
     return 0;
-    
   } else {
     return value / count;
   }
 };
 
-
 // return promise of array
-export const generateActivities =  async (roomUID) => {
+export const generateActivities = async (roomUID) => {
+  const activityCount = {};
+  const sortingArray = [];
   const activities = [];
 
   await db
     .ref('app/rooms/' + roomUID + '/preferences/activities/')
     .get()
     .then((snapshot1) => {
-      snapshot1.forEach((data) => {
-        db.ref('app/rooms/' + roomUID + '/preferences/activities/' + data.key + "/")
-          .get()
-          .then((snapshot2) => {
-            for (const property in snapshot2.val()) {
-              activities.push(property);
-            }
-          })
-      })
-    })
-    
-    return activities;
+      //loop through each participant
+      snapshot1.forEach((participants) => {
+        //loop through each preference of the participant
+        participants.forEach((prefs) => {
+          if (prefs.key in activityCount) {
+            activityCount[prefs.key] += 1; //increase count if already appeared before
+          } else {
+            activityCount[prefs.key] = 1; //add new key-value pair if never appeared before
+          }
+        });
+        // convert activityCount object into 2D array
+        for (const pref in activityCount) {
+          sortingArray.push([pref, activityCount[pref]]);
+        }
+
+        //sort the 2D array
+        sortingArray.sort((a, b) => {
+          b[1] - a[1];
+        });
+
+        //push top 3 activities to activity array
+        for (let i = 0; i < 3 && i < sortingArray.length; i++) {
+          activities.push(sortingArray[i][0]);
+        }
+      });
+    });
+  return activities;
 };
 
 export const getCurrentTime = () => {
