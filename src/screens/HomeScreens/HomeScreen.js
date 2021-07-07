@@ -22,7 +22,7 @@ export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const isFocused = useIsFocused();
-
+  
   useEffect(() => {
     refresh();
   }, [isFocused]);
@@ -147,9 +147,6 @@ export default ({ navigation }) => {
         <FlatList
           data={invitations}
           renderItem={renderInvites}
-          keyExtractor={(item) => {
-            item.key;
-          }}
         />
       </View>
     );
@@ -200,9 +197,6 @@ export default ({ navigation }) => {
       <FlatList
         data={upcoming}
         renderItem={renderEvents}
-        keyExtractor={(item) => {
-          item.key;
-        }}
         ListHeaderComponent={aboveUpcomingEvents}
         ListFooterComponent={belowUpcomingEvents}
         onRefresh={() => {

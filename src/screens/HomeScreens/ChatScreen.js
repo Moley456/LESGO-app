@@ -76,13 +76,15 @@ export default ({ navigation, route }) => {
             logData(messages);
           }}
           user={{
-            _id: Auth.getCurrentUserName(),
+            _id: Auth.getCurrentUserId(),
             name: Auth.getCurrentUserName(),
             avatar: "https://placeimg.com/140/140/any",
           }}
           renderUsernameOnMessage={true}
           showUserAvatar={true}
-          onPressAvatar={() => {}}
+          onPressAvatar={(clickedUser) => {
+            navigation.navigate("ViewUser", { ...clickedUser });
+          }}
           textProps={{ style: { color: "black" } }}
           timeTextStyle={{ left: { color: "grey" }, right: { color: "grey" } }}
           renderChatEmpty={() => {

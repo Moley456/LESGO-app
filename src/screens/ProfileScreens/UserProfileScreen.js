@@ -30,22 +30,22 @@ export default ({ navigation }) => {
         <Text style={styles.tabText}>edit</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.tab} onPress={() => {}}>
+      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('BioScreen')}>
+        <Text style={styles.tabBoldText}>Bio</Text>
+        <Text style={styles.tabText}>edit</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('PictureScreen')}>
         <Text style={styles.tabBoldText}>Picture</Text>
         <Text style={styles.tabText}>edit</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.tab} onPress={() => {}}>
-        <Text style={styles.tabBoldText}>Name</Text>
-        <Text style={styles.tabText}>edit</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.tab} onPress={() => {}}>
+      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('UsernameScreen')}>
         <Text style={styles.tabBoldText}>Username</Text>
         <Text style={styles.tabText}>edit</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.tab} onPress={() => {}}>
+      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('PasswordScreen')}>
         <Text style={styles.tabBoldText}>Password</Text>
         <Text style={styles.tabText}>edit</Text>
       </TouchableOpacity>
