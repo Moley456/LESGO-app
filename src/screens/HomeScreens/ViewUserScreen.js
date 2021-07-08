@@ -17,12 +17,18 @@ export default ({ navigation, route }) => {
   const [bio, setBio] = useState("");
 
   useEffect(() => {
+
+    if (route.params.bio === undefined) {
     const sub = db
       .ref("app/users/" + route.params._id + "/bio/")
       .once("value", (snapshot) => {
         setBio(snapshot.val());
       });
-    return () => sub;
+      return () => sub;
+    } else {
+      setBio(route.params.bio);
+    }
+
   }, []);
 
   return (
