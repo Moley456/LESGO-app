@@ -27,8 +27,13 @@ export default ({ navigation, route }) => {
   const [photo, setPhoto] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [participants, setParticipants] = useState([]);
+  const [totalVotes, setTotalVotes] = useState(35);
+  const [voted, setVoted] = useState(false);
+  const [votedChoice, setVotedChoice] = useState(0);
+  const [choices, setChoices] = useState([]);
 
-  const choices = [
+
+  const POLL = [
     { id: 1, choice: "Karaoke", votes: 12 },
     { id: 2, choice: "Golf", votes: 1 },
     { id: 3, choice: "Badminton", votes: 3 },
@@ -37,10 +42,34 @@ export default ({ navigation, route }) => {
     { id: 6, choice: "Nature", votes: 5 },
   ];
 
+  useEffect(() => {
+    db.ref('app/rooms/' + route.params.key + '/polls').get().then((data) => {
+      if (data.val() === null) {
+        setChoices(POLL)
+        console.log("if")
+      } else {
+        setChoices(data.val())
+        console.log("else")
+      }
+    }
+    )
+  }, [])
+
+  const handleVote = (selectedChoice) => {
+    console.log("SelectedChoice: ", selectedChoice);
+    console.log(route.params.key)
+    setVoted(true);
+    setVotedChoice(selectedChoice.id);
+
+    db.ref('app/rooms/' + route.params.key + '/polls/').set(choices)
+    
+  }
+
   const leave = () => {
     db.ref(
       "app/participants/" + Auth.getCurrentUserName() + "/" + route.params.key
     ).remove();
+
     db.ref(
       "app/rooms/" +
         route.params.key +
@@ -107,22 +136,29 @@ export default ({ navigation, route }) => {
 
         <Text style={styles.header}>{route.params.roomName}</Text>
 
+        <Text style={styles.subHeader}>
+        {route.params.date + "\n" + route.params.time}
+        </Text>
+
         <RNPoll
-          appearFrom="left"
-          animationDuration={750}
-          totalVotes={35}
+          appearFrom="top"
+          animationDuration={200}
+          totalVotes={totalVotes}
           choices={choices}
+          hasBeenVoted={voted}
+          votedChoiceByID={votedChoice}
           PollContainer={RNAnimated}
           PollItemContainer={RNAnimated}
-          onChoicePress={(selectedChoice) =>
-            console.log("SelectedChoice: ", selectedChoice)
-          }
+          fillBackgroundColor={'#F8F5F1'}
+          borderColor={'#F8F5F1'}
+          style={styles.poll}
+          choiceTextStyle={styles.pollText}
+          percentageTextStyle={styles.pollText}
+          onChoicePress={(selectedChoice) => handleVote(selectedChoice)}
         />
 
-        {/*         <Text style={styles.subHeader}>
-          Date & Time: {"\n" + route.params.date + "   " + route.params.time}{" "}
-        </Text>
-        <Text style={styles.subHeader}>
+
+{/*         <Text style={styles.subHeader}>
           Activity: {"\n" + route.params.activity}
         </Text>
         <Text style={styles.subHeader}>Name of Place: {"\n" + name}</Text>
@@ -134,7 +170,7 @@ export default ({ navigation, route }) => {
           }}
         /> */}
         <TouchableOpacity
-          style={styles.participants}
+          style={[styles.tab, {bottom: "19%"}]}
           onPress={() => setModalVisible(!modalVisible)}
         >
           <Text style={{ fontFamily: "Montserrat_700Bold" }}>Participants</Text>
@@ -195,13 +231,23 @@ export default ({ navigation, route }) => {
         </Modal>
 
         <TouchableOpacity
-          style={styles.chatTab}
+          style={styles.tab}
           onPress={() => navigation.navigate("Chat", { ...route })}
         >
-          <Text style={{ fontFamily: "Montserrat_700Bold", color: "white" }}>
+          <Text style={{ fontFamily: "Montserrat_700Bold" }}>
             Chat
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.finalTab}
+          onPress={() =>{}}
+        >
+          <Text style={{ fontFamily: "Montserrat_700Bold", color: "white" }}>
+            LET'S GO!
+          </Text>
+        </TouchableOpacity>
+
       </SafeAreaView>
     </HideKeyboard>
   );
@@ -245,20 +291,20 @@ const styles = StyleSheet.create({
   },
 
   subHeader: {
+    marginVertical: '2%',
     fontSize: 25,
-    color: "black",
     fontFamily: "Montserrat_700Bold",
-    marginVertical: 10,
-    alignSelf: "flex-start",
-    left: "15%",
+    textAlign: 'center'
   },
 
-  progressBar: {
-    width: "80%",
-    height: "5%",
-    backgroundColor: "#F8F5F1",
-    borderRadius: 15,
-    borderWidth: 2,
+  poll: {
+    width: '85%',
+    position: 'absolute',
+    top: "26%"
+  },
+
+  pollText: {
+    fontFamily: "Montserrat_700Bold",
   },
 
   modalView: {
@@ -305,7 +351,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
-  participants: {
+  tab: {
     width: "80%",
     height: "5%",
     backgroundColor: "#F8F5F1",
@@ -317,7 +363,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
 
-  chatTab: {
+  finalTab: {
     width: "80%",
     height: "5%",
     backgroundColor: "black",
