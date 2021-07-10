@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  RefreshControl,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -7,6 +8,7 @@ import {
   FlatList,
   StatusBar,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { CommonActions, useIsFocused } from "@react-navigation/native";
 import firebase from "firebase";
@@ -22,7 +24,7 @@ export default ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const isFocused = useIsFocused();
-  
+
   useEffect(() => {
     refresh();
   }, [isFocused]);
@@ -42,17 +44,17 @@ export default ({ navigation }) => {
                 const left = Maths.getTimeLeft(timeEnded);
                 if (left < 0) {
                   Maths.generateActivities(data.key).then((activities) => {
-                    db.ref("app/rooms/" + data.key + "/details").update({
-                      activity: activities[0],
-                    });
-                    fetchPlaces(activities[0]).then((value) =>
+                    for (var count = 0; count < 3; count ++) {
+                      db.ref("app/rooms/" + data.key + "/polls/" + count).update({
+                        id: count,
+                        choice: activities[count],
+                        votes: 0,
+                      });
+                    }
+/*                     fetchPlaces(activities[0]).then((value) =>
                       addplaceID(data.key, value)
-                    );
-                    db.ref(
-                      "app/participants/" + Auth.getCurrentUserName()
-                    ).update({
-                      [data.key]: true,
-                    });
+                    ); */
+                    setAllParticipantsToTrue(data.key);
                   });
                 }
               });
@@ -67,12 +69,32 @@ export default ({ navigation }) => {
     setRefreshing(false);
   };
 
+  const setAllParticipantsToTrue = (roomUID) => {
+    db.ref(
+      "app/participants/" + Auth.getCurrentUserName()
+    ).update({
+      [roomUID]: true,
+    });
+
+    db.ref(
+      'app/rooms/' + roomUID + '/participants/'
+    ).once('value', (snapshot) => {
+      snapshot.forEach((participant) => {
+        console.log(participant.key)
+        db.ref('app/participants/' + participant.key + '/').update({
+          [roomUID]: true,
+        }
+        )
+      })}
+    )
+  }
+
   const handleInvitations = () => {
+    setInvitations([]);
     db.ref("app/participants/" + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(false)
       .once("value", (snapshot) => {
-        setInvitations([]);
         snapshot.forEach((data) => {
           db.ref("app/rooms/" + data.key + "/details")
             .get()
@@ -87,11 +109,11 @@ export default ({ navigation }) => {
   };
 
   const handleUpcoming = () => {
+    setUpcoming([]);
     db.ref("app/participants/" + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(true)
       .once("value", (snapshot) => {
-        setUpcoming([]);
         snapshot.forEach((data) => {
           db.ref("app/rooms/" + data.key + "/details")
             .get()
@@ -144,10 +166,34 @@ export default ({ navigation }) => {
     return (
       <View>
         <Text style={styles.subHeaderText}>Invitations</Text>
-        <FlatList
-          data={invitations}
-          renderItem={renderInvites}
-        />
+        {invitations.length === 0 && (
+          <Text style={styles.noText}>
+            No invites currently.{"\n"}Start inviting your friends!
+          </Text>
+        )}
+        <FlatList data={invitations} renderItem={renderInvites} />
+      </View>
+    );
+  };
+
+  const noUpcomingEvents = () => {
+    return (
+      <View>
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Logout</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.headerText}>
+          Welcome,{"\n"}
+          {Auth.getCurrentUserName()}!
+        </Text>
+
+        <Text style={styles.subHeaderText}>Upcoming Events</Text>
+        <Text style={styles.noText}>
+          No upcoming events currently.{"\n"}Start inviting your friends!
+        </Text>
+
+        <Text style={styles.subHeaderText}>Invitations</Text>
       </View>
     );
   };
@@ -161,7 +207,6 @@ export default ({ navigation }) => {
         <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
         <Text style={styles.tabText}>{item.time}</Text>
-        <Text style={styles.tabText}>{item.activity}</Text>
       </TouchableOpacity>
 
       <Text style={styles.eventInfo}>@{item.creator}</Text>
@@ -184,7 +229,7 @@ export default ({ navigation }) => {
 
         <View style={styles.invInfo}>
           <Text>
-            Time remaining: {limit <= 0 ? "times up! please refresh" : limit}
+            Time remaining: {limit <= 0 ? "times up! please refresh." : limit}
           </Text>
           <Text>@{item.creator}</Text>
         </View>
@@ -194,16 +239,64 @@ export default ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={upcoming}
-        renderItem={renderEvents}
-        ListHeaderComponent={aboveUpcomingEvents}
-        ListFooterComponent={belowUpcomingEvents}
-        onRefresh={() => {
-          refresh(refreshing);
-        }}
-        refreshing={refreshing}
-      />
+      {/* NO UPCOMING, NO INVITATIONS! */}
+      {invitations.length === 0 && upcoming.length === 0 && (
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={() => {
+                refresh(refreshing);
+              }}
+            />
+          }
+        >
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.headerText}>
+            Welcome,{"\n"}
+            {Auth.getCurrentUserName()}!
+          </Text>
+
+          <Text style={styles.subHeaderText}>Upcoming Events</Text>
+          <Text style={styles.noText}>
+            No upcoming events currently.{"\n"}Start inviting your friends!
+          </Text>
+          <Text style={styles.subHeaderText}>Invitations</Text>
+          <Text style={styles.noText}>
+            No invites currently.{"\n"}Start inviting your friends!
+          </Text>
+        </ScrollView>
+      )}
+
+      {/* NO UPCOMING, GOT INVITATIONS! */}
+      {upcoming.length === 0 && invitations.length !== 0 && (
+        <FlatList
+          data={invitations}
+          renderItem={renderInvites}
+          ListHeaderComponent={noUpcomingEvents}
+          onRefresh={() => {
+            refresh(refreshing);
+          }}
+          refreshing={refreshing}
+        />
+      )}
+
+      {/* GOT UPCOMING, GOT/NO INVITATIONS! */}
+      {upcoming.length !== 0 && (
+        <FlatList
+          data={upcoming}
+          renderItem={renderEvents}
+          ListHeaderComponent={aboveUpcomingEvents}
+          ListFooterComponent={belowUpcomingEvents}
+          onRefresh={() => {
+            refresh(refreshing);
+          }}
+          refreshing={refreshing}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -273,5 +366,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     paddingHorizontal: 35,
+  },
+
+  noText: {
+    alignSelf: "center",
+    fontFamily: "Roboto_400Regular",
+    textAlign: "center",
+    fontSize: 15,
+    paddingTop: "8%",
+    color: "black",
   },
 });

@@ -27,39 +27,33 @@ export default ({ navigation, route }) => {
   const [photo, setPhoto] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const [totalVotes, setTotalVotes] = useState(35);
+  const [totalVotes, setTotalVotes] = useState(10);
   const [voted, setVoted] = useState(false);
   const [votedChoice, setVotedChoice] = useState(0);
   const [choices, setChoices] = useState([]);
 
-
+/* 
   const POLL = [
     { id: 1, choice: "Karaoke", votes: 12 },
     { id: 2, choice: "Golf", votes: 1 },
     { id: 3, choice: "Badminton", votes: 3 },
-    { id: 4, choice: "Paint", votes: 5 },
-    { id: 5, choice: "Bowling", votes: 9 },
-    { id: 6, choice: "Nature", votes: 5 },
-  ];
+    { id: 4, choice: "4th choice", votes: 5 },
+    { id: 5, choice: "5th choice", votes: 9 },
+    { id: 6, choice: "6th choice", votes: 5 },
+  ]; */
 
   useEffect(() => {
     db.ref('app/rooms/' + route.params.key + '/polls').get().then((data) => {
-      if (data.val() === null) {
-        setChoices(POLL)
-        console.log("if")
-      } else {
         setChoices(data.val())
-        console.log("else")
-      }
     }
     )
   }, [])
 
   const handleVote = (selectedChoice) => {
     console.log("SelectedChoice: ", selectedChoice);
-    console.log(route.params.key)
     setVoted(true);
     setVotedChoice(selectedChoice.id);
+    setTotalVotes((old) => {old + 1})
 
     db.ref('app/rooms/' + route.params.key + '/polls/').set(choices)
     
@@ -82,7 +76,7 @@ export default ({ navigation, route }) => {
     }
   };
 
-  useEffect(() => {
+/*   useEffect(() => {
     const sub = db
       .ref("app/rooms/" + route.params.key + "/details/placeID")
       .get()
@@ -91,7 +85,7 @@ export default ({ navigation, route }) => {
       });
 
     return () => sub;
-  }, []);
+  }, []); */
 
   useEffect(() => {
     setParticipants([]);

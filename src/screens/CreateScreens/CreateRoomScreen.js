@@ -264,7 +264,7 @@ export default ({ navigation }) => {
                         style={styles.addButton}
                         onPress={() => {
                           setParticipants((old) => [...old, item.username]);
-                          Alert.alert('Invited ' + item.username + '!');
+                          Alert.alert('Added ' + item.username + '!');
                         }}
                       >
                         <Text style={styles.inputStyle}>Add</Text>

@@ -156,7 +156,6 @@ export default ({ navigation, route }) => {
     ).remove();
 
     if (route.params.creator === Auth.getCurrentUserName()) {
-      db.ref("app/rooms/" + route.params.key).remove();
       db.ref("app/rooms/" + route.params.key + "/participants/")
       .get()
       .then((snapshot) => {
@@ -166,6 +165,7 @@ export default ({ navigation, route }) => {
           ).remove();
         });
       });
+      db.ref("app/rooms/" + route.params.key).remove();
     }
   };
 
