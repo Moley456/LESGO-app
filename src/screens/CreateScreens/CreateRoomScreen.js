@@ -86,7 +86,7 @@ export default ({ navigation }) => {
       });
 
       db.ref('app/rooms/' + postId + '/participants').update({
-        [username]: false,
+        [username]: '-',
       });
 
       db.ref('app/participants/' + username).update({

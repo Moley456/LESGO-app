@@ -70,11 +70,11 @@ export default ({ navigation, route }) => {
   }, []);
 
   const showConfirmDialog = () => {
-    db.ref("app/rooms/" + route.params.key + "/participants/")
+    db.ref("app/rooms/" + route.params.key + "/preferences/activities/")
       .child(Auth.getCurrentUserName())
       .get()
       .then((snapshot) => {
-        if (snapshot.val() === true) {
+        if (snapshot.exists()) {
           return Alert.alert(
             "You have already submitted once!",
             "Submitting again will overwrite your previous submission.",
@@ -102,9 +102,9 @@ export default ({ navigation, route }) => {
   };
 
   const submit = () => {
-    db.ref("app/rooms/" + route.params.key + "/participants").update({
+/*     db.ref("app/rooms/" + route.params.key + "/participants").update({
       [Auth.getCurrentUserName()]: true,
-    });
+    }); */
 
     db.ref("app/rooms/" + route.params.key + "/preferences/budget")
       .get()

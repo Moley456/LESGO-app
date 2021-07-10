@@ -44,10 +44,10 @@ export default ({ navigation }) => {
                 const left = Maths.getTimeLeft(timeEnded);
                 if (left < 0) {
                   Maths.generateActivities(data.key).then((activities) => {
-                    for (var count = 0; count < 3; count ++) {
+                    for (var count = 1; count <= 6; count ++) {
                       db.ref("app/rooms/" + data.key + "/polls/" + count).update({
                         id: count,
-                        choice: activities[count],
+                        choice: activities[count - 1],
                         votes: 0,
                       });
                     }

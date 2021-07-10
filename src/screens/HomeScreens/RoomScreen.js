@@ -27,7 +27,7 @@ export default ({ navigation, route }) => {
   const [photo, setPhoto] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const [totalVotes, setTotalVotes] = useState(10);
+  const [totalVotes, setTotalVotes] = useState(0);
   const [voted, setVoted] = useState(false);
   const [votedChoice, setVotedChoice] = useState(0);
   const [choices, setChoices] = useState([]);
@@ -42,21 +42,40 @@ export default ({ navigation, route }) => {
     { id: 6, choice: "6th choice", votes: 5 },
   ]; */
 
+  {/* TO SET CHOICES FOR POLL */}
   useEffect(() => {
-    db.ref('app/rooms/' + route.params.key + '/polls').get().then((data) => {
-        setChoices(data.val())
-    }
-    )
-  }, [])
+
+    db.ref('app/rooms/' + route.params.key + '/participants').child(Auth.getCurrentUserName()).once('value', (selectedChoice) => {
+      if (selectedChoice.val() !== '-') {
+        setVoted(true);
+        setVotedChoice(selectedChoice.val());
+      }
+    })
+    db.ref('app/rooms/' + route.params.key + '/polls').once('value', (data) => {
+      setChoices(data.val())
+  })
+
+  db.ref('app/rooms/' + route.params.key + '/participants').once('value', (selectedChoice) => {
+      setTotalVotes(0)
+      selectedChoice.forEach((child) => {
+        if (child.val() !== '-') {
+          setTotalVotes((old) => (old + 1))
+          console.log(totalVotes)
+        }
+      })
+  })
+
+
+    }, [])
 
   const handleVote = (selectedChoice) => {
     console.log("SelectedChoice: ", selectedChoice);
-    setVoted(true);
-    setVotedChoice(selectedChoice.id);
-    setTotalVotes((old) => {old + 1})
 
     db.ref('app/rooms/' + route.params.key + '/polls/').set(choices)
     
+    db.ref('app/rooms/' + route.params.key + '/participants').update({
+      [Auth.getCurrentUserName()]: selectedChoice.id
+    })
   }
 
   const leave = () => {
@@ -87,6 +106,7 @@ export default ({ navigation, route }) => {
     return () => sub;
   }, []); */
 
+  {/* TO SET PARTICIPANTS LIST */}
   useEffect(() => {
     setParticipants([]);
     const sub = db
@@ -134,12 +154,12 @@ export default ({ navigation, route }) => {
         {route.params.date + "\n" + route.params.time}
         </Text>
 
-        <RNPoll
+        { voted === true && <RNPoll
           appearFrom="top"
           animationDuration={200}
           totalVotes={totalVotes}
           choices={choices}
-          hasBeenVoted={voted}
+          hasBeenVoted={true}
           votedChoiceByID={votedChoice}
           PollContainer={RNAnimated}
           PollItemContainer={RNAnimated}
@@ -149,7 +169,24 @@ export default ({ navigation, route }) => {
           choiceTextStyle={styles.pollText}
           percentageTextStyle={styles.pollText}
           onChoicePress={(selectedChoice) => handleVote(selectedChoice)}
-        />
+        /> }
+
+        { voted === false && <RNPoll
+          appearFrom="top"
+          animationDuration={200}
+          totalVotes={totalVotes}
+          choices={choices}
+          hasBeenVoted={false}
+          votedChoiceByID={votedChoice}
+          PollContainer={RNAnimated}
+          PollItemContainer={RNAnimated}
+          fillBackgroundColor={'#F8F5F1'}
+          borderColor={'#F8F5F1'}
+          style={styles.poll}
+          choiceTextStyle={styles.pollText}
+          percentageTextStyle={styles.pollText}
+          onChoicePress={(selectedChoice) => handleVote(selectedChoice)}
+        />}
 
 
 {/*         <Text style={styles.subHeader}>
@@ -164,7 +201,7 @@ export default ({ navigation, route }) => {
           }}
         /> */}
         <TouchableOpacity
-          style={[styles.tab, {bottom: "19%"}]}
+          style={[styles.tab, {bottom: "17%"}]}
           onPress={() => setModalVisible(!modalVisible)}
         >
           <Text style={{ fontFamily: "Montserrat_700Bold" }}>Participants</Text>
@@ -350,7 +387,7 @@ const styles = StyleSheet.create({
     height: "5%",
     backgroundColor: "#F8F5F1",
     position: "absolute",
-    bottom: "12%",
+    bottom: "10%",
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
@@ -362,7 +399,7 @@ const styles = StyleSheet.create({
     height: "5%",
     backgroundColor: "black",
     position: "absolute",
-    bottom: "5%",
+    bottom: "3%",
     borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
