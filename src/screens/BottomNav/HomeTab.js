@@ -6,6 +6,7 @@ import RoomScreen from '../HomeScreens/RoomScreen';
 import InvitationScreen from '../HomeScreens/InvitationScreen';
 import ChatScreen from '../HomeScreens/ChatScreen';
 import ViewUserScreen from '../HomeScreens/ViewUserScreen';
+import ActivityScreen from '../HomeScreens/ActivityScreen';
 
 const homeStack = createStackNavigator();
 
@@ -15,6 +16,7 @@ const screens = [
     { name: 'Invitation', component: InvitationScreen },
     { name: 'Chat', component: ChatScreen },
     { name: 'ViewUser', component: ViewUserScreen },
+    { name: 'Activity', component: ActivityScreen },
 ];
 
 export default () => {

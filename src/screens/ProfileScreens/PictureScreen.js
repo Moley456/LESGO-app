@@ -28,7 +28,7 @@ export default ({ navigation }) => {
       <Text style={styles.headerText}>{Authentication.getCurrentUserName()}</Text>
       </View>
 
-      <Text style={styles.bioHeader}>Bio:</Text>
+      <Text style={styles.bioHeader}>Coming soon!</Text>
 
 
     </SafeAreaView>
@@ -58,6 +58,14 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontFamily: 'Montserrat_700Bold',
   },
+
+  bioHeader: {
+    fontSize: 25,
+    fontFamily: 'Montserrat_700Bold',
+    color: "#F8F5F1",
+    marginHorizontal: "12%",
+    marginVertical: "5%",
+  }
 
 
 });
