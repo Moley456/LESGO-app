@@ -62,6 +62,7 @@ export default ({ navigation }) => {
   };
 
   const invite = () => {
+    console.log(time.toTimeString());
     if (roomName === '' || date === '' || time === '' || limit === '') {
       Alert.alert('Please fill in every field!');
     } else if (participants.length === 0) {
@@ -72,7 +73,7 @@ export default ({ navigation }) => {
       db.ref('app/rooms/' + postId + '/details').set({
         roomName: roomName,
         date: date.toDateString(),
-        time: time.toTimeString().split(' ')[0],
+        time: time.toTimeString().slice(0, 5),
         timeCreated: Maths.getCurrentTime().toString(),
         timeEnded: Maths.getTimeAfter(limit).toString(),
         creator: username,
