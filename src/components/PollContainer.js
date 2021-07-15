@@ -11,33 +11,18 @@ export default (props) => {
   const [photo, setPhoto] = useState('');
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [names, setNames] = useState([]);
   const [placeName, setPlaceName] = useState('');
-  const [toggle, setToggle] = useState(true);
 
   useEffect(() => {
+    setData([])
     db.ref('app/rooms/' + props.roomUID + '/polls').once('value', (value) => {
       value.val().forEach((object) =>
         Places.getPlaceName(object.placeId).then((element) => {
-          setNames((old) => [...old, { name: element.name, placeId: object.placeId }]);
+          setData((old) => [...old, {...object, name: element.name}])
         })
       );
-      if (names.length !== 0) {
-        setData(
-          value.val().map((object) => {
-            for (let i = 0; i < 6; i++) {
-              if (names[i].placeId === object.placeId) {
-                return { ...object, name: names[i].name };
-              }
-            }
-          })
-        );
-      } else {
-        setToggle((old) => !old);
-      }
+   
     });
-
-    return setData([]);
   }, []);
 
   useEffect(() => {
