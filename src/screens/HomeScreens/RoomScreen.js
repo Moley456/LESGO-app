@@ -97,16 +97,16 @@ export default ({ navigation, route }) => {
     }
   };
 
-  /*   useEffect(() => {
-    const sub = db
-      .ref("app/rooms/" + route.params.key + "/details/placeID")
-      .get()
-      .then((value) => {
-        Places.getPlaceInfo(value.val(), setName, setLocation, setPhoto);
-      });
+  //    useEffect(() => {
+  //   const sub = db
+  //     .ref("app/rooms/" + route.params.key + "/details/placeID")
+  //     .get()
+  //     .then((value) => {
+  //       Places.getPlaceInfo(value.val(), setName, setLocation, setPhoto);
+  //     });
 
-    return () => sub;
-  }, []); */
+  //   return () => sub;
+  // }, []);
 
   {
     /* TO SET PARTICIPANTS LIST */
@@ -151,7 +151,7 @@ export default ({ navigation, route }) => {
 
         <Text style={styles.subHeader}>{route.params.date + '\n' + route.params.time}</Text>
 
-        <PollContainer />
+        <PollContainer roomUID={route.params.key} setName={setName} name={name} />
 
         {/* {voted === true && (
           <RNPoll

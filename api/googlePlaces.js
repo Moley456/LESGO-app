@@ -1,5 +1,6 @@
 import { GOOGLE_API_KEY } from '@env';
 import firebase from 'firebase';
+import { generateActivities } from './maths';
 const db = firebase.database();
 
 export const fetchPlaces = async (activity) => {
@@ -70,28 +71,29 @@ export const fetchPlaces = async (activity) => {
         }
       });
       results.sort(compareFunction);
-      finalResults.push(results[0]);
 
-      // For Milestone 3
-      // for (let i = 0; i < 3; i++) {
-      //   finalResults.push(results[i]);
-      // }
+      for (let i = 0; i < 2; i++) {
+        finalResults.push(results[i]);
+      }
     })
     .catch((error) => console.log(error));
 
   return finalResults;
 };
 
-// For Milestone 3
-// export const getResultsToDisplay = async (activityArray) => {
-//   let finalArray = [];
-//   await generateActivities().then((value) => {
-//     value.forEach((element) => {
-//       console.log(element);
-//       fetchPlaces(element).then((value) => value.forEach((activity) => finalArray.push(activity)));
-//     });
-//   });
-// };
+export const getResults = async (roomUID) => {
+  const finalArray = [];
+  await generateActivities('-MeZKP-0c80OCf7wsxfw').then((activities) => {
+    activities.forEach((activity) => {
+      fetchPlaces(activity).then((placeId) => {
+        finalArray.push({ placeId: placeId[0], activity: activity });
+        finalArray.push({ placeId: placeId[1], activity: activity });
+      });
+    });
+  });
+  console.log(finalArray);
+  return finalArray;
+};
 
 export const addplaceID = (roomUID, activityInfo) => {
   db.ref('app/rooms/' + roomUID + '/details').update({
@@ -112,6 +114,20 @@ export const getPlaceInfo = (placeID, setName, setLocation, setPhoto) => {
       setLocation(details.formatted_address);
       setPhoto(details.photos[0].photo_reference);
     });
+};
+
+export const getPlaceName = async (placeID) => {
+  const url = 'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeID + '&fields=name&key=' + GOOGLE_API_KEY;
+  let final = {};
+  await fetch(url)
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      const details = res.result;
+      final = details;
+    });
+  return final;
 };
 
 export const getPlacePhoto = (photoRef) => {
