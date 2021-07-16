@@ -151,7 +151,7 @@ export default ({ navigation, route }) => {
 
         <Text style={styles.subHeader}>{route.params.date + '\n' + route.params.time}</Text>
 
-        <PollContainer roomUID={route.params.key} setName={setName} name={name} />
+        <PollContainer roomUID={route.params.key} handleVote={handleVote} />
 
         {/* {voted === true && (
           <RNPoll

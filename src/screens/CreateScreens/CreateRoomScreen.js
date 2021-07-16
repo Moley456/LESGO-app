@@ -78,6 +78,7 @@ export default ({ navigation }) => {
         timeEnded: Maths.getTimeAfter(limit).toString(),
         creator: username,
         activity: '',
+        totalVotes: 0,
       });
 
       participants.forEach((item) => {

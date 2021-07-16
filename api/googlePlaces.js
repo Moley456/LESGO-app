@@ -81,20 +81,6 @@ export const fetchPlaces = async (activity) => {
   return finalResults;
 };
 
-export const getResults = async (roomUID) => {
-  const finalArray = [];
-  await generateActivities('-MeZKP-0c80OCf7wsxfw').then((activities) => {
-    activities.forEach((activity) => {
-      fetchPlaces(activity).then((placeId) => {
-        finalArray.push({ placeId: placeId[0], activity: activity });
-        finalArray.push({ placeId: placeId[1], activity: activity });
-      });
-    });
-  });
-  console.log(finalArray);
-  return finalArray;
-};
-
 export const addplaceID = (roomUID, activityInfo) => {
   db.ref('app/rooms/' + roomUID + '/details').update({
     placeID: activityInfo[0],
@@ -102,6 +88,7 @@ export const addplaceID = (roomUID, activityInfo) => {
 };
 
 export const getPlaceInfo = (placeID, setName, setLocation, setPhoto) => {
+  console.log('ran');
   const url =
     'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeID + '&fields=name,formatted_address,photos&key=' + GOOGLE_API_KEY;
   fetch(url)

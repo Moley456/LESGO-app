@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View, Modal, Text } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View, Modal, Text, Image } from 'react-native';
 import * as Places from '../../api/googlePlaces';
 import firebase from 'firebase';
-const totalVotes = 10;
+import * as Auth from '../../api/auth';
 
 export default (props) => {
   const db = firebase.database();
@@ -11,36 +11,73 @@ export default (props) => {
   const [photo, setPhoto] = useState('');
   const [data, setData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [placeName, setPlaceName] = useState('');
+  const [selection, setSelection] = useState(0);
+  const [toggle, setToggle] = useState(true);
+  const [totalVotes, setTotalVotes] = useState(Infinity);
+  const [currentUser, setCurrentUser] = useState(Auth.getCurrentUserName());
 
   useEffect(() => {
-    setData([])
+    //set total votes
+    db.ref('app/rooms/' + props.roomUID + '/details/totalVotes').once('value', (value) => {
+      console.log('totalVotes:' + value.val());
+      setTotalVotes(value.val());
+    });
+
+    //add place names to data
     db.ref('app/rooms/' + props.roomUID + '/polls').once('value', (value) => {
+      console.log(value.val());
       value.val().forEach((object) =>
         Places.getPlaceName(object.placeId).then((element) => {
-          setData((old) => [...old, {...object, name: element.name}])
+          setData((old) => [...old, { ...object, name: element.name }]);
         })
       );
-   
     });
-  }, []);
+    return setData([]);
+  }, [toggle]);
 
   useEffect(() => {
-    db.ref('app/rooms/' + props.roomUID + '/polls/0/placeId')
+    //get place info when user selects one of the options
+    db.ref('app/rooms/' + props.roomUID + '/polls/' + selection + '/placeId')
       .get()
       .then((value) => {
         Places.getPlaceInfo(value.val(), setName, setLocation, setPhoto);
       });
-  }, []);
+  }, [selection]);
+
+  const handleVote = (selectedChoice) => {
+    //checks if current user already voted.
+    //if voted, decrease previous option's vote count by 1
+    //if not voted, increase total vote count by 1
+    db.ref('app/rooms/' + props.roomUID + '/participants/' + currentUser).once('value', (choice) => {
+      if (choice.val() !== '-' && choice.val() !== false && choice.val() !== true) {
+        db.ref('app/rooms/' + props.roomUID + '/polls/' + choice.val() + '/votes').set(firebase.database.ServerValue.increment(-1));
+      } else {
+        db.ref('app/rooms/' + props.roomUID + '/details/totalVotes').set(firebase.database.ServerValue.increment(1));
+      }
+    });
+
+    //increment option's vote count by 1 and updates the current users selection
+    db.ref('app/rooms/' + props.roomUID + '/polls/' + selection + '/votes').set(firebase.database.ServerValue.increment(1));
+    db.ref('app/rooms/' + props.roomUID + '/participants').update({
+      [currentUser]: selectedChoice,
+    });
+    setToggle(!toggle);
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
         data={data}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item, separator }) => (
+        renderItem={({ item }) => (
           <View>
-            <TouchableOpacity style={styles.listItem} onPress={() => setModalVisible(!modalVisible)}>
+            <TouchableOpacity
+              style={styles.listItem}
+              onPress={() => {
+                setModalVisible(!modalVisible);
+                setSelection(item.id);
+              }}
+            >
               <Text style={styles.activity}>
                 {item.activity}
                 {'\n'}
@@ -60,11 +97,21 @@ export default (props) => {
         }}
       >
         <View style={styles.modalView}>
+          <Text style={styles.modalTextHeader}>Name</Text>
+          <Text style={styles.modalText}>{name}</Text>
+          <Text style={styles.modalTextHeader}>Address</Text>
+          <Text style={styles.modalText}>{location}</Text>
+          <Image
+            style={{ width: 150, height: 150, marginTop: 5 }}
+            source={{
+              uri: Places.getPlacePhoto(photo),
+            }}
+          />
           <Text style={styles.modalWarningText}>Voting again will change your previous vote</Text>
           <TouchableOpacity
-            style={styles.modalButton}
+            style={styles.modalVoteButton}
             onPress={() => {
-              props.handleVote(selectedChoice);
+              handleVote(selection);
               setModalVisible(!modalVisible);
             }}
           >
@@ -100,9 +147,10 @@ const styles = StyleSheet.create({
   },
 
   percentage: {
-    paddingTop: 8,
+    paddingTop: 5,
     paddingRight: 10,
     fontFamily: 'Montserrat_700Bold',
+    fontSize: 18,
   },
 
   activity: {
@@ -141,34 +189,12 @@ const styles = StyleSheet.create({
   modalVoteText: {
     fontFamily: 'Roboto_400Regular',
     alignSelf: 'center',
-  },
-
-  modalButton: {
-    position: 'absolute',
-    bottom: '12%',
-    borderWidth: 2,
-    borderColor: 'black',
-    width: '75%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 10,
-  },
-
-  modalWarningText: {
-    position: 'absolute',
-    bottom: '19%',
-    fontFamily: 'Roboto_400Regular',
-  },
-
-  modalCancelText: {
-    fontFamily: 'Roboto_400Regular',
-    alignSelf: 'center',
     color: 'white',
   },
 
-  modalCancelButton: {
+  modalVoteButton: {
     position: 'absolute',
-    bottom: '5%',
+    bottom: '13%',
     borderWidth: 2,
     borderColor: 'black',
     backgroundColor: 'black',
@@ -176,5 +202,46 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
+    height: 30,
+  },
+
+  modalWarningText: {
+    position: 'absolute',
+    bottom: '21%',
+    fontFamily: 'Roboto_400Regular',
+  },
+
+  modalCancelText: {
+    fontFamily: 'Roboto_400Regular',
+    alignSelf: 'center',
+    color: 'black',
+  },
+
+  modalCancelButton: {
+    position: 'absolute',
+    bottom: '5%',
+    borderWidth: 2,
+    borderColor: 'black',
+
+    width: '75%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    height: 30,
+  },
+
+  modalTextHeader: {
+    fontFamily: 'Roboto_400Regular',
+    textAlign: 'center',
+    color: 'black',
+    fontSize: 20,
+    textDecorationLine: 'underline',
+  },
+  modalText: {
+    fontFamily: 'Roboto_400Regular',
+    textAlign: 'center',
+    color: 'black',
+    fontSize: 17,
+    marginBottom: 10,
   },
 });
