@@ -13,7 +13,7 @@ export default (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selection, setSelection] = useState(0);
   const [toggle, setToggle] = useState(true);
-  const [totalVotes, setTotalVotes] = useState(Infinity);
+  const [totalVotes, setTotalVotes] = useState('-');
   const [currentUser, setCurrentUser] = useState(Auth.getCurrentUserName());
 
   useEffect(() => {
@@ -25,8 +25,8 @@ export default (props) => {
 
     //add place names to data
     db.ref('app/rooms/' + props.roomUID + '/polls').once('value', (value) => {
-      console.log(value.val());
-      value.val().forEach((object) =>
+/*       console.log(value.val());
+ */      value.val().forEach((object) =>
         Places.getPlaceName(object.placeId).then((element) => {
           setData((old) => [...old, { ...object, name: element.name }]);
         })
@@ -61,7 +61,8 @@ export default (props) => {
     db.ref('app/rooms/' + props.roomUID + '/participants').update({
       [currentUser]: selectedChoice,
     });
-    setToggle(!toggle);
+
+    setToggle((old) => (!old));
   };
 
   return (
@@ -83,7 +84,8 @@ export default (props) => {
                 {'\n'}
                 {item.name}
               </Text>
-              <Text style={styles.percentage}>{Math.floor((item.votes / totalVotes) * 100)}%</Text>
+              {totalVotes !== 0 && <Text style={styles.percentage}>{Math.floor((item.votes / totalVotes) * 100)}%</Text>}
+              {totalVotes === 0 && <Text style={styles.percentage}>0%</Text>}
             </TouchableOpacity>
           </View>
         )}
@@ -102,12 +104,12 @@ export default (props) => {
           <Text style={styles.modalTextHeader}>Address</Text>
           <Text style={styles.modalText}>{location}</Text>
           <Image
-            style={{ width: 150, height: 150, marginTop: 5 }}
+            style={{ width: "70%", height: "35%", marginTop: "2%" }}
             source={{
               uri: Places.getPlacePhoto(photo),
             }}
           />
-          <Text style={styles.modalWarningText}>Voting again will change your previous vote</Text>
+          <Text style={styles.modalWarningText}>Voting again will overwrite your previous vote!</Text>
           <TouchableOpacity
             style={styles.modalVoteButton}
             onPress={() => {
@@ -134,27 +136,26 @@ export default (props) => {
 const styles = StyleSheet.create({
   container: {
     width: '80%',
-    height: 400,
   },
 
   listItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: 4,
-    paddingVertical: 10,
+    marginVertical: '1%',
+    paddingVertical: "3%",
     backgroundColor: 'white',
     borderRadius: 10,
   },
 
   percentage: {
-    paddingTop: 5,
+    alignSelf: 'center',
     paddingRight: 10,
     fontFamily: 'Montserrat_700Bold',
     fontSize: 18,
   },
 
   activity: {
-    paddingLeft: 10,
+    paddingLeft: '4%',
     fontFamily: 'Montserrat_700Bold',
   },
 
@@ -198,17 +199,18 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: 'black',
     backgroundColor: 'black',
-    width: '75%',
+    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    height: 30,
+    height: "6%",
   },
 
   modalWarningText: {
     position: 'absolute',
-    bottom: '21%',
+    bottom: '24%',
     fontFamily: 'Roboto_400Regular',
+    color: 'red'
   },
 
   modalCancelText: {
@@ -222,26 +224,28 @@ const styles = StyleSheet.create({
     bottom: '5%',
     borderWidth: 2,
     borderColor: 'black',
-
-    width: '75%',
+    width: '80%',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    height: 30,
+    height: "6%",
   },
 
   modalTextHeader: {
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: 'Montserrat_700Bold',
     textAlign: 'center',
     color: 'black',
     fontSize: 20,
     textDecorationLine: 'underline',
   },
+
   modalText: {
     fontFamily: 'Roboto_400Regular',
     textAlign: 'center',
     color: 'black',
+    paddingHorizontal: '8%',
     fontSize: 17,
-    marginBottom: 10,
+    marginBottom: '4%',
+    marginTop: '2%',
   },
 });
