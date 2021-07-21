@@ -7,85 +7,12 @@ import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
 import * as Places from '../../../api/googlePlaces';
 import * as Friends from '../../../api/friends';
-import RNPoll, { IChoice } from 'react-native-poll';
-import RNAnimated from 'react-native-animated-component';
 import PollContainer from '../../components/PollContainer';
 
 export default ({ navigation, route }) => {
   const db = firebase.database();
-  const [name, setName] = useState('');
-  const [location, setLocation] = useState('');
-  const [photo, setPhoto] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const [totalVotes, setTotalVotes] = useState(0);
-  const [voted, setVoted] = useState(false);
-  const [votedChoice, setVotedChoice] = useState(0);
-  const [choices, setChoices] = useState([]);
-
-  /* 
-  const POLL = [
-    { id: 1, choice: "Karaoke", votes: 12 },
-    { id: 2, choice: "Golf", votes: 1 },
-    { id: 3, choice: "Badminton", votes: 3 },
-    { id: 4, choice: "4th choice", votes: 5 },
-    { id: 5, choice: "5th choice", votes: 9 },
-    { id: 6, choice: "6th choice", votes: 5 },
-  ]; */
-
-  {
-    /* TO SET CHOICES FOR POLL */
-  }
-  useEffect(() => {
-    db.ref('app/rooms/' + route.params.key + '/participants')
-      .child(Auth.getCurrentUserName())
-      .once('value', (selectedChoice) => {
-        console.log(selectedChoice.val());
-        if (selectedChoice.val() !== '-' && selectedChoice.val() !== false) {
-          setVoted(true);
-          setVotedChoice(selectedChoice.val());
-        }
-      });
-    db.ref('app/rooms/' + route.params.key + '/polls').once('value', (data) => {
-      setChoices(data.val());
-    });
-
-    db.ref('app/rooms/' + route.params.key + '/participants').once('value', (selectedChoice) => {
-      setTotalVotes(0);
-      selectedChoice.forEach((child) => {
-        if (child.val() !== '-') {
-          setTotalVotes((old) => old + 1);
-          console.log(totalVotes);
-        }
-      });
-    });
-  }, []);
-
-  const handleVote = (selectedChoice) => {
-    setTotalVotes((old) => old + 1);
-    console.log('SelectedChoice: ', selectedChoice);
-    Alert.alert('You can only vote for the activity once', 'Are you sure you want to vote for ' + selectedChoice.choice, [
-      // The "Yes" button
-      {
-        text: 'Yes',
-        onPress: () => {
-          setVoted(true);
-          db.ref('app/rooms/' + route.params.key + '/polls/').set(choices);
-
-          db.ref('app/rooms/' + route.params.key + '/participants').update({
-            [Auth.getCurrentUserName()]: selectedChoice.id,
-          });
-
-          navigation.goBack();
-        },
-      },
-      // The "No" button
-      // Does nothing but dismiss the dialog when tapped
-      {
-        text: 'No',
-      },
-    ]);
-  };
 
   const leave = () => {
     db.ref('app/participants/' + Auth.getCurrentUserName() + '/' + route.params.key).remove();
@@ -93,24 +20,18 @@ export default ({ navigation, route }) => {
     db.ref('app/rooms/' + route.params.key + '/participants/' + Auth.getCurrentUserName()).remove();
 
     if (route.params.creator === Auth.getCurrentUserName()) {
+      db.ref('app/rooms/' + route.params.key + '/participants/')
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((data) => {
+            db.ref('app/participants/' + data.key + '/' + route.params.key).remove();
+          });
+        });
       db.ref('app/rooms/' + route.params.key).remove();
     }
   };
 
-  //    useEffect(() => {
-  //   const sub = db
-  //     .ref("app/rooms/" + route.params.key + "/details/placeID")
-  //     .get()
-  //     .then((value) => {
-  //       Places.getPlaceInfo(value.val(), setName, setLocation, setPhoto);
-  //     });
-
-  //   return () => sub;
-  // }, []);
-
-  {
-    /* TO SET PARTICIPANTS LIST */
-  }
+  //TO SET PARTICIPANTS LIST
   useEffect(() => {
     setParticipants([]);
     const sub = db.ref('app/rooms/' + route.params.key + '/participants/').on('child_added', (snapshot) => {
@@ -123,11 +44,6 @@ export default ({ navigation, route }) => {
     });
 
     return () => sub;
-
-    /*     db.ref('app/rooms/' + route.params.key + '/participants/')
-    .on('child_removed', (snapshot) => {
-      console.log("removed" + snapshot.key)
-    }) */
   }, []);
 
   return (
@@ -151,58 +67,12 @@ export default ({ navigation, route }) => {
 
         <Text style={styles.subHeader}>{route.params.date + '\n' + route.params.time}</Text>
 
-        <PollContainer roomUID={route.params.key} handleVote={handleVote} />
+        <PollContainer roomUID={route.params.key} />
 
-        {/* {voted === true && (
-          <RNPoll
-            appearFrom="top"
-            animationDuration={200}
-            totalVotes={totalVotes}
-            choices={choices}
-            hasBeenVoted={voted}
-            votedChoiceByID={votedChoice}
-            PollItemContainer={View}
-            fillBackgroundColor={'#F8F5F1'}
-            borderColor={'#F8F5F1'}
-            style={styles.poll}
-            choiceTextStyle={styles.pollText}
-            percentageTextStyle={styles.pollText}
-            onChoicePress={(selectedChoice) => handleVote(selectedChoice)}
-          />
-        )}
-
-        {voted === false && (
-          <RNPoll
-            appearFrom="top"
-            animationDuration={200}
-            totalVotes={totalVotes}
-            choices={choices}
-            hasBeenVoted={voted}
-            votedChoiceByID={votedChoice}
-            PollItemContainer={View}
-            fillBackgroundColor={'#F8F5F1'}
-            borderColor={'#F8F5F1'}
-            style={styles.poll}
-            choiceTextStyle={styles.pollText}
-            percentageTextStyle={styles.pollText}
-            onChoicePress={(selectedChoice) => handleVote(selectedChoice)}
-          />
-        )} */}
-
-        {/*         <Text style={styles.subHeader}>
-          Activity: {"\n" + route.params.activity}
-        </Text>
-        <Text style={styles.subHeader}>Name of Place: {"\n" + name}</Text>
-        <Text style={styles.subHeader}>Address: {"\n" + location}</Text>
-        <Image
-          style={{ width: 150, height: 150 }}
-          source={{
-            uri: Places.getPlacePhoto(photo),
-          }}
-        /> */}
         <TouchableOpacity style={[styles.tab, { bottom: '17%' }]} onPress={() => setModalVisible(!modalVisible)}>
           <Text style={{ fontFamily: 'Montserrat_700Bold' }}>Participants</Text>
         </TouchableOpacity>
+
         <Modal
           animationType="slide"
           transparent={true}

@@ -12,7 +12,7 @@ export default ({ navigation }) => {
   const [upcoming, setUpcoming] = useState([]);
   const [invitations, setInvitations] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [finalArray, setFinalArray] = useState([]);
+  var count = 0;
 
   const isFocused = useIsFocused();
 
@@ -33,39 +33,46 @@ export default ({ navigation }) => {
               const left = Maths.getTimeLeft(timeEnded);
               if (left < 0) {
                 Maths.generateActivities(data.key).then((activities) => {
-                  activities.forEach((activity) => {
-                    Places.fetchPlaces(activity).then((placeId) => {
-                      setFinalArray((old) => [...old, { placeId: placeId[0], activity: activity }]);
-                      setFinalArray((old) => [...old, { placeId: placeId[1], activity: activity }]);
+                  if (activities.length !== 0) {
+                    setAllParticipantsToTrue(data.key);
+                    activities.forEach((activity) => {
+                      Places.fetchPlaces(activity).then((placeId) => {
+                        db.ref('app/rooms/' + data.key + '/polls/' + count).update({
+                          id: count,
+                          placeId: placeId[0],
+                          activity: activity,
+                          votes: 0,
+                        });
+
+                        db.ref('app/rooms/' + data.key + '/polls/' + (count + 1)).update({
+                          id: count + 1,
+                          placeId: placeId[1],
+                          activity: activity,
+                          votes: 0,
+                        });
+                        count += 2;
+                      });
                     });
-                  });
+                  }
                 });
-                console.log(finalArray);
-                for (let i = 0; i < 6; i++) {
-                  db.ref('app/rooms/' + data.key + '/polls/' + i).update({
-                    id: i,
-                    placeId: finalArray[i].placeId,
-                    activity: finalArray[i].activity,
-                    votes: 0,
-                  });
-                }
-                // Maths.generateActivities(data.key).then((activities) => {
-                //   for (var count = 1; count <= 6; count++) {
-                //     db.ref('app/rooms/' + data.key + '/polls/' + count).update({
-                //       id: count,
-                //       choice: activities[count - 1],
-                //       votes: 0,
-                //     });
-                //   }
-                //   /*                     fetchPlaces(activities[0]).then((value) =>
-                //       addplaceID(data.key, value)
-                //     ); */
-                setAllParticipantsToTrue(data.key);
-                setFinalArray([]);
-                // });
               }
             });
         }
+        db.ref('app/rooms/' + data.key + '/details')
+          .get()
+          .then((snapshot) => {
+            const timeLeft = Maths.getTimeLeft(Date.parse(snapshot.val().fullDate));
+            if (timeLeft < 0) {
+              db.ref('app/rooms/' + data.key + '/participants/')
+                .get()
+                .then((snapshot) => {
+                  snapshot.forEach((participant) => {
+                    db.ref('app/participants/' + participant.key + '/' + data.key).remove();
+                  });
+                });
+              db.ref('app/rooms/' + data.key).remove();
+            }
+          });
       });
     });
 
@@ -82,7 +89,6 @@ export default ({ navigation }) => {
 
     db.ref('app/rooms/' + roomUID + '/participants/').once('value', (snapshot) => {
       snapshot.forEach((participant) => {
-        console.log(participant.key);
         db.ref('app/participants/' + participant.key + '/').update({
           [roomUID]: true,
         });
@@ -211,7 +217,7 @@ export default ({ navigation }) => {
         </TouchableOpacity>
 
         <View style={styles.invInfo}>
-          <Text>Time remaining: {limit <= 0 ? 'times up! please refresh.' : limit}</Text>
+          <Text>Time remaining: {limit <= 0 ? 'times up! please refresh.' : limit + ' hours'}</Text>
           <Text>@{item.creator}</Text>
         </View>
       </View>

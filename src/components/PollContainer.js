@@ -25,8 +25,7 @@ export default (props) => {
 
     //add place names to data
     db.ref('app/rooms/' + props.roomUID + '/polls').once('value', (value) => {
-/*       console.log(value.val());
- */      value.val().forEach((object) =>
+      value.val().forEach((object) =>
         Places.getPlaceName(object.placeId).then((element) => {
           setData((old) => [...old, { ...object, name: element.name }]);
         })
@@ -62,7 +61,7 @@ export default (props) => {
       [currentUser]: selectedChoice,
     });
 
-    setToggle((old) => (!old));
+    setToggle((old) => !old);
   };
 
   return (
@@ -104,7 +103,7 @@ export default (props) => {
           <Text style={styles.modalTextHeader}>Address</Text>
           <Text style={styles.modalText}>{location}</Text>
           <Image
-            style={{ width: "70%", height: "35%", marginTop: "2%" }}
+            style={{ width: '70%', height: '35%', marginTop: '2%' }}
             source={{
               uri: Places.getPlacePhoto(photo),
             }}
@@ -136,13 +135,14 @@ export default (props) => {
 const styles = StyleSheet.create({
   container: {
     width: '80%',
+    height: '55%',
   },
 
   listItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: '1%',
-    paddingVertical: "3%",
+    paddingVertical: '3%',
     backgroundColor: 'white',
     borderRadius: 10,
   },
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     alignItems: 'center',
     width: '75%',
-    height: '47%',
+    height: '55%',
     marginTop: '42%',
     marginBottom: '20%',
     backgroundColor: '#F8F5F1',
@@ -203,14 +203,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    height: "6%",
+    height: '6%',
   },
 
   modalWarningText: {
     position: 'absolute',
-    bottom: '24%',
+    bottom: '20%',
     fontFamily: 'Roboto_400Regular',
-    color: 'red'
+    color: 'red',
   },
 
   modalCancelText: {
@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 10,
-    height: "6%",
+    height: '6%',
   },
 
   modalTextHeader: {

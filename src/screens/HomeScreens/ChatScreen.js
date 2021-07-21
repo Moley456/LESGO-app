@@ -1,17 +1,10 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { GiftedChat, Bubble, Day } from "react-native-gifted-chat";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  StatusBar,
-  TouchableOpacity,
-} from "react-native";
-import HideKeyboard from "../../components/HideKeyboard";
-import { Ionicons } from "@expo/vector-icons";
-import firebase from "firebase";
-import * as Auth from "../../../api/auth";
+import React, { useState, useCallback, useEffect } from 'react';
+import { GiftedChat, Bubble, Day } from 'react-native-gifted-chat';
+import { SafeAreaView, StyleSheet, View, Text, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import HideKeyboard from '../../components/HideKeyboard';
+import { Ionicons } from '@expo/vector-icons';
+import firebase from 'firebase';
+import * as Auth from '../../../api/auth';
 
 export default ({ navigation, route }) => {
   const db = firebase.database();
@@ -21,21 +14,16 @@ export default ({ navigation, route }) => {
   const logData = (newMessage) => {
     const timeInString = newMessage[0].createdAt.toString();
     newMessage[0].createdAt = timeInString;
-    db.ref("app/chats/" + roomId).update({
+    db.ref('app/chats/' + roomId).update({
       [messages.length + 1]: newMessage[0],
     });
   };
 
   useEffect(() => {
     setMessages([]);
-    const sub = db
-      .ref("app/chats/" + roomId)
-      .on("child_added", (snapshot, prevChildKey) => {
-        setMessages((messages) => [
-          { ...snapshot.val(), key: snapshot.val()._id },
-          ...messages,
-        ]);
-      });
+    const sub = db.ref('app/chats/' + roomId).on('child_added', (snapshot, prevChildKey) => {
+      setMessages((messages) => [{ ...snapshot.val(), key: snapshot.val()._id }, ...messages]);
+    });
 
     return () => sub;
   }, []);
@@ -62,15 +50,12 @@ export default ({ navigation, route }) => {
   return (
     <HideKeyboard>
       <SafeAreaView style={styles.container}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={32} />
         </TouchableOpacity>
         <Text style={styles.header}>Chat</Text>
-
         <GiftedChat
+          bottomOffset={54}
           messages={messages}
           onSend={(messages) => {
             logData(messages);
@@ -78,15 +63,15 @@ export default ({ navigation, route }) => {
           user={{
             _id: Auth.getCurrentUserId(),
             name: Auth.getCurrentUserName(),
-            avatar: "https://placeimg.com/140/140/any",
+            avatar: 'https://placeimg.com/140/140/any',
           }}
           renderUsernameOnMessage={true}
           showUserAvatar={true}
           onPressAvatar={(clickedUser) => {
-            navigation.navigate("ViewUser", { ...clickedUser });
+            navigation.navigate('ViewUser', { ...clickedUser });
           }}
-          textProps={{ style: { color: "black" } }}
-          timeTextStyle={{ left: { color: "grey" }, right: { color: "grey" } }}
+          textProps={{ style: { color: 'black' } }}
+          timeTextStyle={{ left: { color: 'grey' }, right: { color: 'grey' } }}
           renderChatEmpty={() => {
             return (
               <View style={styles.emptyChat}>
@@ -95,12 +80,7 @@ export default ({ navigation, route }) => {
             );
           }}
           renderDay={(props) => {
-            return (
-              <Day
-                {...props}
-                textStyle={{ color: "black", fontFamily: "Montserrat_700Bold" }}
-              />
-            );
+            return <Day {...props} textStyle={{ color: 'black', fontFamily: 'Montserrat_700Bold' }} />;
           }}
           renderBubble={(props) => {
             return (
@@ -108,14 +88,14 @@ export default ({ navigation, route }) => {
                 {...props}
                 wrapperStyle={{
                   left: {
-                    backgroundColor: "#b8d5cd",
+                    backgroundColor: '#b8d5cd',
                   },
                   right: {
-                    backgroundColor: "#F8F5F1",
+                    backgroundColor: '#F8F5F1',
                   },
                 }}
                 usernameStyle={{
-                  color: "grey",
+                  color: 'grey',
                 }}
               />
             );
@@ -129,37 +109,36 @@ export default ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#5AA397",
+    backgroundColor: '#5AA397',
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
-    paddingBottom: 70,
   },
 
   backButton: {
-    position: "absolute",
-    alignSelf: "flex-start",
-    top: "7%",
-    left: "3%",
+    position: 'absolute',
+    alignSelf: 'flex-start',
+    top: '7%',
+    left: '3%',
   },
 
   header: {
     fontSize: 55,
-    color: "#F8F5F1",
-    fontFamily: "Montserrat_700Bold",
+    color: '#F8F5F1',
+    fontFamily: 'Montserrat_700Bold',
     marginTop: 50,
-    marginLeft: "10%",
+    marginLeft: '10%',
   },
 
   subHeader: {
     fontSize: 20,
-    fontFamily: "Roboto_400Regular",
-    paddingBottom: "10%",
+    fontFamily: 'Roboto_400Regular',
+    paddingBottom: '10%',
   },
 
   emptyChat: {
     transform: [{ scaleY: -1 }],
-    height: "100%",
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

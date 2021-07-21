@@ -1,8 +1,8 @@
 import React from 'react';
-import { Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, TouchableWithoutFeedback, Platform } from 'react-native';
 
 export default ({ children }) => (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      {children}
-    </TouchableWithoutFeedback>
-  );
+  <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>{children}</TouchableWithoutFeedback>
+  </KeyboardAvoidingView>
+);

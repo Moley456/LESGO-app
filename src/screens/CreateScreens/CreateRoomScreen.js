@@ -72,6 +72,7 @@ export default ({ navigation }) => {
       const postId = pushedPostRef.getKey();
       db.ref('app/rooms/' + postId + '/details').set({
         roomName: roomName,
+        fullDate: date.toString().slice(0, 16) + time.toString().slice(16),
         date: date.toDateString(),
         time: time.toTimeString().slice(0, 5),
         timeCreated: Maths.getCurrentTime().toString(),

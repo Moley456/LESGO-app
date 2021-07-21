@@ -44,21 +44,23 @@ export const generateActivities = async (roomUID) => {
             activityCount[prefs.key] = 1; //add new key-value pair if never appeared before
           }
         });
-        // convert activityCount object into 2D array
-        for (const pref in activityCount) {
-          sortingArray.push([pref, activityCount[pref]]);
-        }
-
-        //sort the 2D array
-        sortingArray.sort((a, b) => {
-          b[1] - a[1];
-        });
-
-        //push top 3 activities to activity array
-        for (let i = 0; i < 3 && i < sortingArray.length; i++) {
-          activities.push(sortingArray[i][0]);
-        }
       });
+      // convert activityCount object into 2D array
+      for (const pref in activityCount) {
+        sortingArray.push([pref, activityCount[pref]]);
+      }
+
+      //sort the 2D array
+      var sortedArray = sortingArray.sort((a, b) => {
+        return b[1] - a[1];
+      });
+
+      console.log(sortedArray);
+      //push top 3 activities to activity array
+      for (let i = 0; i < 3 && i < sortingArray.length; i++) {
+        console.log(sortingArray.length + ' sorting array length');
+        activities.push(sortingArray[i][0]);
+      }
     });
   return activities;
 };
@@ -74,6 +76,6 @@ export const getTimeAfter = (limit) => {
 };
 
 export const getTimeLeft = (endTime) => {
-  const diff = (endTime - getCurrentTime()) / 1000 / 60 / 60;
+  const diff = (endTime - new Date().getTime()) / 1000 / 60 / 60;
   return diff;
 };

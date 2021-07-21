@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
-    paddingBottom: 70,
   },
 
   logo: {
