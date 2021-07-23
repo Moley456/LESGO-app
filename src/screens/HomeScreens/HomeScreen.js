@@ -1,11 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { RefreshControl, SafeAreaView, StyleSheet, Text, View, FlatList, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
-import { CommonActions, useIsFocused } from '@react-navigation/native';
-import firebase from 'firebase';
+import React, { useEffect, useState } from "react";
+import {
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  StatusBar,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { CommonActions, useIsFocused } from "@react-navigation/native";
+import firebase from "firebase";
 
-import * as Auth from '../../../api/auth';
-import * as Maths from '../../../api/maths';
-import * as Places from '../../../api/googlePlaces';
+import * as Auth from "../../../api/auth";
+import * as Maths from "../../../api/maths";
+import * as Places from "../../../api/googlePlaces";
 
 export default ({ navigation }) => {
   const db = firebase.database();
@@ -23,58 +33,69 @@ export default ({ navigation }) => {
   const refresh = () => {
     setRefreshing(true);
 
-    db.ref('app/participants/' + Auth.getCurrentUserName()).once('value', (snapshot1) => {
-      snapshot1.forEach((data) => {
-        if (!data.val()) {
-          db.ref('app/rooms/' + data.key + '/details/timeEnded')
-            .get()
-            .then((snapshot2) => {
-              const timeEnded = Date.parse(snapshot2.val());
-              const left = Maths.getTimeLeft(timeEnded);
-              if (left < 0) {
-                Maths.generateActivities(data.key).then((activities) => {
-                  if (activities.length !== 0) {
-                    setAllParticipantsToTrue(data.key);
-                    activities.forEach((activity) => {
-                      Places.fetchPlaces(activity).then((placeId) => {
-                        db.ref('app/rooms/' + data.key + '/polls/' + count).update({
-                          id: count,
-                          placeId: placeId[0],
-                          activity: activity,
-                          votes: 0,
-                        });
+    db.ref("app/participants/" + Auth.getCurrentUserName()).once(
+      "value",
+      (snapshot1) => {
+        snapshot1.forEach((data) => {
+          if (!data.val()) {
+            db.ref("app/rooms/" + data.key + "/details/timeEnded")
+              .get()
+              .then((snapshot2) => {
+                const timeEnded = Date.parse(snapshot2.val());
+                const left = Maths.getTimeLeft(timeEnded);
+                if (left < 0) {
+                  Maths.generateActivities(data.key).then((activities) => {
+                    if (activities.length !== 0) {
+                      setAllParticipantsToTrue(data.key);
+                      activities.forEach((activity) => {
+                        Places.fetchPlaces(activity).then((placeId) => {
+                          db.ref(
+                            "app/rooms/" + data.key + "/polls/" + count
+                          ).update({
+                            id: count,
+                            placeId: placeId[0],
+                            activity: activity,
+                            votes: 0,
+                          });
 
-                        db.ref('app/rooms/' + data.key + '/polls/' + (count + 1)).update({
-                          id: count + 1,
-                          placeId: placeId[1],
-                          activity: activity,
-                          votes: 0,
+                          db.ref(
+                            "app/rooms/" + data.key + "/polls/" + (count + 1)
+                          ).update({
+                            id: count + 1,
+                            placeId: placeId[1],
+                            activity: activity,
+                            votes: 0,
+                          });
+                          count += 2;
                         });
-                        count += 2;
                       });
+                    }
+                  });
+                }
+              });
+          }
+          db.ref("app/rooms/" + data.key + "/details")
+            .get()
+            .then((snapshot) => {
+              const timeLeft = Maths.getTimeLeft(
+                Date.parse(snapshot.val().fullDate)
+              );
+              if (timeLeft < 0) {
+                db.ref("app/rooms/" + data.key + "/participants/")
+                  .get()
+                  .then((snapshot) => {
+                    snapshot.forEach((participant) => {
+                      db.ref(
+                        "app/participants/" + participant.key + "/" + data.key
+                      ).remove();
                     });
-                  }
-                });
+                  });
+                db.ref("app/rooms/" + data.key).remove();
               }
             });
-        }
-        db.ref('app/rooms/' + data.key + '/details')
-          .get()
-          .then((snapshot) => {
-            const timeLeft = Maths.getTimeLeft(Date.parse(snapshot.val().fullDate));
-            if (timeLeft < 0) {
-              db.ref('app/rooms/' + data.key + '/participants/')
-                .get()
-                .then((snapshot) => {
-                  snapshot.forEach((participant) => {
-                    db.ref('app/participants/' + participant.key + '/' + data.key).remove();
-                  });
-                });
-              db.ref('app/rooms/' + data.key).remove();
-            }
-          });
-      });
-    });
+        });
+      }
+    );
 
     handleInvitations();
     handleUpcoming();
@@ -83,30 +104,36 @@ export default ({ navigation }) => {
   };
 
   const setAllParticipantsToTrue = (roomUID) => {
-    db.ref('app/participants/' + Auth.getCurrentUserName()).update({
+    db.ref("app/participants/" + Auth.getCurrentUserName()).update({
       [roomUID]: true,
     });
 
-    db.ref('app/rooms/' + roomUID + '/participants/').once('value', (snapshot) => {
-      snapshot.forEach((participant) => {
-        db.ref('app/participants/' + participant.key + '/').update({
-          [roomUID]: true,
+    db.ref("app/rooms/" + roomUID + "/participants/").once(
+      "value",
+      (snapshot) => {
+        snapshot.forEach((participant) => {
+          db.ref("app/participants/" + participant.key + "/").update({
+            [roomUID]: true,
+          });
         });
-      });
-    });
+      }
+    );
   };
 
   const handleInvitations = () => {
     setInvitations([]);
-    db.ref('app/participants/' + Auth.getCurrentUserName())
+    db.ref("app/participants/" + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(false)
-      .once('value', (snapshot) => {
+      .once("value", (snapshot) => {
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key + '/details')
+          db.ref("app/rooms/" + data.key + "/details")
             .get()
             .then((snapshot) => {
-              setInvitations((old) => [...old, { ...snapshot.val(), key: data.key }]);
+              setInvitations((old) => [
+                ...old,
+                { ...snapshot.val(), key: data.key },
+              ]);
             });
         });
       });
@@ -114,15 +141,18 @@ export default ({ navigation }) => {
 
   const handleUpcoming = () => {
     setUpcoming([]);
-    db.ref('app/participants/' + Auth.getCurrentUserName())
+    db.ref("app/participants/" + Auth.getCurrentUserName())
       .orderByValue()
       .equalTo(true)
-      .once('value', (snapshot) => {
+      .once("value", (snapshot) => {
         snapshot.forEach((data) => {
-          db.ref('app/rooms/' + data.key + '/details')
+          db.ref("app/rooms/" + data.key + "/details")
             .get()
             .then((snapshot) => {
-              setUpcoming((old) => [...old, { ...snapshot.val(), key: data.key }]);
+              setUpcoming((old) => [
+                ...old,
+                { ...snapshot.val(), key: data.key },
+              ]);
             });
         });
       });
@@ -136,7 +166,7 @@ export default ({ navigation }) => {
             index: 0,
             routes: [
               {
-                name: 'Login',
+                name: "Login",
               },
             ],
           })
@@ -154,7 +184,7 @@ export default ({ navigation }) => {
         </TouchableOpacity>
 
         <Text style={styles.headerText}>
-          Welcome,{'\n'}
+          Welcome,{"\n"}
           {Auth.getCurrentUserName()}!
         </Text>
 
@@ -167,7 +197,11 @@ export default ({ navigation }) => {
     return (
       <View>
         <Text style={styles.subHeaderText}>Invitations</Text>
-        {invitations.length === 0 && <Text style={styles.noText}>No invites currently.{'\n'}Start inviting your friends!</Text>}
+        {invitations.length === 0 && (
+          <Text style={styles.noText}>
+            No invites currently.{"\n"}Start inviting your friends!
+          </Text>
+        )}
         <FlatList data={invitations} renderItem={renderInvites} />
       </View>
     );
@@ -181,12 +215,14 @@ export default ({ navigation }) => {
         </TouchableOpacity>
 
         <Text style={styles.headerText}>
-          Welcome,{'\n'}
+          Welcome,{"\n"}
           {Auth.getCurrentUserName()}!
         </Text>
 
         <Text style={styles.subHeaderText}>Upcoming Events</Text>
-        <Text style={styles.noText}>No upcoming events currently.{'\n'}Start inviting your friends!</Text>
+        <Text style={styles.noText}>
+          No upcoming events currently.{"\n"}Start inviting your friends!
+        </Text>
 
         <Text style={styles.subHeaderText}>Invitations</Text>
       </View>
@@ -195,7 +231,10 @@ export default ({ navigation }) => {
 
   const renderEvents = ({ item }) => (
     <View>
-      <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Room', { ...item })}>
+      <TouchableOpacity
+        style={styles.tab}
+        onPress={() => navigation.navigate("Room", { ...item })}
+      >
         <Text style={styles.tabBoldText}>{item.roomName}</Text>
         <Text style={styles.tabText}>{item.date}</Text>
         <Text style={styles.tabText}>{item.time}</Text>
@@ -210,14 +249,20 @@ export default ({ navigation }) => {
 
     return (
       <View>
-        <TouchableOpacity style={styles.tab} onPress={() => navigation.navigate('Invitation', { ...item })}>
+        <TouchableOpacity
+          style={styles.tab}
+          onPress={() => navigation.navigate("Invitation", { ...item })}
+        >
           <Text style={styles.tabBoldText}>{item.roomName}</Text>
           <Text style={styles.tabText}>{item.date}</Text>
           <Text style={styles.tabText}>{item.time}</Text>
         </TouchableOpacity>
 
         <View style={styles.invInfo}>
-          <Text>Time remaining: {limit <= 0 ? 'times up! please refresh.' : limit + ' hours'}</Text>
+          <Text>
+            Time remaining:{" "}
+            {limit <= 0 ? "times up! please refresh." : limit + " hours"}
+          </Text>
           <Text>@{item.creator}</Text>
         </View>
       </View>
@@ -243,14 +288,18 @@ export default ({ navigation }) => {
           </TouchableOpacity>
 
           <Text style={styles.headerText}>
-            Welcome,{'\n'}
+            Welcome,{"\n"}
             {Auth.getCurrentUserName()}!
           </Text>
 
           <Text style={styles.subHeaderText}>Upcoming Events</Text>
-          <Text style={styles.noText}>No upcoming events currently.{'\n'}Start inviting your friends!</Text>
+          <Text style={styles.noText}>
+            No upcoming events currently.{"\n"}Start inviting your friends!
+          </Text>
           <Text style={styles.subHeaderText}>Invitations</Text>
-          <Text style={styles.noText}>No invites currently.{'\n'}Start inviting your friends!</Text>
+          <Text style={styles.noText}>
+            No invites currently.{"\n"}Start inviting your friends!
+          </Text>
         </ScrollView>
       )}
 
@@ -287,76 +336,76 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#5AA397',
+    backgroundColor: "#5AA397",
     paddingTop: StatusBar.currentHeight ? StatusBar.currentHeight : 0,
   },
 
   logoutButton: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     marginTop: 20,
     marginRight: 10,
   },
 
   logoutText: {
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: "Roboto_400Regular",
     fontSize: 20,
-    textDecorationLine: 'underline',
+    textDecorationLine: "underline",
   },
 
   headerText: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginHorizontal: 35,
     fontSize: 50,
-    color: '#F8F5F1',
-    fontFamily: 'Montserrat_700Bold',
+    color: "#F8F5F1",
+    fontFamily: "Montserrat_700Bold",
   },
 
   subHeaderText: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginHorizontal: 35,
     fontSize: 24,
-    color: 'black',
-    fontFamily: 'Montserrat_700Bold',
+    color: "black",
+    fontFamily: "Montserrat_700Bold",
     paddingTop: 40,
   },
 
   tab: {
-    backgroundColor: '#F8F5F1',
-    alignItems: 'center',
-    alignSelf: 'center',
-    justifyContent: 'center',
-    width: '85%',
+    backgroundColor: "#F8F5F1",
+    alignItems: "center",
+    alignSelf: "center",
+    justifyContent: "center",
+    width: "85%",
     marginTop: 15,
     borderRadius: 20,
     paddingVertical: 20,
   },
 
   tabBoldText: {
-    fontFamily: 'Roboto_900Black',
+    fontFamily: "Roboto_900Black",
   },
 
   tabText: {
-    fontFamily: 'Roboto_400Regular',
+    fontFamily: "Roboto_400Regular",
   },
 
   eventInfo: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     paddingRight: 35,
   },
 
   invInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
     paddingHorizontal: 35,
   },
 
   noText: {
-    alignSelf: 'center',
-    fontFamily: 'Roboto_400Regular',
-    textAlign: 'center',
+    alignSelf: "center",
+    fontFamily: "Roboto_400Regular",
+    textAlign: "center",
     fontSize: 15,
-    paddingTop: '8%',
-    color: 'black',
+    paddingTop: "8%",
+    color: "black",
   },
 });

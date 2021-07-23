@@ -62,7 +62,6 @@ export default ({ navigation }) => {
   };
 
   const invite = () => {
-    console.log(time.toTimeString());
     if (roomName === '' || date === '' || time === '' || limit === '') {
       Alert.alert('Please fill in every field!');
     } else if (participants.length === 0) {
