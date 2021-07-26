@@ -55,10 +55,8 @@ export const generateActivities = async (roomUID) => {
         return b[1] - a[1];
       });
 
-      console.log(sortedArray);
       //push top 3 activities to activity array
       for (let i = 0; i < 3 && i < sortingArray.length; i++) {
-        console.log(sortingArray.length + ' sorting array length');
         activities.push(sortingArray[i][0]);
       }
     });

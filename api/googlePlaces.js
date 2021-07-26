@@ -88,7 +88,6 @@ export const addplaceID = (roomUID, activityInfo) => {
 };
 
 export const getPlaceInfo = (placeID, setName, setLocation, setPhoto) => {
-  console.log('ran');
   const url =
     'https://maps.googleapis.com/maps/api/place/details/json?place_id=' + placeID + '&fields=name,formatted_address,photos&key=' + GOOGLE_API_KEY;
   fetch(url)
