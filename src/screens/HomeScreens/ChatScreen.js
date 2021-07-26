@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble, Day } from 'react-native-gifted-chat';
-import { SafeAreaView, StyleSheet, View, Text, StatusBar, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, StatusBar, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import HideKeyboard from '../../components/HideKeyboard';
 import { Ionicons } from '@expo/vector-icons';
 import firebase from 'firebase';
@@ -48,61 +48,59 @@ export default ({ navigation, route }) => {
     }, []) */
 
   return (
-    <HideKeyboard>
-      <SafeAreaView style={styles.container}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={32} />
-        </TouchableOpacity>
-        <Text style={styles.header}>Chat</Text>
-        <GiftedChat
-          bottomOffset={54}
-          messages={messages}
-          onSend={(messages) => {
-            logData(messages);
-          }}
-          user={{
-            _id: Auth.getCurrentUserId(),
-            name: Auth.getCurrentUserName(),
-            avatar: 'https://placeimg.com/140/140/any',
-          }}
-          renderUsernameOnMessage={true}
-          showUserAvatar={true}
-          onPressAvatar={(clickedUser) => {
-            navigation.navigate('ViewUser', { ...clickedUser });
-          }}
-          textProps={{ style: { color: 'black' } }}
-          timeTextStyle={{ left: { color: 'grey' }, right: { color: 'grey' } }}
-          renderChatEmpty={() => {
-            return (
-              <View style={styles.emptyChat}>
-                <Text style={styles.subHeader}>Start chatting!</Text>
-              </View>
-            );
-          }}
-          renderDay={(props) => {
-            return <Day {...props} textStyle={{ color: 'black', fontFamily: 'Montserrat_700Bold' }} />;
-          }}
-          renderBubble={(props) => {
-            return (
-              <Bubble
-                {...props}
-                wrapperStyle={{
-                  left: {
-                    backgroundColor: '#b8d5cd',
-                  },
-                  right: {
-                    backgroundColor: '#F8F5F1',
-                  },
-                }}
-                usernameStyle={{
-                  color: 'grey',
-                }}
-              />
-            );
-          }}
-        />
-      </SafeAreaView>
-    </HideKeyboard>
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="chevron-back" size={32} />
+      </TouchableOpacity>
+      <Text style={styles.header}>Chat</Text>
+      <GiftedChat
+        messages={messages}
+        onSend={(messages) => {
+          logData(messages);
+        }}
+        user={{
+          _id: Auth.getCurrentUserId(),
+          name: Auth.getCurrentUserName(),
+          avatar: 'https://placeimg.com/140/140/any',
+        }}
+        renderUsernameOnMessage={true}
+        showUserAvatar={true}
+        onPressAvatar={(clickedUser) => {
+          navigation.navigate('ViewUser', { ...clickedUser });
+        }}
+        textProps={{ style: { color: 'black' } }}
+        timeTextStyle={{ left: { color: 'grey' }, right: { color: 'grey' } }}
+        renderChatEmpty={() => {
+          return (
+            <View style={styles.emptyChat}>
+              <Text style={styles.subHeader}>Start chatting!</Text>
+            </View>
+          );
+        }}
+        renderDay={(props) => {
+          return <Day {...props} textStyle={{ color: 'black', fontFamily: 'Montserrat_700Bold' }} />;
+        }}
+        renderBubble={(props) => {
+          return (
+            <Bubble
+              {...props}
+              wrapperStyle={{
+                left: {
+                  backgroundColor: '#b8d5cd',
+                },
+                right: {
+                  backgroundColor: '#F8F5F1',
+                },
+              }}
+              usernameStyle={{
+                color: 'grey',
+              }}
+            />
+          );
+        }}
+      />
+      {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={-30} />}
+    </SafeAreaView>
   );
 };
 
