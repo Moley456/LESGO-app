@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { GiftedChat, Bubble, Day } from 'react-native-gifted-chat';
-import { SafeAreaView, StyleSheet, View, Text, StatusBar, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
-import HideKeyboard from '../../components/HideKeyboard';
+import { SafeAreaView, StyleSheet, View, Text, StatusBar, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import firebase from 'firebase';
 import * as Auth from '../../../api/auth';
