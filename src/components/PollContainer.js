@@ -18,8 +18,7 @@ export default (props) => {
 
   useEffect(() => {
     //set total votes
-    db.ref('app/rooms/' + props.roomUID + '/details/totalVotes').once('value', (value) => {
-      console.log('totalVotes:' + value.val());
+    db.ref('app/rooms/' + props.roomUID + '/details/totalVotes').once('value', (value) => {      
       setTotalVotes(value.val());
     });
 
@@ -32,6 +31,7 @@ export default (props) => {
       );
     });
     return setData([]);
+    
   }, [toggle]);
 
   useEffect(() => {
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
   container: {
     width: '80%',
     height: '55%',
+    marginTop: '3%'
   },
 
   listItem: {
@@ -208,9 +209,10 @@ const styles = StyleSheet.create({
 
   modalWarningText: {
     position: 'absolute',
-    bottom: '20%',
+    bottom: '22%',
     fontFamily: 'Roboto_400Regular',
     color: 'red',
+    fontSize: 12
   },
 
   modalCancelText: {

@@ -102,7 +102,7 @@ export default ({ navigation, route }) => {
   };
 
   const submit = () => {
-/*     db.ref("app/rooms/" + route.params.key + "/participants").update({
+    /*     db.ref("app/rooms/" + route.params.key + "/participants").update({
       [Auth.getCurrentUserName()]: true,
     }); */
 
@@ -157,14 +157,14 @@ export default ({ navigation, route }) => {
 
     if (route.params.creator === Auth.getCurrentUserName()) {
       db.ref("app/rooms/" + route.params.key + "/participants/")
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((data) => {
-          db.ref(
-            "app/participants/" + data.key + "/" + route.params.key
-          ).remove();
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((data) => {
+            db.ref(
+              "app/participants/" + data.key + "/" + route.params.key
+            ).remove();
+          });
         });
-      });
       db.ref("app/rooms/" + route.params.key).remove();
     }
   };
