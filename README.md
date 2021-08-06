@@ -15,7 +15,7 @@ This may seem like a trivial issue, but it can be one that strains relationships
 ## Aim
 Our team intends to ease the decision-making process amongst groups of friends (mainly students/youths) during planning of gatherings through effective recommendations on the application.  
 
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/poster.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/posterNew.png>
 
 ## User Stories
 
@@ -53,7 +53,7 @@ With the data provided, Algorithm to filter out dealbreakers and search for the 
 Application to generate a list of 6 potential activities for the participants to choose from
 
 ### 4. Poll Feature
-Users in the ‘Room’ will be able to vote for the activity which they are interested in from the list generated
+Users in the ‘Room’ will be able to vote for the activity which they are interested in from the list generated!
 
 ## Step by Step Guide
 <img src=https://github.com/Moley456/LESGO-app/blob/main/assets/1.png>
@@ -91,15 +91,12 @@ Version Control: Git
 URL access to project deployed:
 https://expo.io/@xw99/lesgo-app
 
-Link to Milestone 1 README:  
-https://docs.google.com/document/d/14gynMKKA1u4plFcY2efOtrMZ1eUoEY3Lx6xd6sN-89c/edit?usp=sharing
-
-Link to Milestone 2 README:  
-https://docs.google.com/document/d/1DQ7ueVafSsjq2Zs6Ev-aRxDhMTDg8djU3zLAWoxsHO4/edit?usp=sharing
+Link to README:  
+https://docs.google.com/document/d/1kygNwX4IZdCuO382Zoca6Hp71f8e9b9O3GDdzDU0vPE/edit?usp=sharing
 
 Poster: 
-https://drive.google.com/file/d/1C6PnSd8Jb1JsgEiOTlp_rmRXS_5VG04d/view?usp=sharing
+https://drive.google.com/file/d/13xbeiFbMMYAaWEHnfWhCi6yfKhftqHr6/view?usp=sharing
 
 Video: 
-https://drive.google.com/file/d/1o-pM8sAI7JsnqI3IYWAN3shGv2TpaH91/view?usp=sharing
+https://drive.google.com/file/d/1HNL9wLSreU-772-ZVYb2xwB4ae24XMp1/view?usp=sharing
 
