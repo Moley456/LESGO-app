@@ -15,7 +15,7 @@ This may seem like a trivial issue, but it can be one that strains relationships
 ## Aim
 Our team intends to ease the decision-making process amongst groups of friends (mainly students/youths) during planning of gatherings through effective recommendations on the application.  
 
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/posterNew.png>
+<img width="50%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/posterNew.png>
 
 ## User Stories
 
@@ -56,12 +56,12 @@ Application to generate a list of 6 potential activities for the participants to
 Users in the ‘Room’ will be able to vote for the activity which they are interested in from the list generated!
 
 ## Step by Step Guide
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/1.png>
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/2.png>
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/3.png>
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/4.png>
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/5.png>
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/6.png>
+<img width="80%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/1.png>
+<img width="80%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/2.png>
+<img width="80%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/3.png>
+<img width="80%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/4.png>
+<img width="80%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/5.png>
+<img width="80%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/6.png>
 
 ## How our Algorithm Works
 <img width="50%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/algo.png>
@@ -88,15 +88,15 @@ Database: Firebase
 Version Control: Git  
 
 ## Resources
-URL access to project deployed:
+URL access to project deployed:  
 https://expo.io/@xw99/lesgo-app
 
 Link to README:  
 https://docs.google.com/document/d/1kygNwX4IZdCuO382Zoca6Hp71f8e9b9O3GDdzDU0vPE/edit?usp=sharing
 
-Poster: 
+Poster:  
 https://drive.google.com/file/d/13xbeiFbMMYAaWEHnfWhCi6yfKhftqHr6/view?usp=sharing
 
-Video: 
+Video:  
 https://drive.google.com/file/d/1HNL9wLSreU-772-ZVYb2xwB4ae24XMp1/view?usp=sharing
 
