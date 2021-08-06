@@ -56,9 +56,12 @@ Application to generate a list of 6 potential activities for the participants to
 Users in the ‘Room’ will be able to vote for the activity which they are interested in from the list generated
 
 ## Step by Step Guide
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/p1.png>
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/p2.png>
-<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/p3.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/1.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/2.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/3.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/4.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/5.png>
+<img src=https://github.com/Moley456/LESGO-app/blob/main/assets/6.png>
 
 ## How our Algorithm Works
 <img width="50%" src=https://github.com/Moley456/LESGO-app/blob/main/assets/algo.png>
